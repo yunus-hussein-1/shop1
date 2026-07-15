@@ -1,0 +1,12 @@
+{
+  "name": "shayeb-shop-backend",
+  "version": "2.0.0",
+  "description": "الخادم الخلفي لمتجر الشايب — SHAYEB SHOP API (بدون مكتبات خارجية)",
+  "main": "server.js",
+  "engines": { "node": ">=22.5.0" },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {}
+}
