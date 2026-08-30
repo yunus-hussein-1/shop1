@@ -19,6 +19,10 @@ def create_app(config_class=Config):
 
     from models import User
 
+    # ينشئ جداول قاعدة البيانات الناقصة تلقائياً عند بدء التشغيل (آمن: لا يحذف بيانات موجودة)
+    with app.app_context():
+        db.create_all()
+
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
