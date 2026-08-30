@@ -14,9 +14,38 @@
       <a href="{{ url_for('seller.apply') }}" class="btn btn-ghost">{{ t('sell_on_shayeb') }}</a>
     </div>
     <div class="hero-art">
-      <svg class="leaf" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20 4C11 8 6 16 8 26c1.5 7 8 10 14 8-4-2-7-6-7-11 0-8 6-14 13-16-2-2-5-3-8-3Z" fill="#fff" opacity=".92"/>
-        <path d="M8 26c6 2 14-2 16-12" stroke="#c99a3d" stroke-width="1.6" stroke-linecap="round"/>
+      <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%">
+        <defs>
+          <radialGradient id="heroGlow" cx="35%" cy="30%" r="75%">
+            <stop offset="0" stop-color="#3fbf7c" stop-opacity=".55"/>
+            <stop offset="1" stop-color="#3fbf7c" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="160" cy="160" r="150" fill="url(#heroGlow)"/>
+        <circle cx="230" cy="90" r="34" fill="#c99a3d" opacity=".25"/>
+        <circle cx="75" cy="245" r="22" fill="#fff" opacity=".12"/>
+
+        <!-- كيس تسوّق كبير -->
+        <path d="M95 128h130l-11 128a16 16 0 0 1-16 14.6H122a16 16 0 0 1-16-14.6L95 128Z" fill="#fdfaf3"/>
+        <path d="M95 128h130" stroke="#c99a3d" stroke-width="3"/>
+        <path d="M112 128v-22a48 48 0 0 1 96 0v22" stroke="#fdfaf3" stroke-width="10" stroke-linecap="round"/>
+
+        <!-- ورقة/غصن أخضر خارج من الكيس -->
+        <path d="M160 96c-16-20-14-46 6-62 6 20-2 40-6 62Z" fill="#2ba363"/>
+        <path d="M160 96c10-24 30-34 52-30-10 18-30 26-52 30Z" fill="#3fbf7c"/>
+
+        <!-- نجوم صغيرة للزينة -->
+        <g fill="#c99a3d">
+          <circle cx="250" cy="200" r="4"/>
+          <circle cx="70" cy="110" r="3"/>
+          <circle cx="245" cy="255" r="3"/>
+        </g>
+
+        <!-- شاهين سوري مصغّر -->
+        <g transform="translate(238,150) scale(1.8)">
+          <path d="M0 6C-2.3 5.4-4 3.6-4 1.3c0-1 .4-1.8 1.1-1.1.7.7 1.5.9 2.2.4-.4-.9-.2-1.8.6-2.3C1.4-2.5 3 -1.6 3.4 0c.5 2.2-.8 4.4-3 5.7Z" fill="#f3d98a"/>
+          <circle cx="-3.3" cy="1" r=".55" fill="#0f3d26"/>
+        </g>
       </svg>
     </div>
   </div>

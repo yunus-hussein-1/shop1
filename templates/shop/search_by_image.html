@@ -1,17 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-  <div class="form-card wide">
-    <h1>دور بالصورة 📷</h1>
-    <p class="sub">التقط صورة للمنتج يلي بدك ياه أو ارفعها من جهازك، ورح نلاقيلك أشبه المنتجات.</p>
-    <form method="post" enctype="multipart/form-data">
-      <div class="field">
-        <label>صورة المنتج</label>
-        <input type="file" name="photo" accept="image/*" capture="environment" required>
+  <div class="form-card wide" style="text-align:center">
+    <h1>📷 دور بالصورة</h1>
+    <p class="sub">افتح كاميرا جوالك مباشرة وصوّر المنتج، أو ارفع صورة جاهزة من معرض الصور — ورح نلاقيلك أشبه المنتجات عندنا.</p>
+
+    <form method="post" enctype="multipart/form-data" id="imgSearchForm">
+      <div style="display:flex; gap:14px; flex-wrap:wrap; justify-content:center; margin:26px 0">
+
+        <label for="cameraInput" class="btn btn-primary" style="padding:16px 26px; font-size:1rem; cursor:pointer">
+          📸 افتح الكاميرا
+        </label>
+        <input type="file" id="cameraInput" name="photo" accept="image/*" capture="environment" style="display:none" onchange="document.getElementById('imgSearchForm').submit()">
+
+        <label for="galleryInput" class="btn btn-ghost" style="padding:16px 26px; font-size:1rem; cursor:pointer">
+          🖼️ ارفع من المعرض
+        </label>
+        <input type="file" id="galleryInput" name="photo" accept="image/*" style="display:none" onchange="document.getElementById('imgSearchForm').submit()">
+
       </div>
-      <button type="submit" class="btn btn-primary btn-block">دور هلق</button>
     </form>
-    <p class="hint" style="margin-top:14px">ملاحظة: هاي أول نسخة من ميزة البحث بالصورة، وبتحسّن أكتر مع الوقت.</p>
+
+    <p class="hint">أول ما تدوس "افتح الكاميرا"، الجوال رح يطلب منك صلاحية استخدام الكاميرا (سواء آيفون أو سامسونج) — اسمح فيها عشان الميزة تشتغل.</p>
+    <p class="hint">ملاحظة: هاي أول نسخة من ميزة البحث بالصورة، وبتحسّن أكتر مع الوقت.</p>
   </div>
 
   {% if uploaded_path %}

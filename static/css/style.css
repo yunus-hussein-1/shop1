@@ -18,6 +18,7 @@
   --danger:#c1443a;
   --card-bg:#ffffff;
   --page-bg:var(--sand-050);
+  --deep-900:#0f3d26; /* أخضر غامق ثابت لا يتغيّر مع الوضع الليلي/النهاري — للخلفيات الداكنة دايماً */
   --radius-lg:22px;
   --radius-md:14px;
   --radius-sm:9px;
@@ -77,7 +78,7 @@ button{font-family:inherit; cursor:pointer}
 
 /* ---------- Utility top bar ---------- */
 .topbar{
-  background:var(--green-900);
+  background:var(--deep-900);
   color:#eaf5ee;
   font-size:.82rem;
 }
@@ -117,7 +118,7 @@ button{font-family:inherit; cursor:pointer}
 }
 .icon-btn:hover{background:var(--green-600); color:#fff}
 .search-form button.submit{background:var(--green-700); color:#fff}
-.search-form button.submit:hover{background:var(--green-900)}
+.search-form button.submit:hover{background:var(--deep-900)}
 
 .nav-actions{display:flex; align-items:center; gap:10px}
 .nav-actions .cart-count{
@@ -133,7 +134,7 @@ button{font-family:inherit; cursor:pointer}
   transition:.15s; cursor:pointer;
 }
 .btn-primary{background:var(--green-700); color:#fff}
-.btn-primary:hover{background:var(--green-900)}
+.btn-primary:hover{background:var(--deep-900)}
 .btn-ghost{background:transparent; color:var(--green-800,var(--green-700)); border:1.5px solid var(--line)}
 .btn-ghost:hover{border-color:var(--green-600); color:var(--green-700)}
 .btn-gold{background:var(--gold-500); color:#fff}
@@ -143,7 +144,7 @@ button{font-family:inherit; cursor:pointer}
 .btn-block{width:100%}
 
 /* ---------- categories strip ---------- */
-.cat-strip{background:var(--green-900)}
+.cat-strip{background:var(--deep-900)}
 .cat-strip .container{display:flex; gap:26px; overflow-x:auto; padding-top:10px; padding-bottom:10px}
 .cat-strip a{color:#dcf0e3; font-weight:700; font-size:.9rem; white-space:nowrap; opacity:.85}
 .cat-strip a:hover, .cat-strip a.active{opacity:1; color:#fff; text-decoration:underline; text-underline-offset:6px; text-decoration-color:var(--gold-500)}
@@ -173,7 +174,7 @@ button{font-family:inherit; cursor:pointer}
   font-size:.8rem; font-weight:700; color:var(--green-800,var(--green-700)); display:inline-flex; gap:6px; align-items:center;
 }
 .hero-art{
-  aspect-ratio:1/1; border-radius:32px; background:linear-gradient(150deg,var(--green-600),var(--green-900));
+  aspect-ratio:1/1; border-radius:32px; background:linear-gradient(150deg,var(--green-600),var(--deep-900));
   display:flex; align-items:center; justify-content:center; position:relative; box-shadow:var(--shadow-soft);
 }
 .hero-art .leaf{width:44%; height:44%; opacity:.9}
@@ -207,7 +208,7 @@ button{font-family:inherit; cursor:pointer}
 .card-product .rating{font-size:.78rem; color:var(--gold-600); font-weight:700}
 
 /* ---------- offers block ---------- */
-.offers-section{background:var(--green-900); color:#fff; border-radius:32px; margin:30px 0; padding:44px 26px}
+.offers-section{background:var(--deep-900); color:#fff; border-radius:32px; margin:30px 0; padding:44px 26px}
 .offers-section .section-head h2{color:#fff}
 .offers-section .section-head a{color:var(--gold-500)}
 .offers-section .card-product{background:var(--green-800,#154a2c); border-color:rgba(255,255,255,.12)}
@@ -245,7 +246,7 @@ button{font-family:inherit; cursor:pointer}
 .status-processing, .status-shipped{background:#eaf1fb; color:#2b5292}
 
 /* ---------- footer ---------- */
-footer{background:var(--green-900); color:#cfe7d7; margin-top:60px; padding:46px 0 22px}
+footer{background:var(--deep-900); color:#cfe7d7; margin-top:60px; padding:46px 0 22px}
 footer .container{display:grid; grid-template-columns:1.3fr repeat(3,1fr); gap:30px}
 footer h4{color:#fff; font-size:.95rem; margin:0 0 12px}
 footer ul{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px}
@@ -266,7 +267,7 @@ footer a:hover{opacity:1; text-decoration:underline}
   display:inline-flex; align-items:center; gap:6px; background:var(--green-700); color:#fff;
   padding:8px 16px; border-radius:999px; font-size:.82rem; font-weight:700; cursor:pointer;
 }
-.avatar-upload label.avatar-btn:hover{background:var(--green-900)}
+.avatar-upload label.avatar-btn:hover{background:var(--deep-900)}
 .avatar-upload input[type=file]{display:none}
 
 /* ---------- mobile nav ---------- */
