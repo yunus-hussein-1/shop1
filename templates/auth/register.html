@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="form-card">
+    <h1>{{ t('register') }}</h1>
+    <p class="sub">حساب جديد بأقل من دقيقة</p>
+    <form method="post">
+      <div class="field">
+        <label>الاسم الكامل</label>
+        <input type="text" name="name" value="{{ form.get('name','') }}" required>
+      </div>
+      <div class="field">
+        <label>الإيميل</label>
+        <input type="email" name="email" value="{{ form.get('email','') }}" required>
+      </div>
+      <div class="field">
+        <label>كلمة السر</label>
+        <input type="password" name="password" required minlength="8">
+        <p class="hint">8 محارف على الأقل.</p>
+      </div>
+      <div class="field">
+        <label>تأكيد كلمة السر</label>
+        <input type="password" name="confirm" required minlength="8">
+      </div>
+      <div class="checkbox-row" style="margin-bottom:20px">
+        <input type="checkbox" name="agree_terms" required id="agree">
+        <label for="agree">موافق على <a href="{{ url_for('pages.terms') }}" target="_blank">اتفاقية الاستخدام</a> وسياسة الخصوصية.</label>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">{{ t('register') }}</button>
+    </form>
+    <div style="display:flex; align-items:center; gap:10px; margin:18px 0; color:var(--ink-500); font-size:.8rem">
+      <hr style="flex:1; border:none; border-top:1px solid var(--line)"> أو <hr style="flex:1; border:none; border-top:1px solid var(--line)">
+    </div>
+    <a href="{{ url_for('auth.login_google') }}" class="btn btn-ghost btn-block">التسجيل عبر جوجل</a>
+    <p class="form-foot">عندك حساب مسبقاً؟ <a href="{{ url_for('auth.login') }}" style="color:var(--green-700); font-weight:700">سجّل دخول</a></p>
+  </div>
+</div>
+{% endblock %}

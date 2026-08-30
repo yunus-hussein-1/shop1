@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero">
+  <div class="container">
+    <div>
+      <div class="hero-badges">
+        <span class="badge">🌿 توصيل لكل المناطق</span>
+        <span class="badge">💳 دفع آمن عبر شام كاش</span>
+      </div>
+      <h1>سوق شايب... كل شي بلمسة وحدة.</h1>
+      <p>تسوّق أحدث الملابس الرجالية والنسائية وأغراض الأطفال والإلكترونيات من متاجر موثوقة، بأسعار وعروض حصرية.</p>
+      <a href="#new" class="btn btn-primary">شوف الجديد</a>
+      <a href="{{ url_for('seller.apply') }}" class="btn btn-ghost">{{ t('sell_on_shayeb') }}</a>
+    </div>
+    <div class="hero-art">
+      <svg class="leaf" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 4C11 8 6 16 8 26c1.5 7 8 10 14 8-4-2-7-6-7-11 0-8 6-14 13-16-2-2-5-3-8-3Z" fill="#fff" opacity=".92"/>
+        <path d="M8 26c6 2 14-2 16-12" stroke="#c99a3d" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+
+  <section class="section" id="new">
+    <div class="section-head">
+      <h2><span class="dot"></span> {{ t('new') }}</h2>
+      <a href="{{ url_for('main.search') }}">شوف الكل ←</a>
+    </div>
+    {% if new_products %}
+    <div class="grid-products">
+      {% for p in new_products %}
+        {% include "partials/product_card.html" %}
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <svg class="leaf" viewBox="0 0 40 40" fill="none"><path d="M20 4C11 8 6 16 8 26c1.5 7 8 10 14 8-4-2-7-6-7-11 0-8 6-14 13-16-2-2-5-3-8-3Z" fill="#c9d9cf"/></svg>
+      <p>لسا ما في منتجات مضافة. أول بائع يوافَق عليه رح تظهر منتجاته هون.</p>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="section-head"><h2><span class="dot"></span> تسوّق حسب الفئة</h2></div>
+    <div class="grid-products" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
+      {% for c in categories %}
+      <a href="{{ url_for('main.category', slug=c.slug) }}" class="card-product" style="align-items:center; justify-content:center; text-align:center; padding:26px 10px">
+        <div class="body" style="align-items:center">
+          <span class="title">
+            {% if current_lang=='ar' %}{{ c.name_ar }}{% elif current_lang=='tr' %}{{ c.name_tr }}{% else %}{{ c.name_en }}{% endif %}
+          </span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section id="offers" class="offers-section">
+    <div class="section-head">
+      <h2><span class="dot"></span> {{ t('offers') }}</h2>
+    </div>
+    {% if offer_products %}
+    <div class="grid-products">
+      {% for p in offer_products %}
+        {% include "partials/product_card.html" %}
+      {% endfor %}
+    </div>
+    {% else %}
+    <p style="opacity:.8">لسا ما في عروض فعّالة، ترقّب قريباً 🌿</p>
+    {% endif %}
+  </section>
+
+</div>
+{% endblock %}

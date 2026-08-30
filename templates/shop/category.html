@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h1 class="page-title">
+    {% if current_lang=='ar' %}{{ category.name_ar }}{% elif current_lang=='tr' %}{{ category.name_tr }}{% else %}{{ category.name_en }}{% endif %}
+  </h1>
+  {% if products %}
+  <div class="grid-products" style="margin-top:20px">
+    {% for p in products %}{% include "partials/product_card.html" %}{% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state"><p>ما في منتجات بهاد القسم لسا.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

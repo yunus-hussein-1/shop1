@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="two-col" style="margin-top:34px; align-items:start">
+    <div class="card-product" style="border-radius:22px">
+      <div class="thumb" style="aspect-ratio:1/1">
+        {% if product.discount_percent %}<span class="tag">خصم {{ product.discount_percent }}%</span>{% endif %}
+        {% if product.image_path %}<img src="{{ url_for('static', filename=product.image_path) }}" alt="{{ product.title }}">{% endif %}
+      </div>
+    </div>
+
+    <div>
+      <h1 class="page-title" style="margin-top:0">{{ product.title }}</h1>
+      <p style="color:var(--ink-500)">من متجر <strong>{{ product.store.name }}</strong></p>
+      {% if product.avg_rating %}<p class="rating" style="font-size:1rem">★ {{ product.avg_rating }} ({{ reviews|length }} {{ t('reviews') }})</p>{% endif %}
+
+      <div style="margin:18px 0">
+        <span class="price" style="font-size:1.7rem">{{ price(product.final_price_usd) }}</span>
+        {% if product.discount_percent %}<span class="price-old" style="font-size:1rem">{{ price(product.price_usd) }}</span>{% endif %}
+      </div>
+
+      <p class="prose" style="margin:0 0 24px">{{ product.description or "لا يوجد وصف إضافي لهاد المنتج." }}</p>
+
+      {% if current_user.is_authenticated %}
+      <form method="post" action="{{ url_for('shop.add_to_cart', product_id=product.id) }}" style="display:flex; gap:10px; align-items:center">
+        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" style="width:80px; padding:10px; border:1.5px solid var(--line); border-radius:9px">
+        <button type="submit" class="btn btn-primary">{{ t('add_to_cart') }}</button>
+      </form>
+      {% else %}
+      <a href="{{ url_for('auth.login') }}" class="btn btn-primary">سجّل دخول للشراء</a>
+      {% endif %}
+
+      {% if product.stock is not none and product.stock <= 3 %}
+      <p style="color:var(--danger); font-weight:700; margin-top:10px; font-size:.85rem">
+        {% if product.stock == 0 %}نفدت الكمية حالياً{% else %}باقي {{ product.stock }} قطع فقط!{% endif %}
+      </p>
+      {% endif %}
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="section-head"><h2><span class="dot"></span> {{ t('reviews') }}</h2></div>
+    {% if reviews %}
+      {% for r in reviews %}
+      <div style="background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:12px">
+        <div style="display:flex; justify-content:space-between">
+          <strong>{{ r.author.name }}</strong>
+          <span class="stars">{{ '★'*r.rating }}{{ '☆'*(5-r.rating) }}</span>
+        </div>
+        {% if r.comment %}<p style="margin:8px 0 0; color:var(--ink-700)">{{ r.comment }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <p style="color:var(--ink-500)">لسا ما في تقييمات على هاد المنتج.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

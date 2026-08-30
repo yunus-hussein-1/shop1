@@ -1,0 +1,19 @@
+<a href="{{ url_for('main.product_detail', product_id=p.id) }}" class="card-product">
+  <div class="thumb">
+    {% if p.discount_percent %}<span class="tag">خصم {{ p.discount_percent }}%</span>{% endif %}
+    {% if p.image_path %}
+      <img src="{{ url_for('static', filename=p.image_path) }}" alt="{{ p.title }}">
+    {% endif %}
+  </div>
+  <div class="body">
+    <span class="title">{{ p.title }}</span>
+    <span class="store">{{ p.store.name }}</span>
+    <div class="price-row">
+      <span>
+        <span class="price">{{ price(p.final_price_usd) }}</span>
+        {% if p.discount_percent %}<span class="price-old">{{ price(p.price_usd) }}</span>{% endif %}
+      </span>
+      {% if p.avg_rating %}<span class="rating">★ {{ p.avg_rating }}</span>{% endif %}
+    </div>
+  </div>
+</a>

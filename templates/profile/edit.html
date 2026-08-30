@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="form-card">
+    <h1>معلوماتي الشخصية</h1>
+    <form method="post">
+      <div class="field"><label>الاسم</label><input type="text" name="name" value="{{ current_user.name }}"></div>
+      <div class="field"><label>الإيميل</label><input type="email" name="email" value="{{ current_user.email }}"></div>
+      <div class="field"><label>رقم الهاتف</label><input type="tel" name="phone" value="{{ current_user.phone or '' }}"></div>
+      <div class="field"><label>تاريخ الميلاد</label><input type="date" name="birth_date" value="{{ current_user.birth_date or '' }}"></div>
+      <button type="submit" class="btn btn-primary btn-block">حفظ التعديلات</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

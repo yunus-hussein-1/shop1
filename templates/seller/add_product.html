@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="form-card wide">
+    <h1>إضافة منتج جديد</h1>
+    <form method="post" enctype="multipart/form-data">
+      <div class="field"><label>اسم المنتج</label><input type="text" name="title" required></div>
+      <div class="field"><label>الوصف</label><textarea name="description" rows="3"></textarea></div>
+      <div class="two-col">
+        <div class="field"><label>السعر (بالدولار)</label><input type="number" step="0.01" name="price_usd" required></div>
+        <div class="field"><label>نسبة الخصم % (اختياري)</label><input type="number" name="discount_percent" value="0"></div>
+      </div>
+      <div class="two-col">
+        <div class="field"><label>الكمية المتوفرة</label><input type="number" name="stock" value="1" required></div>
+        <div class="field">
+          <label>القسم</label>
+          <select name="category_id" required>
+            {% for c in categories %}<option value="{{ c.id }}">{{ c.name_ar }}</option>{% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>صورة حقيقية للمنتج من الاستوديو</label><input type="file" name="image" accept="image/*" required></div>
+      <div class="checkbox-row" style="margin-bottom:18px"><input type="checkbox" name="is_shayeb_offer" id="offer"><label for="offer">أضفه لقسم عروض شايب</label></div>
+      <button type="submit" class="btn btn-primary btn-block">إضافة المنتج</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

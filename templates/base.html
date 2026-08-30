@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="{{ current_lang }}" dir="{{ dir }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}شايب شوب | SHAYEB SHOP{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@400;500;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="container">
+    <div class="topbar-links">
+      <a href="{{ url_for('pages.track_order') }}">{{ t('track_order') }}</a>
+      <a href="{{ url_for('pages.about') }}">{{ t('about') }}</a>
+    </div>
+    <div class="lang-switch">
+      <a href="{{ url_for('main.set_language', lang='ar') }}" class="{{ 'active' if current_lang=='ar' }}">AR</a>
+      <a href="{{ url_for('main.set_language', lang='en') }}" class="{{ 'active' if current_lang=='en' }}">EN</a>
+      <a href="{{ url_for('main.set_language', lang='tr') }}" class="{{ 'active' if current_lang=='tr' }}">TR</a>
+    </div>
+  </div>
+</div>
+
+<header class="navbar">
+  <div class="container">
+    <a href="{{ url_for('main.home') }}" class="brand">
+      <svg class="leaf" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 4C11 8 6 16 8 26c1.5 7 8 10 14 8-4-2-7-6-7-11 0-8 6-14 13-16-2-2-5-3-8-3Z" fill="#1e8a52"/>
+        <path d="M8 26c6 2 14-2 16-12" stroke="#c99a3d" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <span>شايب<br><small>SHAYEB&nbsp;SHOP</small></span>
+    </a>
+
+    <form action="{{ url_for('main.search') }}" method="get" class="search-form">
+      <button type="button" class="icon-btn" title="{{ t('search_placeholder') }}" onclick="window.location.href='{{ url_for('main.search_by_image') }}'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2a1 1 0 0 0 .8-.4l1-1.3A2 2 0 0 1 10.6 3.5h2.8a2 2 0 0 1 1.6.8l1 1.3a1 1 0 0 0 .8.4H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12.5" r="3.4" stroke="currentColor" stroke-width="1.7"/></svg>
+      </button>
+      <input type="text" name="q" placeholder="{{ t('search_placeholder') }}">
+      <button type="submit" class="icon-btn submit">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </form>
+
+    <nav class="nav-actions">
+      {% if current_user.is_authenticated %}
+        <a href="{{ url_for('shop.cart') }}" class="icon-link icon-btn" title="{{ t('cart') }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.6 12.2A2 2 0 0 0 9.5 18h7.8a2 2 0 0 0 1.9-1.4L21 8H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.3" fill="currentColor"/><circle cx="18" cy="21" r="1.3" fill="currentColor"/></svg>
+        </a>
+        <a href="{{ url_for('profile.dashboard') }}" class="btn btn-ghost btn-sm">{{ t('my_account') }}</a>
+        {% if current_user.store %}
+          <a href="{{ url_for('seller.dashboard') }}" class="btn btn-gold btn-sm">متجري</a>
+        {% else %}
+          <a href="{{ url_for('seller.apply') }}" class="btn btn-gold btn-sm">{{ t('sell_on_shayeb') }}</a>
+        {% endif %}
+        {% if current_user.is_admin %}
+          <a href="{{ url_for('admin.dashboard') }}" class="btn btn-ghost btn-sm">لوحة الإدارة</a>
+        {% endif %}
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-ghost btn-sm">{{ t('logout') }}</a>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}" class="btn btn-ghost btn-sm">{{ t('login') }}</a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm">{{ t('register') }}</a>
+      {% endif %}
+    </nav>
+  </div>
+
+  <div class="cat-strip">
+    <div class="container">
+      <a href="{{ url_for('main.home') }}">{{ t('new') }}</a>
+      <a href="{{ url_for('main.category', slug='men') }}">{{ t('men') }}</a>
+      <a href="{{ url_for('main.category', slug='women') }}">{{ t('women') }}</a>
+      <a href="{{ url_for('main.category', slug='kids') }}">{{ t('kids') }}</a>
+      <a href="{{ url_for('main.category', slug='electronics') }}">{{ t('electronics') }}</a>
+      <a href="{{ url_for('main.home') }}#offers">{{ t('offers') }}</a>
+    </div>
+  </div>
+</header>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="flashes">
+    {% for category, message in messages %}
+      <div class="flash flash-{{ category }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endwith %}
+
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<footer>
+  <div class="container">
+    <div>
+      <div class="brand" style="color:#fff; font-size:1.3rem; margin-bottom:10px">
+        <svg class="leaf" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:26px;height:26px">
+          <path d="M20 4C11 8 6 16 8 26c1.5 7 8 10 14 8-4-2-7-6-7-11 0-8 6-14 13-16-2-2-5-3-8-3Z" fill="#c99a3d"/>
+        </svg>
+        شايب شوب
+      </div>
+      <p style="opacity:.8; font-size:.86rem; max-width:34ch">سوق شايب — مكان يلتقي فيه البائعون والمشترون بثقة وسهولة.</p>
+    </div>
+    <div>
+      <h4>الشركة</h4>
+      <ul>
+        <li><a href="{{ url_for('pages.about') }}">{{ t('about') }}</a></li>
+        <li><a href="{{ url_for('seller.apply') }}">{{ t('sell_on_shayeb') }}</a></li>
+        <li><a href="{{ url_for('pages.track_order') }}">{{ t('track_order') }}</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>سياسات</h4>
+      <ul>
+        <li><a href="{{ url_for('pages.terms') }}">{{ t('terms') }}</a></li>
+        <li><a href="{{ url_for('pages.privacy') }}">{{ t('privacy') }}</a></li>
+        <li><a href="{{ url_for('pages.returns') }}">{{ t('returns') }}</a></li>
+        <li><a href="{{ url_for('pages.seller_agreement') }}">{{ t('seller_agreement') }}</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>تواصل معنا</h4>
+      <ul>
+        <li>support@shayebshop.com</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© {{ 2026 }} SHAYEB SHOP — جميع الحقوق محفوظة</div>
+</footer>
+
+</body>
+</html>

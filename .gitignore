@@ -1,0 +1,23 @@
+# بيئة بايثون
+__pycache__/
+*.pyc
+venv/
+env/
+.venv/
+
+# قاعدة بيانات محلية
+*.db
+*.sqlite3
+
+# متغيرات بيئة حساسة - لا ترفعها أبداً لـ GitHub
+.env
+.env.local
+
+# ملفات مرفوعة من المستخدمين (تُخزن بالاستضافة وليس بالمستودع)
+static/uploads/*
+!static/uploads/.gitkeep
+!static/uploads/**/.gitkeep
+
+# ملفات نظام
+.DS_Store
+*.log

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h1 class="page-title">طلب رقم {{ order.order_number }}</h1>
+  <p>
+    الحالة: <span class="status-pill status-{{ order.status }}">{{ order.status }}</span>
+    &nbsp; حالة الدفع: <span class="status-pill status-{{ order.payment_status }}">{{ order.payment_status }}</span>
+  </p>
+
+  <table class="simple-table" style="margin-top:16px">
+    <thead><tr><th>المنتج</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th><th></th></tr></thead>
+    <tbody>
+    {% for item in order.items %}
+      <tr>
+        <td>{{ item.title_snapshot }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ price(item.unit_price_usd) }}</td>
+        <td>{{ price(item.unit_price_usd * item.quantity) }}</td>
+        <td>
+          {% if order.status == 'completed' %}
+          <form method="post" action="{{ url_for('shop.add_review', order_item_id=item.id) }}" style="display:flex; gap:6px">
+            <select name="rating">
+              <option value="5">★★★★★</option><option value="4">★★★★</option>
+              <option value="3">★★★</option><option value="2">★★</option><option value="1">★</option>
+            </select>
+            <button class="btn btn-gold btn-sm">قيّم</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <p style="margin-top:16px; font-weight:800; font-size:1.1rem">الإجمالي: {{ price(order.total_usd) }}</p>
+
+  {% if order.status in ['processing','confirmed'] %}
+  <form method="post" action="{{ url_for('shop.cancel_order', order_id=order.id) }}">
+    <button class="btn btn-danger">إلغاء الطلب</button>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h1 class="page-title">{{ t('addresses') }}</h1>
+
+  {% if addresses %}
+  <div class="grid-products" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); margin-bottom:30px">
+    {% for a in addresses %}
+    <div class="card-product" style="padding:18px">
+      <div class="body">
+        <span class="title">{{ a.label }} {% if a.is_default %}<span class="status-pill status-approved">افتراضي</span>{% endif %}</span>
+        <span class="store">{{ a.city }} — {{ a.area }}</span>
+        <span class="store">{{ a.street_details }}</span>
+        <span class="store">📞 {{ a.phone }}</span>
+        <form method="post" action="{{ url_for('shop.delete_address', address_id=a.id) }}" style="margin-top:10px">
+          <button class="btn btn-ghost btn-sm">حذف</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="form-card wide" style="margin:0">
+    <h1 style="font-size:1.2rem">إضافة عنوان جديد</h1>
+    <form method="post" action="{{ url_for('shop.add_address') }}">
+      <div class="two-col">
+        <div class="field"><label>اسم العنوان</label><input type="text" name="label" placeholder="المنزل / العمل" required></div>
+        <div class="field"><label>المدينة</label><input type="text" name="city" required></div>
+      </div>
+      <div class="two-col">
+        <div class="field"><label>المنطقة</label><input type="text" name="area"></div>
+        <div class="field"><label>رقم الهاتف</label><input type="tel" name="phone" required></div>
+      </div>
+      <div class="field"><label>تفاصيل الشارع</label><textarea name="street_details" rows="2"></textarea></div>
+      <div class="checkbox-row" style="margin-bottom:16px"><input type="checkbox" name="is_default" id="def"><label for="def">اجعله العنوان الافتراضي</label></div>
+      <button type="submit" class="btn btn-primary">إضافة العنوان</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

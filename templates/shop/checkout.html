@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="form-card wide">
+    <h1>{{ t('checkout') }}</h1>
+    <p class="sub">الإجمالي المطلوب دفعه: <strong>{{ price(total) }}</strong></p>
+
+    <form method="post" enctype="multipart/form-data">
+      <div class="field">
+        <label>عنوان التوصيل</label>
+        {% if addresses %}
+        <select name="address_id" required>
+          {% for a in addresses %}
+          <option value="{{ a.id }}">{{ a.label }} — {{ a.city }} {{ a.area }}</option>
+          {% endfor %}
+        </select>
+        {% else %}
+        <p class="hint" style="color:var(--danger)">ما عندك عنوان محفوظ. <a href="{{ url_for('profile.addresses') }}">أضف عنوان أول من هون</a>.</p>
+        {% endif %}
+      </div>
+
+      <div style="background:var(--green-050); border:1px solid var(--green-100); border-radius:14px; padding:18px; margin:20px 0">
+        <h3 style="margin:0 0 8px; color:var(--green-800,var(--green-700))">💳 الدفع عبر شام كاش</h3>
+        <p style="font-size:.88rem; color:var(--ink-700); margin:0 0 12px">
+          حوّل المبلغ لرقم شام كاش الرسمي لشايب شوب (يظهر لك بعد اختيار العنوان)، وارفق رقم العملية أو صورة الإيصال بالأسفل.
+          بعد التأكد من الدفع من فريقنا، رح يتأكد طلبك تلقائياً.
+        </p>
+        <div class="field">
+          <label>رقم عملية شام كاش</label>
+          <input type="text" name="payment_reference" placeholder="مثال: 45789632">
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label>صورة إيصال الدفع</label>
+          <input type="file" name="payment_proof" accept="image/*">
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">تأكيد الطلب</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

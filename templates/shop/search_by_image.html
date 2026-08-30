@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="form-card wide">
+    <h1>دور بالصورة 📷</h1>
+    <p class="sub">التقط صورة للمنتج يلي بدك ياه أو ارفعها من جهازك، ورح نلاقيلك أشبه المنتجات.</p>
+    <form method="post" enctype="multipart/form-data">
+      <div class="field">
+        <label>صورة المنتج</label>
+        <input type="file" name="photo" accept="image/*" capture="environment" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">دور هلق</button>
+    </form>
+    <p class="hint" style="margin-top:14px">ملاحظة: هاي أول نسخة من ميزة البحث بالصورة، وبتحسّن أكتر مع الوقت.</p>
+  </div>
+
+  {% if uploaded_path %}
+  <section class="section">
+    <div class="section-head"><h2><span class="dot"></span> نتائج مقترحة</h2></div>
+    <div class="grid-products">
+      {% for p in results %}{% include "partials/product_card.html" %}{% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

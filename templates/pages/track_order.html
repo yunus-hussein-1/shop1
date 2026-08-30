@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="form-card">
+    <h1>{{ t('track_order') }}</h1>
+    <form method="post">
+      <div class="field"><label>رقم الطلب</label><input type="text" name="order_number" placeholder="SH-XXXXXXXX" required></div>
+      <button type="submit" class="btn btn-primary btn-block">تتبع</button>
+    </form>
+    {% if searched %}
+      {% if order %}
+      <div style="margin-top:20px">
+        <p>الحالة الحالية: <span class="status-pill status-{{ order.status }}">{{ order.status }}</span></p>
+        <p>حالة الدفع: <span class="status-pill status-{{ order.payment_status }}">{{ order.payment_status }}</span></p>
+      </div>
+      {% else %}
+      <p style="color:var(--danger); margin-top:16px">ما لقينا طلب بهاد الرقم.</p>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

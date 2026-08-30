@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h1 class="page-title">نتائج البحث عن "{{ query }}"</h1>
+  {% if results %}
+  <div class="grid-products" style="margin-top:20px">
+    {% for p in results %}{% include "partials/product_card.html" %}{% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state"><p>ما لقينا نتائج مطابقة. جرّب كلمة تانية أو دور بالصورة.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

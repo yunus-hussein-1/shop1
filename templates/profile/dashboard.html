@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h1 class="page-title">أهلاً، {{ current_user.name }} 👋</h1>
+  <div class="grid-products" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); margin-top:20px">
+    <a href="{{ url_for('profile.edit_info') }}" class="card-product" style="padding:20px"><div class="body"><span class="title">معلوماتي الشخصية</span></div></a>
+    <a href="{{ url_for('profile.addresses') }}" class="card-product" style="padding:20px"><div class="body"><span class="title">{{ t('addresses') }}</span></div></a>
+    <a href="{{ url_for('shop.my_orders') }}" class="card-product" style="padding:20px"><div class="body"><span class="title">{{ t('orders') }}</span></div></a>
+    <a href="{{ url_for('profile.settings') }}" class="card-product" style="padding:20px"><div class="body"><span class="title">{{ t('settings') }}</span></div></a>
+  </div>
+
+  <section class="section">
+    <div class="section-head"><h2><span class="dot"></span> آخر الطلبات</h2><a href="{{ url_for('shop.my_orders') }}">شوف الكل ←</a></div>
+    {% if recent_orders %}
+    <table class="simple-table">
+      <thead><tr><th>رقم الطلب</th><th>التاريخ</th><th>الإجمالي</th><th>الحالة</th></tr></thead>
+      <tbody>
+      {% for o in recent_orders %}
+        <tr><td><a href="{{ url_for('shop.order_detail', order_id=o.id) }}">{{ o.order_number }}</a></td><td>{{ o.created_at.strftime('%Y-%m-%d') }}</td><td>{{ price(o.total_usd) }}</td><td><span class="status-pill status-{{ o.status }}">{{ o.status }}</span></td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p style="color:var(--ink-500)">ما عندك طلبات لسا.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

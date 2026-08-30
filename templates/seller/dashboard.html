@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h1 class="page-title">متجر {{ store.name }}</h1>
+  <p>حالة المتجر: <span class="status-pill status-{{ store.status }}">{{ store.status }}</span></p>
+
+  {% if store.status == 'pending' %}
+  <div class="empty-state"><p>طلبك قيد المراجعة من فريق شايب، رح تنعلم فور الموافقة عليه 🌿</p></div>
+  {% elif store.status == 'rejected' %}
+  <div class="empty-state"><p>للأسف تم رفض طلب متجرك. تواصل معنا لمزيد من التفاصيل.</p></div>
+  {% elif store.status == 'banned' %}
+  <div class="empty-state"><p>هاد المتجر موقوف حالياً من قبل الإدارة.</p></div>
+  {% else %}
+  <a href="{{ url_for('seller.add_product') }}" class="btn btn-primary" style="margin-bottom:24px; display:inline-flex">+ أضف منتج جديد</a>
+
+  <table class="simple-table">
+    <thead><tr><th>المنتج</th><th>الكمية المباعة</th><th>سعر الوحدة</th><th>المتجر</th></tr></thead>
+    <tbody>
+    {% for item in sold_items %}
+      <tr><td>{{ item.title_snapshot }}</td><td>{{ item.quantity }}</td><td>{{ price(item.unit_price_usd) }}</td><td><span class="status-pill status-{{ item.order.status }}">{{ item.order.status }}</span></td></tr>
+    {% else %}
+      <tr><td colspan="4">ما في مبيعات لسا.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <p class="hint" style="margin-top:16px">يتم تحويل مستحقاتك لرقم شام كاش تبعك خلال 7 أيام من كل عملية بيع مؤكدة، بعد خصم عمولة شايب (10%).</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h1 class="page-title">لوحة إدارة شايب</h1>
+
+  <section class="section">
+    <div class="section-head"><h2><span class="dot"></span> طلبات فتح متاجر بانتظار الموافقة</h2></div>
+    <table class="simple-table">
+      <thead><tr><th>المتجر</th><th>المالك</th><th>القسم</th><th></th></tr></thead>
+      <tbody>
+      {% for s in pending_stores %}
+        <tr>
+          <td>{{ s.name }}</td><td>{{ s.owner.name }} ({{ s.owner.email }})</td><td>{{ s.category }}</td>
+          <td style="display:flex; gap:6px">
+            <form method="post" action="{{ url_for('admin.approve_store', store_id=s.id) }}"><button class="btn btn-primary btn-sm">قبول</button></form>
+            <form method="post" action="{{ url_for('admin.reject_store', store_id=s.id) }}"><button class="btn btn-ghost btn-sm">رفض</button></form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="4">لا يوجد طلبات حالياً.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2><span class="dot"></span> طلبات بانتظار تأكيد دفع شام كاش</h2></div>
+    <table class="simple-table">
+      <thead><tr><th>رقم الطلب</th><th>الزبون</th><th>الإجمالي</th><th>رقم العملية</th><th>الإيصال</th><th></th></tr></thead>
+      <tbody>
+      {% for o in pending_payments %}
+        <tr>
+          <td>{{ o.order_number }}</td><td>{{ o.buyer.name }}</td><td>{{ price(o.total_usd) }}</td>
+          <td>{{ o.payment_reference or '—' }}</td>
+          <td>{% if o.payment_proof_path %}<a href="{{ url_for('static', filename=o.payment_proof_path) }}" target="_blank">عرض</a>{% else %}—{% endif %}</td>
+          <td style="display:flex; gap:6px">
+            <form method="post" action="{{ url_for('admin.confirm_payment', order_id=o.id) }}"><button class="btn btn-primary btn-sm">تأكيد الدفع</button></form>
+            <form method="post" action="{{ url_for('admin.reject_payment', order_id=o.id) }}"><button class="btn btn-ghost btn-sm">رفض</button></form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6">لا يوجد طلبات بانتظار التأكيد.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2><span class="dot"></span> شكاوى واستفسارات مفتوحة</h2></div>
+    <table class="simple-table">
+      <thead><tr><th>الموضوع</th><th>المتجر</th><th>التاريخ</th></tr></thead>
+      <tbody>
+      {% for c in open_complaints %}
+        <tr><td>{{ c.subject }}</td><td>{{ c.store.name if c.store else '—' }}</td><td>{{ c.created_at.strftime('%Y-%m-%d') }}</td></tr>
+      {% else %}
+        <tr><td colspan="3">لا يوجد شكاوى مفتوحة.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+{% endblock %}
