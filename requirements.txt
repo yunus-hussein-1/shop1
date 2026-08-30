@@ -5,5 +5,5 @@ Flask-Mail==0.10.0
 Flask-WTF==1.2.1
 Werkzeug==3.0.3
 python-dotenv==1.0.1
-Pillow==10.4.0
+Pillow==12.3.0
 gunicorn==22.0.0
