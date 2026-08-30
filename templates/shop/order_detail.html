@@ -7,6 +7,14 @@
     &nbsp; حالة الدفع: <span class="status-pill status-{{ order.payment_status }}">{{ order.payment_status }}</span>
   </p>
 
+  {% if order.address %}
+  <div style="background:var(--green-050); border:1px solid var(--green-100); border-radius:14px; padding:14px 18px; margin-bottom:16px">
+    <strong>عنوان التوصيل:</strong> {{ order.address.city }} — {{ order.address.area }} — {{ order.address.street_details }} (📞 {{ order.address.phone }})
+    <br>
+    <a class="map-pin" href="https://www.google.com/maps/search/?api=1&query={{ order.address.maps_query | urlencode }}" target="_blank" rel="noopener">📍 شوف عنوان الزبون على الخريطة</a>
+  </div>
+  {% endif %}
+
   <table class="simple-table" style="margin-top:16px">
     <thead><tr><th>المنتج</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th><th></th></tr></thead>
     <tbody>

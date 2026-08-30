@@ -3,7 +3,7 @@ from flask import Flask, session, request
 
 from config import Config
 from extensions import db, login_manager, mail
-from i18n import t
+from i18n import t, brand_name
 from utils import format_price
 
 
@@ -57,6 +57,7 @@ def create_app(config_class=Config):
         return {
             "t": lambda key: t(key, lang),
             "current_lang": lang,
+            "brand_name": brand_name(lang),
             "price": lambda usd: format_price(usd, lang),
             "dir": "rtl" if lang == "ar" else "ltr",
         }

@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
 
 from extensions import db
-from models import Store, Product, Category, OrderItem, Order
+from models import Store, Product, Category, OrderItem, Order, StorePhoto
 from utils import save_image
 
 seller_bp = Blueprint("seller", __name__, url_prefix="/sell")
@@ -19,17 +19,24 @@ def apply():
         category = request.form.get("category", "clothing")
         description = request.form.get("description", "").strip()
         shamcash_number = request.form.get("shamcash_number", "").strip()
+        tax_number = request.form.get("tax_number", "").strip()
         agree = request.form.get("agree_terms")
         logo = request.files.get("logo")
+        store_photos = request.files.getlist("store_photos")
 
-        if not name or not agree or not shamcash_number:
-            flash("عبّي اسم المتجر ورقم شام كاش ووافق على الشروط أول.", "danger")
+        if not name or not agree or not shamcash_number or not tax_number:
+            flash("عبّي اسم المتجر، رقم شام كاش، الرقم الضريبي، ووافق على الشروط أول.", "danger")
+            return render_template("seller/apply.html")
+
+        real_photos = [f for f in store_photos if f and f.filename]
+        if not real_photos:
+            flash("لازم ترفع صورة واحدة عالأقل حقيقية لمحلك.", "danger")
             return render_template("seller/apply.html")
 
         store = Store(
             owner_id=current_user.id, name=name, category=category,
             description=description, shamcash_number=shamcash_number,
-            agreed_to_terms=True, status="pending",
+            tax_number=tax_number, agreed_to_terms=True, status="pending",
         )
         try:
             store.logo_path = save_image(logo, subfolder="stores")
@@ -38,6 +45,17 @@ def apply():
             return render_template("seller/apply.html")
 
         db.session.add(store)
+        db.session.flush()
+
+        try:
+            for f in real_photos[:5]:
+                path = save_image(f, subfolder="store_photos")
+                db.session.add(StorePhoto(store_id=store.id, image_path=path))
+        except ValueError as e:
+            db.session.rollback()
+            flash(str(e), "danger")
+            return render_template("seller/apply.html")
+
         db.session.commit()
         flash("تم إرسال طلبك للبيع على شايب! رح تنراجع من فريقنا وتنعلمك بالنتيجة.", "success")
         return redirect(url_for("seller.dashboard"))

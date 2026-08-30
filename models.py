@@ -19,6 +19,7 @@ class User(UserMixin, db.Model):
     phone = db.Column(db.String(30))
     birth_date = db.Column(db.Date)
     preferred_lang = db.Column(db.String(5), default="ar")
+    avatar_path = db.Column(db.String(255))
 
     is_admin = db.Column(db.Boolean, default=False)
     is_banned = db.Column(db.Boolean, default=False)
@@ -70,6 +71,14 @@ class Address(db.Model):
     street_details = db.Column(db.String(255))
     phone = db.Column(db.String(30))
     is_default = db.Column(db.Boolean, default=False)
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+
+    @property
+    def maps_query(self):
+        """نص العنوان الكامل يُستخدم لفتح خرائط جوجل."""
+        parts = [self.city, self.area, self.street_details]
+        return ", ".join([p for p in parts if p])
 
 
 class Store(db.Model):
@@ -80,12 +89,21 @@ class Store(db.Model):
     category = db.Column(db.String(30))   # clothing / electronics
     description = db.Column(db.Text)
     shamcash_number = db.Column(db.String(40))  # رقم شام كاش لاستلام المستحقات
+    tax_number = db.Column(db.String(60))        # الرقم الضريبي للمحل
 
     status = db.Column(db.String(20), default="pending")  # pending / approved / rejected / banned
     agreed_to_terms = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     products = db.relationship("Product", backref="store", cascade="all, delete-orphan")
+    photos = db.relationship("StorePhoto", backref="store", cascade="all, delete-orphan")
+
+
+class StorePhoto(db.Model):
+    """صور حقيقية للمحل (واجهة المحل، الديكور، إلخ) تُرفع عند طلب الانضمام."""
+    id = db.Column(db.Integer, primary_key=True)
+    store_id = db.Column(db.Integer, db.ForeignKey("store.id"), nullable=False)
+    image_path = db.Column(db.String(255), nullable=False)
 
 
 class Category(db.Model):

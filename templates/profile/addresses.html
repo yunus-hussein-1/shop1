@@ -12,6 +12,7 @@
         <span class="store">{{ a.city }} — {{ a.area }}</span>
         <span class="store">{{ a.street_details }}</span>
         <span class="store">📞 {{ a.phone }}</span>
+        <a class="map-pin" href="https://www.google.com/maps/search/?api=1&query={{ a.maps_query | urlencode }}" target="_blank" rel="noopener">📍 شوف على الخريطة</a>
         <form method="post" action="{{ url_for('shop.delete_address', address_id=a.id) }}" style="margin-top:10px">
           <button class="btn btn-ghost btn-sm">حذف</button>
         </form>

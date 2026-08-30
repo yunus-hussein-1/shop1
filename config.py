@@ -36,8 +36,7 @@ class Config:
     MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER", "SHAYEB SHOP <no-reply@shayebshop.com>")
 
     # إيميل الأدمن العام المسؤول الكامل عن التطبيق (حظر/قبول/رفض متاجر ومستخدمين)
-    # !! غيّر هاد الإيميل لإيميلك الحقيقي قبل الإطلاق !!
-    ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@shayebshop.com")
+    ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "yunuselhuseyin82@gmail.com")
 
     # بريد المتجر العام يلي بيوصلو شكاوى/استفسارات الزبائن (بيتحول لصندوق الأدمن)
     SUPPORT_EMAIL = os.environ.get("SUPPORT_EMAIL", "support@shayebshop.com")
@@ -57,9 +56,10 @@ class Config:
     }
 
     LANGUAGE_CURRENCY_MAP = {
+        # العملة موحّدة ليرة سوري بكل اللغات — كل الدفع الفعلي بيصير عبر شام كاش بالليرة السوري
         "ar": "SYP",
-        "en": "USD",
-        "tr": "TRY",
+        "en": "SYP",
+        "tr": "SYP",
     }
 
     CURRENCY_SYMBOL = {

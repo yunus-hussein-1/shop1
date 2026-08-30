@@ -4,7 +4,8 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user, logout_user
 
 from extensions import db
-from models import Address, Order
+from models import Address, Order, User
+from utils import save_image
 
 profile_bp = Blueprint("profile", __name__, url_prefix="/account")
 
@@ -26,24 +27,24 @@ def dashboard():
 def edit_info():
     if request.method == "POST":
         name = request.form.get("name", "").strip()
-        email = request.form.get("email", "").strip().lower()
         phone = request.form.get("phone", "").strip()
         birth_date = request.form.get("birth_date", "")
-
-        from models import User
-        existing = User.query.filter(User.email == email, User.id != current_user.id).first()
-        if existing:
-            flash("في حساب تاني مستخدم هاد الإيميل.", "danger")
-            return render_template("profile/edit.html")
+        avatar = request.files.get("avatar")
 
         current_user.name = name or current_user.name
-        current_user.email = email or current_user.email
         current_user.phone = phone
         if birth_date:
             try:
                 current_user.birth_date = datetime.strptime(birth_date, "%Y-%m-%d").date()
             except ValueError:
                 pass
+
+        if avatar and avatar.filename:
+            try:
+                current_user.avatar_path = save_image(avatar, subfolder="avatars")
+            except ValueError as e:
+                flash(str(e), "danger")
+                return render_template("profile/edit.html")
 
         db.session.commit()
         flash("تم تحديث معلوماتك بنجاح.", "success")
@@ -65,7 +66,21 @@ def settings():
     if request.method == "POST":
         action = request.form.get("action")
 
-        if action == "change_password":
+        if action == "change_email":
+            new_email = request.form.get("new_email", "").strip().lower()
+            confirm_pw = request.form.get("confirm_password_email", "")
+            if not current_user.check_password(confirm_pw):
+                flash("كلمة السر غير صحيحة، ما تم تغيير الإيميل.", "danger")
+            elif "@" not in new_email or "." not in new_email:
+                flash("الإيميل الجديد غير صحيح.", "danger")
+            elif User.query.filter(User.email == new_email, User.id != current_user.id).first():
+                flash("في حساب تاني مستخدم هاد الإيميل.", "danger")
+            else:
+                current_user.email = new_email
+                db.session.commit()
+                flash("تم تحديث الإيميل بنجاح.", "success")
+
+        elif action == "change_password":
             old_pw = request.form.get("old_password", "")
             new_pw = request.form.get("new_password", "")
             confirm = request.form.get("confirm", "")

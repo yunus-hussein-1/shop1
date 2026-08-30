@@ -29,10 +29,11 @@ with app.app_context():
     admin = User.query.filter_by(email=admin_email).first()
     if not admin:
         admin = User(name="مدير شايب", email=admin_email, is_admin=True)
-        admin.set_password("ChangeMe123!")  # !! لازم تغيّرها فوراً بعد أول دخول !!
+        # كلمة سر مؤقتة قوية بدل الكلمة الضعيفة — غيّرها فوراً من صفحة الإعدادات بعد أول دخول!
+        admin.set_password("lp44!d@hmxHyc9")
         db.session.add(admin)
         db.session.commit()
-        print(f"تم إنشاء حساب أدمن: {admin_email} / كلمة السر المؤقتة: ChangeMe123!")
+        print(f"تم إنشاء حساب أدمن: {admin_email} / كلمة السر المؤقتة: lp44!d@hmxHyc9")
 
     # --- متجر تجريبي + منتجات (للاختبار فقط، احذفهم قبل الإطلاق الحقيقي) ---
     demo_owner = User.query.filter_by(email="demo@shayebshop.com").first()

@@ -1,10 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-  <h1 class="page-title">{{ t('settings') }}</h1>
+  <h1 class="page-title">⚙️ {{ t('settings') }}</h1>
+
   <div class="two-col" style="align-items:start">
     <div class="form-card" style="margin:0">
-      <h1 style="font-size:1.15rem">تغيير كلمة السر</h1>
+      <h1 style="font-size:1.15rem">✉️ تغيير الإيميل</h1>
+      <p class="sub">الإيميل الحالي: {{ current_user.email }}</p>
+      <form method="post">
+        <input type="hidden" name="action" value="change_email">
+        <div class="field"><label>الإيميل الجديد</label><input type="email" name="new_email" required></div>
+        <div class="field"><label>كلمة السر للتأكيد</label><input type="password" name="confirm_password_email" required></div>
+        <button type="submit" class="btn btn-primary btn-block">تحديث الإيميل</button>
+      </form>
+    </div>
+
+    <div class="form-card" style="margin:0">
+      <h1 style="font-size:1.15rem">🔒 تغيير كلمة السر</h1>
       <form method="post">
         <input type="hidden" name="action" value="change_password">
         <div class="field"><label>كلمة السر الحالية</label><input type="password" name="old_password" required></div>
@@ -13,16 +25,27 @@
         <button type="submit" class="btn btn-primary btn-block">تحديث كلمة السر</button>
       </form>
     </div>
+  </div>
 
-    <div class="form-card" style="margin:0; border-color:#f2c6c1">
-      <h1 style="font-size:1.15rem; color:var(--danger)">حذف الحساب نهائياً</h1>
-      <p class="sub">هاد الإجراء لا يمكن التراجع عنه. رح يتم حذف كل بياناتك.</p>
-      <form method="post">
-        <input type="hidden" name="action" value="delete_account">
-        <div class="field"><label>أدخل كلمة السر للتأكيد</label><input type="password" name="confirm_password" required></div>
-        <button type="submit" class="btn btn-danger btn-block">حذف الحساب نهائياً</button>
-      </form>
-    </div>
+  <div class="form-card wide" style="margin:26px auto">
+    <h1 style="font-size:1.15rem">🏪 بيع على {{ brand_name }}</h1>
+    {% if current_user.store %}
+      <p class="sub">عندك متجر مسجّل باسم <strong>{{ current_user.store.name }}</strong> — حالته: <span class="status-pill status-{{ current_user.store.status }}">{{ current_user.store.status }}</span></p>
+      <a href="{{ url_for('seller.dashboard') }}" class="btn btn-gold">افتح لوحة متجري</a>
+    {% else %}
+      <p class="sub">بدك تبيع منتجاتك على {{ brand_name }}؟ الشرط الأساسي: يكون عندك حساب شام كاش فعّال، وتلتزم بقواعد المنصة الصادقة مع كل زبون.</p>
+      <a href="{{ url_for('seller.apply') }}" class="btn btn-gold">{{ t('sell_on_shayeb') }}</a>
+    {% endif %}
+  </div>
+
+  <div class="form-card" style="margin:0 auto; border-color:#f2c6c1">
+    <h1 style="font-size:1.15rem; color:var(--danger)">🗑️ حذف الحساب نهائياً</h1>
+    <p class="sub">هاد الإجراء لا يمكن التراجع عنه. رح يتم حذف كل بياناتك.</p>
+    <form method="post">
+      <input type="hidden" name="action" value="delete_account">
+      <div class="field"><label>أدخل كلمة السر للتأكيد</label><input type="password" name="confirm_password" required></div>
+      <button type="submit" class="btn btn-danger btn-block">حذف الحساب نهائياً</button>
+    </form>
   </div>
 </div>
 {% endblock %}

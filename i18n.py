@@ -1,6 +1,13 @@
 # ترجمات بسيطة للواجهة (عربي / إنجليزي / تركي)
 # لو بدك تضيف كلمة جديدة: زيدها بالقاموس التلاتة بنفس المفتاح
 
+# اسم العلامة التجارية حسب اللغة
+BRAND_NAME = {
+    "ar": "متجر الشايب",
+    "en": "SHAYEB SHOP",
+    "tr": "SHAYEB SHOP",
+}
+
 TRANSLATIONS = {
     "ar": {
         "home": "الرئيسية", "new": "جديد", "men": "رجالي", "women": "نسائي",
@@ -46,3 +53,7 @@ TRANSLATIONS = {
 
 def t(key, lang):
     return TRANSLATIONS.get(lang, TRANSLATIONS["ar"]).get(key, key)
+
+
+def brand_name(lang):
+    return BRAND_NAME.get(lang, BRAND_NAME["ar"])
