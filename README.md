@@ -40,7 +40,7 @@ python app.py
 3. اختر مستودع `shop1` (نفس هاد الكود).
 4. اضبط الإعدادات:
    - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `gunicorn app:app`
+   - **Start Command**: `gunicorn app:app --bind 0.0.0.0:$PORT`
 5. من تبويب **Environment**، ضيف المتغيرات التالية (قيم حقيقية منك، مو القيم الافتراضية بالكود):
    - `SECRET_KEY` → قيمة عشوائية طويلة
    - `ADMIN_EMAIL` → إيميلك الحقيقي
