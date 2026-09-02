@@ -1,5 +1,8 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for
-from models import Product, Category, Review
+from sqlalchemy import func
+from extensions import db
+from models import Product, Category, Review, OrderItem, Order, Favorite
+from flask_login import current_user
 from utils import save_image
 
 main_bp = Blueprint("main", __name__)
@@ -19,9 +22,28 @@ def home():
         .limit(8)
         .all()
     )
+
+    # الأكثر مبيعاً: مجموع الكميات المباعة ضمن طلبات مكتملة
+    best_seller_rows = (
+        db.session.query(OrderItem.product_id, func.sum(OrderItem.quantity).label("sold"))
+        .join(Order, Order.id == OrderItem.order_id)
+        .filter(Order.status == "completed")
+        .group_by(OrderItem.product_id)
+        .order_by(func.sum(OrderItem.quantity).desc())
+        .limit(8)
+        .all()
+    )
+    best_seller_ids = [r[0] for r in best_seller_rows]
+    best_sellers = []
+    if best_seller_ids:
+        products_map = {p.id: p for p in Product.query.filter(Product.id.in_(best_seller_ids), Product.is_active == True)}
+        best_sellers = [products_map[pid] for pid in best_seller_ids if pid in products_map]
+
     categories = Category.query.all()
+
     return render_template(
-        "index.html", new_products=new_products, offer_products=offer_products, categories=categories
+        "index.html", new_products=new_products, offer_products=offer_products,
+        best_sellers=best_sellers, categories=categories,
     )
 
 

@@ -76,6 +76,7 @@
     <nav class="nav-actions" id="navActions">
       {% if current_user.is_authenticated %}
         <a href="{{ url_for('shop.cart') }}" class="icon-link icon-btn" title="{{ t('cart') }}">🛒</a>
+        <a href="{{ url_for('shop.favorites') }}" class="icon-link icon-btn" title="المفضلة">❤️</a>
         <a href="{{ url_for('profile.dashboard') }}" class="btn btn-ghost btn-sm">👤 {{ t('my_account') }}</a>
         {% if current_user.is_admin %}
           <a href="{{ url_for('admin.dashboard') }}" class="btn btn-ghost btn-sm">🛠️ لوحة الإدارة</a>

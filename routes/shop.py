@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash,
 from flask_login import login_required, current_user
 
 from extensions import db
-from models import CartItem, Product, Order, OrderItem, Address, Review
+from models import CartItem, Product, Order, OrderItem, Address, Review, Favorite
 from utils import save_image
 
 shop_bp = Blueprint("shop", __name__)
@@ -206,3 +206,28 @@ def delete_address(address_id):
     db.session.commit()
     flash("تم حذف العنوان.", "info")
     return redirect(url_for("profile.addresses"))
+
+
+# --- المفضلة (Wishlist) ---
+
+@shop_bp.route("/favorites")
+@login_required
+def favorites():
+    items = Favorite.query.filter_by(user_id=current_user.id).order_by(Favorite.created_at.desc()).all()
+    return render_template("shop/favorites.html", items=items)
+
+
+@shop_bp.route("/favorites/toggle/<int:product_id>", methods=["POST"])
+@login_required
+def toggle_favorite(product_id):
+    Product.query.get_or_404(product_id)
+    existing = Favorite.query.filter_by(user_id=current_user.id, product_id=product_id).first()
+    if existing:
+        db.session.delete(existing)
+        db.session.commit()
+        added = False
+    else:
+        db.session.add(Favorite(user_id=current_user.id, product_id=product_id))
+        db.session.commit()
+        added = True
+    return redirect(request.referrer or url_for("main.home"))

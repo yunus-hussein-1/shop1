@@ -33,6 +33,7 @@ class User(UserMixin, db.Model):
     orders = db.relationship("Order", backref="buyer", cascade="all, delete-orphan")
     store = db.relationship("Store", backref="owner", uselist=False, cascade="all, delete-orphan")
     reviews = db.relationship("Review", backref="author", cascade="all, delete-orphan")
+    favorites = db.relationship("Favorite", backref="user", cascade="all, delete-orphan")
 
     def set_password(self, raw):
         self.password_hash = generate_password_hash(raw)
@@ -152,6 +153,18 @@ class CartItem(db.Model):
     quantity = db.Column(db.Integer, default=1)
 
     product = db.relationship("Product")
+
+
+class Favorite(db.Model):
+    """المفضلة (Wishlist) — منتجات حفظها المستخدم للرجوع إلها لاحقاً."""
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    product = db.relationship("Product")
+
+    __table_args__ = (db.UniqueConstraint("user_id", "product_id", name="uq_user_product_fav"),)
 
 
 class Order(db.Model):

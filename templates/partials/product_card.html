@@ -1,19 +1,30 @@
-<a href="{{ url_for('main.product_detail', product_id=p.id) }}" class="card-product">
-  <div class="thumb">
-    {% if p.discount_percent %}<span class="tag">خصم {{ p.discount_percent }}%</span>{% endif %}
-    {% if p.image_path %}
-      <img src="{{ url_for('static', filename=p.image_path) }}" alt="{{ p.title }}">
-    {% endif %}
-  </div>
-  <div class="body">
-    <span class="title">{{ p.title }}</span>
-    <span class="store">{{ p.store.name }}</span>
-    <div class="price-row">
-      <span>
-        <span class="price">{{ price(p.final_price_usd) }}</span>
-        {% if p.discount_percent %}<span class="price-old">{{ price(p.price_usd) }}</span>{% endif %}
-      </span>
-      {% if p.avg_rating %}<span class="rating">★ {{ p.avg_rating }}</span>{% endif %}
+<div class="card-product" style="position:relative">
+  {% if current_user.is_authenticated %}
+  <form method="post" action="{{ url_for('shop.toggle_favorite', product_id=p.id) }}"
+        style="position:absolute; top:10px; inset-inline-end:10px; z-index:2">
+    <button type="submit" class="icon-btn" style="background:rgba(255,255,255,.9); width:32px; height:32px; font-size:.95rem"
+            title="{{ 'إزالة من المفضلة' if p.id in favorite_ids else 'أضف للمفضلة' }}">
+      {{ '❤️' if p.id in favorite_ids else '🤍' }}
+    </button>
+  </form>
+  {% endif %}
+  <a href="{{ url_for('main.product_detail', product_id=p.id) }}" style="display:contents">
+    <div class="thumb">
+      {% if p.discount_percent %}<span class="tag">خصم {{ p.discount_percent }}%</span>{% endif %}
+      {% if p.image_path %}
+        <img src="{{ url_for('static', filename=p.image_path) }}" alt="{{ p.title }}">
+      {% endif %}
     </div>
-  </div>
-</a>
+    <div class="body">
+      <span class="title">{{ p.title }}</span>
+      <span class="store">{{ p.store.name }}</span>
+      <div class="price-row">
+        <span>
+          <span class="price">{{ price(p.final_price_usd) }}</span>
+          {% if p.discount_percent %}<span class="price-old">{{ price(p.price_usd) }}</span>{% endif %}
+        </span>
+        {% if p.avg_rating %}<span class="rating">★ {{ p.avg_rating }}</span>{% endif %}
+      </div>
+    </div>
+  </a>
+</div>

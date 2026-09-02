@@ -54,12 +54,18 @@ def create_app(config_class=Config):
     @app.context_processor
     def inject_globals():
         lang = session.get("lang", "ar")
+        from flask_login import current_user
+        from models import Favorite
+        fav_ids = set()
+        if current_user.is_authenticated:
+            fav_ids = {f.product_id for f in Favorite.query.filter_by(user_id=current_user.id).all()}
         return {
             "t": lambda key: t(key, lang),
             "current_lang": lang,
             "brand_name": brand_name(lang),
             "price": lambda usd: format_price(usd, lang),
             "dir": "rtl" if lang == "ar" else "ltr",
+            "favorite_ids": fav_ids,
         }
 
     # --- رؤوس أمان أساسية على كل استجابة ---
