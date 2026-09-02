@@ -70,11 +70,24 @@ def dashboard():
     if not store:
         return redirect(url_for("seller.apply"))
 
-    sold_items = (
-        OrderItem.query.join(Order).filter(OrderItem.store_id == store.id).all()
-        if store.status == "approved" else []
-    )
-    return render_template("seller/dashboard.html", store=store, sold_items=sold_items)
+    sold_items = []
+    stats = {"orders_count": 0, "total_sold_usd": 0, "net_earnings_usd": 0, "pending_payout_usd": 0}
+
+    if store.status == "approved":
+        sold_items = OrderItem.query.join(Order).filter(OrderItem.store_id == store.id).all()
+        from models import Order as OrderModel
+        completed_or_paid = [i for i in sold_items if i.order.payment_status == "paid"]
+        gross = sum(i.unit_price_usd * i.quantity for i in completed_or_paid)
+        commission_rate = 0.10
+        stats["orders_count"] = len({i.order_id for i in sold_items})
+        stats["total_sold_usd"] = gross
+        stats["net_earnings_usd"] = gross * (1 - commission_rate)
+        stats["pending_payout_usd"] = sum(
+            i.unit_price_usd * i.quantity * (1 - commission_rate)
+            for i in completed_or_paid if i.order.seller_payout_status == "held"
+        )
+
+    return render_template("seller/dashboard.html", store=store, sold_items=sold_items, stats=stats)
 
 
 @seller_bp.route("/products/add", methods=["GET", "POST"])

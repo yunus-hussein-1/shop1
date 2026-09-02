@@ -13,8 +13,35 @@
   {% else %}
   <a href="{{ url_for('seller.add_product') }}" class="btn btn-primary" style="margin-bottom:24px; display:inline-flex">+ أضف منتج جديد</a>
 
+  <div class="grid-products" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); margin-bottom:28px">
+    <div class="card-product" style="padding:20px; text-align:center">
+      <div class="body" style="align-items:center">
+        <span style="font-size:1.6rem; font-weight:900; color:var(--green-700)">{{ stats.orders_count }}</span>
+        <span class="store">عدد الطلبات</span>
+      </div>
+    </div>
+    <div class="card-product" style="padding:20px; text-align:center">
+      <div class="body" style="align-items:center">
+        <span style="font-size:1.6rem; font-weight:900; color:var(--green-700)">{{ price(stats.total_sold_usd) }}</span>
+        <span class="store">إجمالي المبيعات</span>
+      </div>
+    </div>
+    <div class="card-product" style="padding:20px; text-align:center">
+      <div class="body" style="align-items:center">
+        <span style="font-size:1.6rem; font-weight:900; color:var(--gold-600)">{{ price(stats.net_earnings_usd) }}</span>
+        <span class="store">صافي أرباحك (بعد عمولة 10%)</span>
+      </div>
+    </div>
+    <div class="card-product" style="padding:20px; text-align:center">
+      <div class="body" style="align-items:center">
+        <span style="font-size:1.6rem; font-weight:900; color:var(--danger)">{{ price(stats.pending_payout_usd) }}</span>
+        <span class="store">قيد التحويل (خلال 7 أيام)</span>
+      </div>
+    </div>
+  </div>
+
   <table class="simple-table">
-    <thead><tr><th>المنتج</th><th>الكمية المباعة</th><th>سعر الوحدة</th><th>المتجر</th></tr></thead>
+    <thead><tr><th>المنتج</th><th>الكمية المباعة</th><th>سعر الوحدة</th><th>حالة الطلب</th></tr></thead>
     <tbody>
     {% for item in sold_items %}
       <tr><td>{{ item.title_snapshot }}</td><td>{{ item.quantity }}</td><td>{{ price(item.unit_price_usd) }}</td><td><span class="status-pill status-{{ item.order.status }}">{{ item.order.status }}</span></td></tr>

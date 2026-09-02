@@ -1,8 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-  <h1 class="page-title">أهلاً، {{ current_user.name }} 👋</h1>
-  <div class="grid-products" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); margin-top:20px">
+
+  <div class="form-card wide" style="display:flex; align-items:center; gap:22px; margin-top:30px">
+    <div class="avatar-preview" style="width:78px; height:78px; flex:none">
+      {% if current_user.avatar_path %}
+        <img src="{{ url_for('static', filename=current_user.avatar_path) }}" alt="{{ current_user.name }}">
+      {% else %}
+        <span class="placeholder">{{ current_user.name[0] }}</span>
+      {% endif %}
+    </div>
+    <div style="flex:1">
+      <h1 style="margin:0 0 4px">أهلاً، {{ current_user.name }} 👋</h1>
+      <p style="margin:0; color:var(--ink-500); font-size:.86rem">{{ current_user.email }} · عضو منذ {{ current_user.created_at.strftime('%Y-%m-%d') }}</p>
+    </div>
+    <div style="display:flex; gap:22px; text-align:center">
+      <div><div style="font-weight:900; font-size:1.3rem; color:var(--green-700)">{{ stats.orders_count }}</div><div style="font-size:.75rem; color:var(--ink-500)">{{ t('orders') }}</div></div>
+      <div><div style="font-weight:900; font-size:1.3rem; color:var(--green-700)">{{ stats.favorites_count }}</div><div style="font-size:.75rem; color:var(--ink-500)">المفضلة</div></div>
+      <div><div style="font-weight:900; font-size:1.3rem; color:var(--green-700)">{{ stats.addresses_count }}</div><div style="font-size:.75rem; color:var(--ink-500)">{{ t('addresses') }}</div></div>
+    </div>
+  </div>
+
+  <div class="grid-products" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); margin-top:24px">
     <a href="{{ url_for('profile.edit_info') }}" class="card-product" style="padding:20px"><div class="body"><span class="title">معلوماتي الشخصية</span></div></a>
     <a href="{{ url_for('profile.addresses') }}" class="card-product" style="padding:20px"><div class="body"><span class="title">{{ t('addresses') }}</span></div></a>
     <a href="{{ url_for('shop.my_orders') }}" class="card-product" style="padding:20px"><div class="body"><span class="title">{{ t('orders') }}</span></div></a>

@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user, logout_user
 
 from extensions import db
-from models import Address, Order, User
+from models import Address, Order, User, Favorite
 from utils import save_image
 
 profile_bp = Blueprint("profile", __name__, url_prefix="/account")
@@ -19,7 +19,12 @@ def dashboard():
         .limit(5)
         .all()
     )
-    return render_template("profile/dashboard.html", recent_orders=recent_orders)
+    stats = {
+        "orders_count": Order.query.filter_by(buyer_id=current_user.id).count(),
+        "favorites_count": Favorite.query.filter_by(user_id=current_user.id).count(),
+        "addresses_count": Address.query.filter_by(user_id=current_user.id).count(),
+    }
+    return render_template("profile/dashboard.html", recent_orders=recent_orders, stats=stats)
 
 
 @profile_bp.route("/edit", methods=["GET", "POST"])
