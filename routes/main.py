@@ -41,28 +41,69 @@ def home():
 
     categories = Category.query.all()
 
+    recent_ids = session.get("recently_viewed", [])
+    recently_viewed = []
+    if recent_ids:
+        products_map = {p.id: p for p in Product.query.filter(Product.id.in_(recent_ids), Product.is_active == True)}
+        recently_viewed = [products_map[pid] for pid in recent_ids if pid in products_map][:8]
+
     return render_template(
         "index.html", new_products=new_products, offer_products=offer_products,
-        best_sellers=best_sellers, categories=categories,
+        best_sellers=best_sellers, categories=categories, recently_viewed=recently_viewed,
     )
 
 
 @main_bp.route("/category/<slug>")
 def category(slug):
     cat = Category.query.filter_by(slug=slug).first_or_404()
-    products = (
-        Product.query.filter_by(category_id=cat.id, is_active=True)
-        .order_by(Product.created_at.desc())
-        .all()
-    )
-    return render_template("shop/category.html", category=cat, products=products)
+    sort = request.args.get("sort", "newest")
+
+    q = Product.query.filter_by(category_id=cat.id, is_active=True)
+    if sort == "price_asc":
+        q = q.order_by(Product.price_usd.asc())
+    elif sort == "price_desc":
+        q = q.order_by(Product.price_usd.desc())
+    elif sort == "rating":
+        products = q.all()
+        products.sort(key=lambda p: (p.avg_rating or 0), reverse=True)
+        return render_template("shop/category.html", category=cat, products=products, sort=sort)
+    else:
+        q = q.order_by(Product.created_at.desc())
+
+    products = q.all()
+    return render_template("shop/category.html", category=cat, products=products, sort=sort)
+
+
+@main_bp.route("/store/<int:store_id>")
+def store_page(store_id):
+    from models import Store
+    store = Store.query.get_or_404(store_id)
+    products = Product.query.filter_by(store_id=store.id, is_active=True).order_by(Product.created_at.desc()).all()
+    return render_template("shop/store_page.html", store=store, products=products)
 
 
 @main_bp.route("/product/<int:product_id>")
 def product_detail(product_id):
     product = Product.query.get_or_404(product_id)
     reviews = Review.query.filter_by(product_id=product.id).order_by(Review.created_at.desc()).all()
-    return render_template("shop/product.html", product=product, reviews=reviews)
+
+    related_products = (
+        Product.query.filter(
+            Product.category_id == product.category_id,
+            Product.id != product.id,
+            Product.is_active == True,
+        ).limit(4).all()
+    )
+
+    # تتبّع "شوهد مؤخراً" بجلسة الزائر (بدون حساب مستخدم)
+    recent = session.get("recently_viewed", [])
+    recent = [pid for pid in recent if pid != product.id]
+    recent.insert(0, product.id)
+    session["recently_viewed"] = recent[:10]
+
+    return render_template(
+        "shop/product.html", product=product, reviews=reviews, related_products=related_products
+    )
 
 
 @main_bp.route("/search")

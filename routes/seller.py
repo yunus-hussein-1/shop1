@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
 
 from extensions import db
-from models import Store, Product, Category, OrderItem, Order, StorePhoto
+from models import Store, Product, Category, OrderItem, Order, StorePhoto, ProductImage
 from utils import save_image
 
 seller_bp = Blueprint("seller", __name__, url_prefix="/sell")
@@ -109,6 +109,7 @@ def add_product():
         category_id = request.form.get("category_id")
         is_offer = bool(request.form.get("is_shayeb_offer"))
         image = request.files.get("image")
+        extra_images = request.files.getlist("extra_images")
 
         try:
             price_val = float(price)
@@ -139,6 +140,16 @@ def add_product():
             return render_template("seller/add_product.html", categories=categories)
 
         db.session.add(product)
+        db.session.flush()
+
+        try:
+            for i, f in enumerate([f for f in extra_images if f and f.filename][:6]):
+                path = save_image(f, subfolder="products")
+                db.session.add(ProductImage(product_id=product.id, image_path=path, sort_order=i))
+        except ValueError as e:
+            flash(str(e), "danger")
+            return render_template("seller/add_product.html", categories=categories)
+
         db.session.commit()
         flash("تمت إضافة المنتج بنجاح 🎉", "success")
         return redirect(url_for("seller.dashboard"))

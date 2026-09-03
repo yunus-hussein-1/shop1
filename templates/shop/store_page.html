@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="form-card wide" style="display:flex; align-items:center; gap:18px; margin-top:30px">
+    <div class="avatar-preview" style="width:72px; height:72px; flex:none">
+      {% if store.logo_path %}<img src="{{ url_for('static', filename=store.logo_path) }}" alt="{{ store.name }}">
+      {% else %}<span class="placeholder">{{ store.name[0] }}</span>{% endif %}
+    </div>
+    <div>
+      <h1 style="margin:0 0 4px">{{ store.name }}</h1>
+      <p style="margin:0; color:var(--ink-500); font-size:.88rem">{{ store.description or "متجر على " + brand_name }}</p>
+    </div>
+  </div>
+
+  {% if products %}
+  <div class="grid-products" style="margin-top:24px">
+    {% for p in products %}{% include "partials/product_card.html" %}{% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state"><p>ما في منتجات بهاد المتجر لسا.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

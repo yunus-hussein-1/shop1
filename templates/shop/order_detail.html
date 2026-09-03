@@ -15,6 +15,31 @@
   </div>
   {% endif %}
 
+  {% if order.status != 'cancelled' %}
+  {% set steps = ['processing', 'confirmed', 'shipped', 'delivered', 'completed'] %}
+  {% set step_labels = {'processing':'قيد المعالجة','confirmed':'تم التأكيد','shipped':'تم الشحن','delivered':'تم التوصيل','completed':'مكتمل'} %}
+  {% set current_index = steps.index(order.status) if order.status in steps else 0 %}
+  <div style="display:flex; align-items:center; margin:26px 0 30px; overflow-x:auto">
+    {% for s in steps %}
+    <div style="display:flex; align-items:center; flex:1; min-width:100px">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px; flex:none">
+        <div style="width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.8rem;
+                    background:{{ 'var(--green-700)' if loop.index0 <= current_index else 'var(--line)' }};
+                    color:{{ '#fff' if loop.index0 <= current_index else 'var(--ink-500)' }}">
+          {{ '✓' if loop.index0 < current_index else loop.index }}
+        </div>
+        <span style="font-size:.72rem; color:var(--ink-500); text-align:center; white-space:nowrap">{{ step_labels[s] }}</span>
+      </div>
+      {% if not loop.last %}
+      <div style="flex:1; height:3px; background:{{ 'var(--green-700)' if loop.index0 < current_index else 'var(--line)' }}; margin:0 4px; margin-bottom:20px"></div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="flash flash-danger" style="margin:20px 0">هاد الطلب ملغي.</div>
+  {% endif %}
+
   <table class="simple-table" style="margin-top:16px">
     <thead><tr><th>المنتج</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th><th></th></tr></thead>
     <tbody>
@@ -24,7 +49,7 @@
         <td>{{ item.quantity }}</td>
         <td>{{ price(item.unit_price_usd) }}</td>
         <td>{{ price(item.unit_price_usd * item.quantity) }}</td>
-        <td>
+        <td style="display:flex; gap:6px; flex-wrap:wrap">
           {% if order.status == 'completed' %}
           <form method="post" action="{{ url_for('shop.add_review', order_item_id=item.id) }}" style="display:flex; gap:6px">
             <select name="rating">
@@ -33,19 +58,45 @@
             </select>
             <button class="btn btn-gold btn-sm">قيّم</button>
           </form>
+          {% if not item.return_requests %}
+          <button class="btn btn-ghost btn-sm" onclick="document.getElementById('return-form-{{ item.id }}').style.display='flex'">↩️ إرجاع/استبدال</button>
+          {% else %}
+          <span class="status-pill status-{{ item.return_requests[-1].status }}">طلب {{ 'إرجاع' if item.return_requests[-1].request_type=='return' else 'استبدال' }}: {{ item.return_requests[-1].status }}</span>
+          {% endif %}
           {% endif %}
         </td>
       </tr>
+      {% if order.status == 'completed' and not item.return_requests %}
+      <tr id="return-form-{{ item.id }}" style="display:none">
+        <td colspan="5">
+          <form method="post" action="{{ url_for('shop.request_return', order_item_id=item.id) }}" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:10px; background:var(--sand-100); border-radius:10px">
+            <select name="request_type" style="padding:8px; border-radius:8px; border:1.5px solid var(--line)">
+              <option value="return">إرجاع (استرداد المبلغ)</option>
+              <option value="exchange">استبدال</option>
+            </select>
+            <input type="text" name="reason" placeholder="سبب الطلب (اختياري)" style="flex:1; min-width:180px; padding:8px; border-radius:8px; border:1.5px solid var(--line)">
+            <button class="btn btn-primary btn-sm">إرسال الطلب</button>
+          </form>
+        </td>
+      </tr>
+      {% endif %}
     {% endfor %}
     </tbody>
   </table>
 
   <p style="margin-top:16px; font-weight:800; font-size:1.1rem">الإجمالي: {{ price(order.total_usd) }}</p>
 
-  {% if order.status in ['processing','confirmed'] %}
-  <form method="post" action="{{ url_for('shop.cancel_order', order_id=order.id) }}">
-    <button class="btn btn-danger">إلغاء الطلب</button>
-  </form>
-  {% endif %}
+  <div style="display:flex; gap:10px; flex-wrap:wrap">
+    {% if order.status in ['processing','confirmed'] %}
+    <form method="post" action="{{ url_for('shop.cancel_order', order_id=order.id) }}">
+      <button class="btn btn-danger">إلغاء الطلب</button>
+    </form>
+    {% endif %}
+    {% if order.status == 'completed' %}
+    <form method="post" action="{{ url_for('shop.reorder', order_id=order.id) }}">
+      <button class="btn btn-primary">🔁 اطلب نفس الطلبية مرة تانية</button>
+    </form>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}

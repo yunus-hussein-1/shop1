@@ -59,5 +59,28 @@
       </tbody>
     </table>
   </section>
+
+  <section class="section">
+    <div class="section-head"><h2><span class="dot"></span> طلبات إرجاع/استبدال بانتظار المراجعة</h2></div>
+    <table class="simple-table">
+      <thead><tr><th>المنتج</th><th>الزبون</th><th>النوع</th><th>السبب</th><th></th></tr></thead>
+      <tbody>
+      {% for r in pending_returns %}
+        <tr>
+          <td>{{ r.order_item.title_snapshot }}</td>
+          <td>{{ r.user.name }}</td>
+          <td>{{ 'إرجاع' if r.request_type == 'return' else 'استبدال' }}</td>
+          <td>{{ r.reason or '—' }}</td>
+          <td style="display:flex; gap:6px">
+            <form method="post" action="{{ url_for('admin.approve_return', return_id=r.id) }}"><button class="btn btn-primary btn-sm">قبول</button></form>
+            <form method="post" action="{{ url_for('admin.reject_return', return_id=r.id) }}"><button class="btn btn-ghost btn-sm">رفض</button></form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5">لا يوجد طلبات إرجاع حالياً.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
 </div>
 {% endblock %}

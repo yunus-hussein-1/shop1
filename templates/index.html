@@ -116,6 +116,17 @@
   </section>
   {% endif %}
 
+  {% if recently_viewed %}
+  <section class="section">
+    <div class="section-head"><h2><span class="dot"></span> 👁️ شوهد مؤخراً</h2></div>
+    <div class="grid-products">
+      {% for p in recently_viewed %}
+        {% include "partials/product_card.html" %}
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
 </div>
 
 <script>

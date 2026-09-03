@@ -1,9 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-  <h1 class="page-title">
-    {% if current_lang=='ar' %}{{ category.name_ar }}{% elif current_lang=='tr' %}{{ category.name_tr }}{% else %}{{ category.name_en }}{% endif %}
-  </h1>
+  <div class="section-head" style="margin-top:30px">
+    <h1 class="page-title" style="margin:0">
+      {% if current_lang=='ar' %}{{ category.name_ar }}{% elif current_lang=='tr' %}{{ category.name_tr }}{% else %}{{ category.name_en }}{% endif %}
+    </h1>
+    <form method="get" style="display:flex; align-items:center; gap:8px">
+      <label style="font-size:.85rem; color:var(--ink-500)">فرز حسب:</label>
+      <select name="sort" onchange="this.form.submit()" style="padding:8px 12px; border:1.5px solid var(--line); border-radius:9px">
+        <option value="newest" {{ 'selected' if sort=='newest' }}>الأحدث</option>
+        <option value="price_asc" {{ 'selected' if sort=='price_asc' }}>السعر: من الأقل للأعلى</option>
+        <option value="price_desc" {{ 'selected' if sort=='price_desc' }}>السعر: من الأعلى للأقل</option>
+        <option value="rating" {{ 'selected' if sort=='rating' }}>الأعلى تقييماً</option>
+      </select>
+    </form>
+  </div>
   {% if products %}
   <div class="grid-products" style="margin-top:20px">
     {% for p in products %}{% include "partials/product_card.html" %}{% endfor %}

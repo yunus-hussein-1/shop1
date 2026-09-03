@@ -133,6 +133,7 @@ class Product(db.Model):
 
     category = db.relationship("Category")
     reviews = db.relationship("Review", backref="product", cascade="all, delete-orphan")
+    images = db.relationship("ProductImage", backref="product", cascade="all, delete-orphan", order_by="ProductImage.sort_order")
 
     @property
     def final_price_usd(self):
@@ -144,6 +145,22 @@ class Product(db.Model):
     def avg_rating(self):
         vals = [r.rating for r in self.reviews]
         return round(sum(vals) / len(vals), 1) if vals else None
+
+    @property
+    def gallery(self):
+        """كل صور المنتج بترتيبها؛ الصورة الرئيسية القديمة أول واحدة دايماً."""
+        extra = [im.image_path for im in self.images]
+        if self.image_path and self.image_path not in extra:
+            return [self.image_path] + extra
+        return extra or ([self.image_path] if self.image_path else [])
+
+
+class ProductImage(db.Model):
+    """صور إضافية للمنتج (معرض صور)."""
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)
+    image_path = db.Column(db.String(255), nullable=False)
+    sort_order = db.Column(db.Integer, default=0)
 
 
 class CartItem(db.Model):
@@ -207,6 +224,7 @@ class OrderItem(db.Model):
 
     product = db.relationship("Product")
     store = db.relationship("Store")
+    return_requests = db.relationship("ReturnRequest", backref="order_item", cascade="all, delete-orphan")
 
 
 class Review(db.Model):
@@ -241,3 +259,16 @@ class Report(db.Model):
     reason = db.Column(db.Text)
     status = db.Column(db.String(20), default="open")
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class ReturnRequest(db.Model):
+    """طلب إرجاع/استبدال منتج من طلب مكتمل."""
+    id = db.Column(db.Integer, primary_key=True)
+    order_item_id = db.Column(db.Integer, db.ForeignKey("order_item.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    request_type = db.Column(db.String(20), default="return")  # return / exchange
+    reason = db.Column(db.Text)
+    status = db.Column(db.String(20), default="pending")  # pending / approved / rejected
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship("User")

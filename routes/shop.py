@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash,
 from flask_login import login_required, current_user
 
 from extensions import db
-from models import CartItem, Product, Order, OrderItem, Address, Review, Favorite
+from models import CartItem, Product, Order, OrderItem, Address, Review, Favorite, ReturnRequest
 from utils import save_image
 
 shop_bp = Blueprint("shop", __name__)
@@ -166,6 +166,56 @@ def add_review(order_item_id):
     db.session.commit()
     flash("شكراً إلك على تقييمك 🌟", "success")
     return redirect(url_for("main.product_detail", product_id=oi.product_id))
+
+
+@shop_bp.route("/orders/<int:order_item_id>/return", methods=["POST"])
+@login_required
+def request_return(order_item_id):
+    oi = OrderItem.query.get_or_404(order_item_id)
+    if oi.order.buyer_id != current_user.id:
+        flash("مو مسموح.", "danger")
+        return redirect(url_for("shop.my_orders"))
+    if oi.order.status != "completed":
+        flash("فيك تطلب إرجاع/استبدال بس بعد اكتمال الطلب.", "warning")
+        return redirect(url_for("shop.order_detail", order_id=oi.order_id))
+
+    rr = ReturnRequest(
+        order_item_id=oi.id, user_id=current_user.id,
+        request_type=request.form.get("request_type", "return"),
+        reason=request.form.get("reason", "").strip(),
+    )
+    db.session.add(rr)
+    db.session.commit()
+    flash("تم إرسال طلب الإرجاع/الاستبدال، وفريق شايب رح يتواصل معك قريباً.", "success")
+    return redirect(url_for("shop.order_detail", order_id=oi.order_id))
+
+
+@shop_bp.route("/orders/<int:order_id>/reorder", methods=["POST"])
+@login_required
+def reorder(order_id):
+    order = Order.query.get_or_404(order_id)
+    if order.buyer_id != current_user.id:
+        flash("مو مسموح.", "danger")
+        return redirect(url_for("shop.my_orders"))
+
+    added = 0
+    for item in order.items:
+        product = Product.query.get(item.product_id)
+        if not product or not product.is_active:
+            continue
+        existing = CartItem.query.filter_by(user_id=current_user.id, product_id=product.id).first()
+        if existing:
+            existing.quantity += item.quantity
+        else:
+            db.session.add(CartItem(user_id=current_user.id, product_id=product.id, quantity=item.quantity))
+        added += 1
+    db.session.commit()
+
+    if added:
+        flash("تمت إضافة منتجات الطلبية السابقة لسلتك 🛒", "success")
+        return redirect(url_for("shop.cart"))
+    flash("للأسف المنتجات بهاد الطلبية ما عادت متوفرة.", "warning")
+    return redirect(url_for("shop.order_detail", order_id=order.id))
 
 
 # --- إدارة العناوين ---

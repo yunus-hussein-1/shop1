@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
 
 from extensions import db
-from models import Store, User, Order, Complaint, Report
+from models import Store, User, Order, Complaint, Report, ReturnRequest
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -27,12 +27,14 @@ def dashboard():
     pending_payments = Order.query.filter_by(payment_status="pending_verification").all()
     open_complaints = Complaint.query.filter_by(status="open").all()
     open_reports = Report.query.filter_by(status="open").all()
+    pending_returns = ReturnRequest.query.filter_by(status="pending").all()
     return render_template(
         "admin/dashboard.html",
         pending_stores=pending_stores,
         pending_payments=pending_payments,
         open_complaints=open_complaints,
         open_reports=open_reports,
+        pending_returns=pending_returns,
     )
 
 
@@ -101,4 +103,26 @@ def reject_payment(order_id):
     order.status = "cancelled"
     db.session.commit()
     flash(f"تم رفض إثبات دفع الطلب {order.order_number}.", "warning")
+    return redirect(url_for("admin.dashboard"))
+
+
+@admin_bp.route("/returns/<int:return_id>/approve", methods=["POST"])
+@login_required
+@admin_required
+def approve_return(return_id):
+    rr = ReturnRequest.query.get_or_404(return_id)
+    rr.status = "approved"
+    db.session.commit()
+    flash("تم قبول طلب الإرجاع/الاستبدال.", "success")
+    return redirect(url_for("admin.dashboard"))
+
+
+@admin_bp.route("/returns/<int:return_id>/reject", methods=["POST"])
+@login_required
+@admin_required
+def reject_return(return_id):
+    rr = ReturnRequest.query.get_or_404(return_id)
+    rr.status = "rejected"
+    db.session.commit()
+    flash("تم رفض طلب الإرجاع/الاستبدال.", "info")
     return redirect(url_for("admin.dashboard"))
