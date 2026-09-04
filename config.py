@@ -41,6 +41,11 @@ class Config:
     # بريد المتجر العام يلي بيوصلو شكاوى/استفسارات الزبائن (بيتحول لصندوق الأدمن)
     SUPPORT_EMAIL = os.environ.get("SUPPORT_EMAIL", "support@shayebshop.com")
 
+    # بيانات شام كاش الرسمية للشركة (تظهر للزبون وقت الدفع)
+    # !! استبدل static/shamcash_qr.png بصورة الباركود الحقيقية من تطبيق شام كاش تبعك، وحدّث الرقم هون !!
+    SHAMCASH_NUMBER = os.environ.get("SHAMCASH_NUMBER", "0999999999")
+    SHAMCASH_QR_PATH = "shamcash_qr.png"
+
     # عمولة المنصة على كل عملية بيع
     PLATFORM_COMMISSION_PERCENT = 10
 

@@ -21,17 +21,26 @@
 
       <div style="background:var(--green-050); border:1px solid var(--green-100); border-radius:14px; padding:18px; margin:20px 0">
         <h3 style="margin:0 0 8px; color:var(--green-800,var(--green-700))">💳 الدفع عبر شام كاش</h3>
-        <p style="font-size:.88rem; color:var(--ink-700); margin:0 0 12px">
-          حوّل المبلغ لرقم شام كاش الرسمي لشايب شوب (يظهر لك بعد اختيار العنوان)، وارفق رقم العملية أو صورة الإيصال بالأسفل.
-          بعد التأكد من الدفع من فريقنا، رح يتأكد طلبك تلقائياً.
+        <p style="font-size:.88rem; color:var(--ink-700); margin:0 0 14px">
+          امسح الباركود التالي من تطبيق شام كاش عندك، أو حوّل يدوياً لرقم شام كاش الرسمي بالأسفل. بعدها ارفق رقم العملية أو صورة الإيصال.
         </p>
+
+        <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap; margin-bottom:16px">
+          <img src="{{ url_for('static', filename=config.SHAMCASH_QR_PATH) }}" alt="باركود شام كاش" style="width:150px; height:auto; border-radius:12px; border:1px solid var(--line); background:#fff; padding:6px">
+          <div>
+            <p style="margin:0 0 6px; font-weight:700">رقم شام كاش الرسمي:</p>
+            <p style="margin:0; font-size:1.2rem; font-weight:900; color:var(--green-700); direction:ltr; text-align:right">{{ config.SHAMCASH_NUMBER }}</p>
+            <a href="{{ url_for('static', filename=config.SHAMCASH_QR_PATH) }}" download class="btn btn-ghost btn-sm" style="margin-top:10px; display:inline-flex">⬇️ تحميل صورة الباركود</a>
+          </div>
+        </div>
+
         <div class="field">
-          <label>رقم عملية شام كاش</label>
+          <label>رقم عملية شام كاش (اختياري إذا رفعت الإيصال)</label>
           <input type="text" name="payment_reference" placeholder="مثال: 45789632">
         </div>
         <div class="field" style="margin-bottom:0">
-          <label>صورة إيصال الدفع</label>
-          <input type="file" name="payment_proof" accept="image/*">
+          <label>صورة إيصال الدفع (من تطبيق شام كاش بعد إتمام التحويل)</label>
+          <input type="file" name="payment_proof" accept="image/*" capture="environment">
         </div>
       </div>
 
