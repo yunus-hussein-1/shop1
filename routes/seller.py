@@ -90,6 +90,44 @@ def dashboard():
     return render_template("seller/dashboard.html", store=store, sold_items=sold_items, stats=stats)
 
 
+@seller_bp.route("/report")
+@login_required
+def report():
+    store = current_user.store
+    if not store or store.status != "approved":
+        return redirect(url_for("seller.dashboard"))
+
+    from datetime import datetime as dt
+    from sqlalchemy import func
+
+    sold_items = OrderItem.query.join(Order).filter(OrderItem.store_id == store.id).all()
+
+    best_seller_row = (
+        db.session.query(OrderItem.product_id, func.sum(OrderItem.quantity).label("qty"))
+        .filter(OrderItem.store_id == store.id)
+        .group_by(OrderItem.product_id)
+        .order_by(func.sum(OrderItem.quantity).desc())
+        .first()
+    )
+    best_product = Product.query.get(best_seller_row[0]) if best_seller_row else None
+    best_qty = best_seller_row[1] if best_seller_row else 0
+
+    paid_items = [i for i in sold_items if i.order.payment_status == "paid"]
+    gross = sum(i.unit_price_usd * i.quantity for i in paid_items)
+
+    report_data = {
+        "generated_at": dt.utcnow(),
+        "orders_count": len({i.order_id for i in sold_items}),
+        "items_count": sum(i.quantity for i in sold_items),
+        "gross_usd": gross,
+        "commission_usd": gross * 0.10,
+        "net_usd": gross * 0.90,
+        "best_product": best_product,
+        "best_qty": best_qty,
+    }
+    return render_template("seller/report.html", store=store, sold_items=sold_items, report=report_data)
+
+
 @seller_bp.route("/products/add", methods=["GET", "POST"])
 @login_required
 def add_product():

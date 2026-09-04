@@ -60,3 +60,22 @@ def notify_user(user_id, message, link=None):
     n = Notification(user_id=user_id, message=message, link=link)
     db.session.add(n)
     return n
+
+
+def send_order_email(user_email, subject, body):
+    """يبعت إيميل فوري متعلق بالطلب. بحال البريد مش مفعّل أو السيرفر بطيء، بيفشل بصمت
+    خلال ثوانٍ معدودة بدل ما يعلّق عملية الشراء بالكامل."""
+    import socket
+    from extensions import mail
+    from flask_mail import Message
+
+    old_timeout = socket.getdefaulttimeout()
+    socket.setdefaulttimeout(5)  # لا تنتظر أكتر من 5 ثواني على اتصال البريد
+    try:
+        msg = Message(subject=subject, recipients=[user_email], body=body)
+        mail.send(msg)
+        return True
+    except Exception:
+        return False
+    finally:
+        socket.setdefaulttimeout(old_timeout)

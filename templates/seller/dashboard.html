@@ -12,6 +12,7 @@
   <div class="empty-state"><p>هاد المتجر موقوف حالياً من قبل الإدارة.</p></div>
   {% else %}
   <a href="{{ url_for('seller.add_product') }}" class="btn btn-primary" style="margin-bottom:24px; display:inline-flex">+ أضف منتج جديد</a>
+  <a href="{{ url_for('seller.report') }}" class="btn btn-ghost" style="margin-bottom:24px; margin-inline-start:10px; display:inline-flex">🧾 تقرير المبيعات</a>
 
   <div class="grid-products" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); margin-bottom:28px">
     <div class="card-product" style="padding:20px; text-align:center">

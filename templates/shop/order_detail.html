@@ -52,21 +52,23 @@
   {% endif %}
 
   <table class="simple-table" style="margin-top:16px">
-    <thead><tr><th>المنتج</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th><th></th></tr></thead>
+    <thead><tr><th>المنتج</th><th>المتجر</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th><th></th></tr></thead>
     <tbody>
     {% for item in order.items %}
       <tr>
         <td>{{ item.title_snapshot }}</td>
+        <td><a href="{{ url_for('main.store_page', store_id=item.store_id) }}" style="color:var(--green-700)">{{ item.store.name }}</a></td>
         <td>{{ item.quantity }}</td>
         <td>{{ price(item.unit_price_usd) }}</td>
         <td>{{ price(item.unit_price_usd * item.quantity) }}</td>
         <td style="display:flex; gap:6px; flex-wrap:wrap">
           {% if order.status == 'completed' %}
-          <form method="post" action="{{ url_for('shop.add_review', order_item_id=item.id) }}" style="display:flex; gap:6px">
+          <form method="post" action="{{ url_for('shop.add_review', order_item_id=item.id) }}" enctype="multipart/form-data" style="display:flex; gap:6px; flex-wrap:wrap; align-items:center">
             <select name="rating">
               <option value="5">★★★★★</option><option value="4">★★★★</option>
               <option value="3">★★★</option><option value="2">★★</option><option value="1">★</option>
             </select>
+            <input type="file" name="photo" accept="image/*" style="max-width:130px; font-size:.72rem">
             <button class="btn btn-gold btn-sm">قيّم</button>
           </form>
           {% if not item.return_requests %}
@@ -79,7 +81,7 @@
       </tr>
       {% if order.status == 'completed' and not item.return_requests %}
       <tr id="return-form-{{ item.id }}" style="display:none">
-        <td colspan="5">
+        <td colspan="6">
           <form method="post" action="{{ url_for('shop.request_return', order_item_id=item.id) }}" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:10px; background:var(--sand-100); border-radius:10px">
             <select name="request_type" style="padding:8px; border-radius:8px; border:1.5px solid var(--line)">
               <option value="return">إرجاع (استرداد المبلغ)</option>

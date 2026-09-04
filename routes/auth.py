@@ -105,12 +105,18 @@ def forgot_password():
             prc = PasswordResetCode.new_for(user)
             db.session.commit()
             try:
-                msg = Message(
-                    subject="كود استعادة كلمة السر - SHAYEB SHOP",
-                    recipients=[user.email],
-                    body=f"كود استعادة كلمة السر تبعك: {prc.code}\nصالح لمدة 15 دقيقة فقط.",
-                )
-                mail.send(msg)
+                import socket
+                old_timeout = socket.getdefaulttimeout()
+                socket.setdefaulttimeout(5)
+                try:
+                    msg = Message(
+                        subject="كود استعادة كلمة السر - SHAYEB SHOP",
+                        recipients=[user.email],
+                        body=f"كود استعادة كلمة السر تبعك: {prc.code}\nصالح لمدة 15 دقيقة فقط.",
+                    )
+                    mail.send(msg)
+                finally:
+                    socket.setdefaulttimeout(old_timeout)
             except Exception:
                 # بحال إعدادات البريد مش مفعّلة بعد، منعرض الكود بالشاشة (بيئة تطوير فقط!)
                 flash(f"[وضع تجريبي - بدون إرسال بريد حقيقي] الكود: {prc.code}", "info")

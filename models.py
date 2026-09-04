@@ -99,6 +99,22 @@ class Store(db.Model):
     products = db.relationship("Product", backref="store", cascade="all, delete-orphan")
     photos = db.relationship("StorePhoto", backref="store", cascade="all, delete-orphan")
 
+    @property
+    def completed_sales_count(self):
+        from sqlalchemy import func
+        result = (
+            db.session.query(func.count(OrderItem.id))
+            .join(Order, Order.id == OrderItem.order_id)
+            .filter(OrderItem.store_id == self.id, Order.status == "completed")
+            .scalar()
+        )
+        return result or 0
+
+    @property
+    def is_verified(self):
+        """متجر موثوق تلقائياً بعد 5 عمليات بيع مكتملة عالأقل."""
+        return self.completed_sales_count >= 5
+
 
 class StorePhoto(db.Model):
     """صور حقيقية للمحل (واجهة المحل، الديكور، إلخ) تُرفع عند طلب الانضمام."""
@@ -251,6 +267,7 @@ class Review(db.Model):
     order_item_id = db.Column(db.Integer, db.ForeignKey("order_item.id"))
     rating = db.Column(db.Integer, nullable=False)  # 1-5
     comment = db.Column(db.Text)
+    photo_path = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 

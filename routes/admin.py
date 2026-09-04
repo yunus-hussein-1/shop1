@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 
 from extensions import db
 from models import Store, User, Order, Complaint, Report, ReturnRequest
-from utils import notify_user
+from utils import notify_user, send_order_email
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -91,6 +91,7 @@ def confirm_payment(order_id):
     order.payment_status = "paid"
     order.status = "confirmed"
     notify_user(order.buyer_id, f"تم تأكيد دفع طلبك رقم {order.order_number} ✅", link=url_for("shop.order_detail", order_id=order.id))
+    send_order_email(order.buyer.email, f"تم تأكيد دفع طلبك {order.order_number}", f"تم تأكيد دفعك بنجاح، وطلبك رقم {order.order_number} قيد التجهيز الآن.")
     db.session.commit()
     flash(f"تم تأكيد دفع الطلب {order.order_number}.", "success")
     return redirect(url_for("admin.dashboard"))
@@ -104,6 +105,7 @@ def reject_payment(order_id):
     order.payment_status = "failed"
     order.status = "cancelled"
     notify_user(order.buyer_id, f"للأسف تم رفض إثبات دفع طلبك رقم {order.order_number}، تواصل معنا للمساعدة.", link=url_for("shop.order_detail", order_id=order.id))
+    send_order_email(order.buyer.email, f"مشكلة بدفع طلبك {order.order_number}", f"للأسف ما قدرنا نأكد دفع طلبك رقم {order.order_number}. تواصل معنا على support@alshayebshop.com للمساعدة.")
     db.session.commit()
     flash(f"تم رفض إثبات دفع الطلب {order.order_number}.", "warning")
     return redirect(url_for("admin.dashboard"))
@@ -121,6 +123,7 @@ def advance_order_status(order_id):
         order.status = next_status
         if next_status in labels:
             notify_user(order.buyer_id, f"{labels[next_status]} — طلب رقم {order.order_number}", link=url_for("shop.order_detail", order_id=order.id))
+            send_order_email(order.buyer.email, f"تحديث حالة طلبك {order.order_number}", f"{labels[next_status]}\n\nطلب رقم: {order.order_number}")
         db.session.commit()
         flash(f"تم تحديث حالة الطلب إلى: {next_status}", "success")
     return redirect(url_for("shop.order_detail", order_id=order.id))

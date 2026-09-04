@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+@media print {
+  .navbar, .promo-marquee, .topbar, footer, #pageLoader, .no-print { display:none !important; }
+  body { background:#fff !important; }
+}
+</style>
+<div class="container">
+  <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin:26px 0">
+    <h1 class="page-title" style="margin:0">🧾 تقرير مبيعات {{ store.name }}</h1>
+    <button onclick="window.print()" class="btn btn-primary">🖨️ طباعة / حفظ PDF</button>
+  </div>
+
+  <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:26px">
+    <div style="display:flex; justify-content:space-between; border-bottom:2px solid var(--green-600); padding-bottom:16px; margin-bottom:20px">
+      <div>
+        <strong style="font-size:1.2rem">{{ store.name }}</strong><br>
+        <span style="font-size:.82rem; color:var(--ink-500)">تقرير صادر عن {{ brand_name }}</span>
+      </div>
+      <div style="text-align:end; font-size:.82rem; color:var(--ink-500)">
+        تاريخ الإصدار: {{ report.generated_at.strftime('%Y-%m-%d %H:%M') }}
+      </div>
+    </div>
+
+    <div class="grid-products" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); margin-bottom:24px">
+      <div class="card-product" style="padding:16px; text-align:center"><div class="body" style="align-items:center">
+        <span style="font-size:1.4rem; font-weight:900; color:var(--green-700)">{{ report.orders_count }}</span>
+        <span class="store">عدد الطلبات</span>
+      </div></div>
+      <div class="card-product" style="padding:16px; text-align:center"><div class="body" style="align-items:center">
+        <span style="font-size:1.4rem; font-weight:900; color:var(--green-700)">{{ report.items_count }}</span>
+        <span class="store">القطع المباعة</span>
+      </div></div>
+      <div class="card-product" style="padding:16px; text-align:center"><div class="body" style="align-items:center">
+        <span style="font-size:1.4rem; font-weight:900; color:var(--green-700)">{{ price(report.gross_usd) }}</span>
+        <span class="store">إجمالي المبيعات</span>
+      </div></div>
+      <div class="card-product" style="padding:16px; text-align:center"><div class="body" style="align-items:center">
+        <span style="font-size:1.4rem; font-weight:900; color:var(--gold-600)">{{ price(report.net_usd) }}</span>
+        <span class="store">صافي أرباحك</span>
+      </div></div>
+    </div>
+
+    {% if report.best_product %}
+    <p style="margin-bottom:20px">🏆 <strong>أفضل منتج مبيعاً:</strong> {{ report.best_product.title }} ({{ report.best_qty }} قطعة)</p>
+    {% endif %}
+
+    <table class="simple-table">
+      <thead><tr><th>المنتج</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th><th>حالة الطلب</th></tr></thead>
+      <tbody>
+      {% for item in sold_items %}
+        <tr>
+          <td>{{ item.title_snapshot }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ price(item.unit_price_usd) }}</td>
+          <td>{{ price(item.unit_price_usd * item.quantity) }}</td>
+          <td><span class="status-pill status-{{ item.order.status }}">{{ item.order.status }}</span></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5">ما في مبيعات لسا.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

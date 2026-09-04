@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 
 from extensions import db
 from models import CartItem, Product, Order, OrderItem, Address, Review, Favorite, ReturnRequest
-from utils import save_image
+from utils import save_image, send_order_email
 
 shop_bp = Blueprint("shop", __name__)
 
@@ -128,6 +128,12 @@ def checkout():
             db.session.delete(i)
 
         db.session.commit()
+        send_order_email(
+            current_user.email,
+            f"تم استلام طلبك رقم {order.order_number} - {current_app.config.get('SUPPORT_EMAIL','')}",
+            f"أهلاً {current_user.name}،\n\nتم استلام طلبك رقم {order.order_number} بإجمالي {total:.2f}$.\n"
+            f"رح يتأكد فريقنا من الدفع خلال وقت قصير ونعلمك فور التأكيد.\n\nشكراً لثقتك فينا 🌿",
+        )
         flash("تم استلام طلبك! رح يتأكد فريق شايب من الدفع خلال وقت قصير.", "success")
         return redirect(url_for("shop.order_detail", order_id=order.id))
 
@@ -185,6 +191,13 @@ def add_review(order_item_id):
         product_id=oi.product_id, user_id=current_user.id,
         order_item_id=oi.id, rating=rating, comment=comment,
     )
+    photo = request.files.get("photo")
+    if photo and photo.filename:
+        try:
+            review.photo_path = save_image(photo, subfolder="reviews")
+        except ValueError as e:
+            flash(str(e), "danger")
+            return redirect(url_for("shop.order_detail", order_id=oi.order_id))
     db.session.add(review)
     db.session.commit()
     flash("شكراً إلك على تقييمك 🌟", "success")
