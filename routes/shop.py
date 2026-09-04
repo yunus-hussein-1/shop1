@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app
+from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app, session, jsonify
 from flask_login import login_required, current_user
 
 from extensions import db
@@ -16,6 +16,29 @@ def cart():
     items = CartItem.query.filter_by(user_id=current_user.id).all()
     total = sum(i.product.final_price_usd * i.quantity for i in items)
     return render_template("shop/cart.html", items=items, total=total)
+
+
+@shop_bp.route("/cart/mini")
+@login_required
+def mini_cart():
+    from utils import format_price
+    items = CartItem.query.filter_by(user_id=current_user.id).all()
+    total = sum(i.product.final_price_usd * i.quantity for i in items)
+    data = {
+        "items": [
+            {
+                "id": i.id,
+                "title": i.product.title,
+                "image": url_for("static", filename=i.product.image_path) if i.product.image_path else "",
+                "quantity": i.quantity,
+                "price": format_price(i.product.final_price_usd * i.quantity, session.get("lang", "ar")),
+            }
+            for i in items
+        ],
+        "total": format_price(total, session.get("lang", "ar")),
+        "count": sum(i.quantity for i in items),
+    }
+    return jsonify(data)
 
 
 @shop_bp.route("/cart/add/<int:product_id>", methods=["POST"])

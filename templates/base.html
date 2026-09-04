@@ -22,6 +22,12 @@
 </head>
 <body>
 
+<div class="promo-marquee">
+  <div class="container">
+    <span id="promoText">🎉 عروض حصرية اليوم على شايب شوب</span>
+  </div>
+</div>
+
 <div class="topbar">
   <div class="container">
     <div class="topbar-links">
@@ -75,8 +81,13 @@
 
     <nav class="nav-actions" id="navActions">
       {% if current_user.is_authenticated %}
-        <a href="{{ url_for('shop.cart') }}" class="icon-link icon-btn" title="{{ t('cart') }}">🛒</a>
+        <a href="{{ url_for('shop.cart') }}" onclick="return openCartDrawer(event)" class="icon-link icon-btn" title="{{ t('cart') }}">🛒</a>
         <a href="{{ url_for('shop.favorites') }}" class="icon-link icon-btn" title="المفضلة">❤️</a>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('profile.notifications') }}" class="icon-link icon-btn" title="الإشعارات" style="position:relative">
+          🔔{% if unread_notifications_count %}<span class="cart-count">{{ unread_notifications_count }}</span>{% endif %}
+        </a>
+        {% endif %}
         <a href="{{ url_for('profile.dashboard') }}" class="btn btn-ghost btn-sm">👤 {{ t('my_account') }}</a>
         {% if current_user.is_admin %}
           <a href="{{ url_for('admin.dashboard') }}" class="btn btn-ghost btn-sm">🛠️ لوحة الإدارة</a>
@@ -114,6 +125,26 @@
 <main>
   {% block content %}{% endblock %}
 </main>
+
+{% if current_user.is_authenticated %}
+<div id="cartDrawerOverlay" class="cart-drawer-overlay" onclick="closeCartDrawer()"></div>
+<aside id="cartDrawer" class="cart-drawer">
+  <div class="cart-drawer-head">
+    <strong>🛒 {{ t('cart') }}</strong>
+    <button onclick="closeCartDrawer()" class="icon-btn" style="width:30px;height:30px">✕</button>
+  </div>
+  <div id="cartDrawerBody" class="cart-drawer-body">
+    <p style="color:var(--ink-500); text-align:center; padding:30px 10px">...</p>
+  </div>
+  <div class="cart-drawer-foot">
+    <div style="display:flex; justify-content:space-between; font-weight:800; margin-bottom:10px">
+      <span>الإجمالي</span><span id="cartDrawerTotal">—</span>
+    </div>
+    <a href="{{ url_for('shop.checkout') }}" class="btn btn-primary btn-block">{{ t('checkout') }}</a>
+    <a href="{{ url_for('shop.cart') }}" class="btn btn-ghost btn-block" style="margin-top:8px">فتح السلة كاملة</a>
+  </div>
+</aside>
+{% endif %}
 
 <footer>
   <div class="container">
@@ -162,5 +193,62 @@
 </footer>
 
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script>
+// شريط العروض المتحرك: يبدّل الرسائل كل 4 ثواني بتأثير تلاشي بسيط
+(function () {
+  const messages = [
+    '🎉 عروض حصرية اليوم على {{ brand_name }}',
+    '💳 ادفع بأمان وسهولة عبر شام كاش',
+    '🚚 توصيل لكل المناطق',
+    '❤️ ضيف منتجاتك المفضلة وارجعلها براحتك',
+    '🏷️ خصومات تصل حتى نهاية اليوم — دوّر بقسم عروض شايب',
+  ];
+  let i = 0;
+  const el = document.getElementById('promoText');
+  if (!el) return;
+  setInterval(() => {
+    i = (i + 1) % messages.length;
+    el.style.opacity = 0;
+    setTimeout(() => { el.textContent = messages[i]; el.style.opacity = 1; }, 300);
+  }, 4000);
+})();
+
+// سلة التسوق المنزلقة
+function openCartDrawer(e) {
+  if (e) e.preventDefault();
+  const drawer = document.getElementById('cartDrawer');
+  const overlay = document.getElementById('cartDrawerOverlay');
+  if (!drawer) return true; // مو مسجل دخول، فوت عالرابط العادي
+  drawer.classList.add('open');
+  overlay.classList.add('open');
+  fetch('{{ url_for("shop.mini_cart") if current_user.is_authenticated else "#" }}')
+    .then(r => r.json())
+    .then(data => {
+      const body = document.getElementById('cartDrawerBody');
+      document.getElementById('cartDrawerTotal').textContent = data.total;
+      if (!data.items.length) {
+        body.innerHTML = '<p style="color:var(--ink-500); text-align:center; padding:30px 10px">سلتك فاضية حالياً 🌿</p>';
+        return;
+      }
+      body.innerHTML = data.items.map(i => `
+        <div style="display:flex; gap:10px; align-items:center; padding:10px 0; border-bottom:1px solid var(--line)">
+          ${i.image ? `<img src="${i.image}" style="width:52px;height:52px;object-fit:cover;border-radius:8px">` : ''}
+          <div style="flex:1">
+            <div style="font-weight:700; font-size:.86rem">${i.title}</div>
+            <div style="font-size:.78rem; color:var(--ink-500)">الكمية: ${i.quantity}</div>
+          </div>
+          <div style="font-weight:800; color:var(--green-700); font-size:.86rem">${i.price}</div>
+        </div>
+      `).join('');
+    });
+  return false;
+}
+function closeCartDrawer() {
+  const drawer = document.getElementById('cartDrawer');
+  const overlay = document.getElementById('cartDrawerOverlay');
+  if (drawer) drawer.classList.remove('open');
+  if (overlay) overlay.classList.remove('open');
+}
+</script>
 </body>
 </html>

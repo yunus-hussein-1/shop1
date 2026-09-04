@@ -144,3 +144,30 @@ def set_language(lang):
     if lang in ("ar", "en", "tr"):
         session["lang"] = lang
     return redirect(request.referrer or url_for("main.home"))
+
+
+@main_bp.route("/compare/add/<int:product_id>")
+def compare_add(product_id):
+    Product.query.get_or_404(product_id)
+    compare_list = session.get("compare_list", [])
+    if product_id not in compare_list:
+        compare_list.append(product_id)
+    session["compare_list"] = compare_list[-3:]  # حتى 3 منتجات كحد أقصى
+    return redirect(url_for("main.compare"))
+
+
+@main_bp.route("/compare/remove/<int:product_id>")
+def compare_remove(product_id):
+    compare_list = session.get("compare_list", [])
+    session["compare_list"] = [pid for pid in compare_list if pid != product_id]
+    return redirect(url_for("main.compare"))
+
+
+@main_bp.route("/compare")
+def compare():
+    compare_list = session.get("compare_list", [])
+    products = Product.query.filter(Product.id.in_(compare_list)).all() if compare_list else []
+    # حافظ على نفس ترتيب الإضافة
+    order_map = {pid: i for i, pid in enumerate(compare_list)}
+    products.sort(key=lambda p: order_map.get(p.id, 0))
+    return render_template("shop/compare.html", products=products)

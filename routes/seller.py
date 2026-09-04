@@ -108,6 +108,7 @@ def add_product():
         stock = request.form.get("stock", "1")
         category_id = request.form.get("category_id")
         is_offer = bool(request.form.get("is_shayeb_offer"))
+        available_sizes = request.form.get("available_sizes", "").strip()
         image = request.files.get("image")
         extra_images = request.files.getlist("extra_images")
 
@@ -127,7 +128,7 @@ def add_product():
             store_id=store.id, category_id=category_id, title=title,
             description=description, price_usd=price_val,
             discount_percent=discount_val, stock=stock_val,
-            is_shayeb_offer=is_offer, is_new=True,
+            is_shayeb_offer=is_offer, is_new=True, available_sizes=available_sizes,
         )
         try:
             product.image_path = save_image(image, subfolder="products")

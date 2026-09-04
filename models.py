@@ -129,6 +129,7 @@ class Product(db.Model):
     is_new = db.Column(db.Boolean, default=True)
     is_shayeb_offer = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
+    available_sizes = db.Column(db.String(120))  # مثال: "S,M,L,XL"
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     category = db.relationship("Category")
@@ -153,6 +154,12 @@ class Product(db.Model):
         if self.image_path and self.image_path not in extra:
             return [self.image_path] + extra
         return extra or ([self.image_path] if self.image_path else [])
+
+    @property
+    def sizes_list(self):
+        if not self.available_sizes:
+            return []
+        return [s.strip() for s in self.available_sizes.split(",") if s.strip()]
 
 
 class ProductImage(db.Model):
@@ -182,6 +189,16 @@ class Favorite(db.Model):
     product = db.relationship("Product")
 
     __table_args__ = (db.UniqueConstraint("user_id", "product_id", name="uq_user_product_fav"),)
+
+
+class Notification(db.Model):
+    """إشعارات داخل الموقع (مثلاً تغيّر حالة الطلب)."""
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    message = db.Column(db.String(255), nullable=False)
+    link = db.Column(db.String(255))
+    is_read = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 class Order(db.Model):

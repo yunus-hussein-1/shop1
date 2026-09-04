@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h1 class="page-title">⚖️ مقارنة المنتجات</h1>
+  {% if products %}
+  <div style="overflow-x:auto; margin-top:20px">
+  <table class="simple-table" style="min-width:520px">
+    <tbody>
+      <tr>
+        <th>الصورة</th>
+        {% for p in products %}
+        <td style="text-align:center">
+          {% if p.image_path %}<img src="{{ url_for('static', filename=p.image_path) }}" style="width:90px;height:90px;object-fit:cover;border-radius:10px; margin:0 auto">{% endif %}
+          <br><a href="{{ url_for('main.compare_remove', product_id=p.id) }}" class="btn btn-ghost btn-sm" style="margin-top:8px">إزالة</a>
+        </td>
+        {% endfor %}
+      </tr>
+      <tr><th>الاسم</th>{% for p in products %}<td><a href="{{ url_for('main.product_detail', product_id=p.id) }}">{{ p.title }}</a></td>{% endfor %}</tr>
+      <tr><th>المتجر</th>{% for p in products %}<td>{{ p.store.name }}</td>{% endfor %}</tr>
+      <tr><th>السعر</th>{% for p in products %}<td style="font-weight:800; color:var(--green-700)">{{ price(p.final_price_usd) }}</td>{% endfor %}</tr>
+      <tr><th>الخصم</th>{% for p in products %}<td>{{ p.discount_percent }}%{% if not p.discount_percent %}—{% endif %}</td>{% endfor %}</tr>
+      <tr><th>التقييم</th>{% for p in products %}<td>{% if p.avg_rating %}★ {{ p.avg_rating }}{% else %}—{% endif %}</td>{% endfor %}</tr>
+      <tr><th>الكمية المتوفرة</th>{% for p in products %}<td>{{ p.stock }}</td>{% endfor %}</tr>
+      <tr><th>المقاسات</th>{% for p in products %}<td>{{ p.sizes_list|join(', ') if p.sizes_list else '—' }}</td>{% endfor %}</tr>
+      <tr><th>الوصف</th>{% for p in products %}<td style="font-size:.82rem">{{ p.description or '—' }}</td>{% endfor %}</tr>
+    </tbody>
+  </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <p>ما ضفت أي منتج للمقارنة لسا. دوس ⚖️ بأي منتج عشان تبلش تقارن (حتى 3 منتجات).</p>
+    <a href="{{ url_for('main.home') }}" class="btn btn-primary" style="margin-top:14px">تسوّق هلق</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

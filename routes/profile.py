@@ -65,6 +65,19 @@ def addresses():
     return render_template("profile/addresses.html", addresses=addr_list)
 
 
+@profile_bp.route("/notifications")
+@login_required
+def notifications():
+    from models import Notification
+    items = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.created_at.desc()).all()
+    unread = [n for n in items if not n.is_read]
+    for n in unread:
+        n.is_read = True
+    if unread:
+        db.session.commit()
+    return render_template("profile/notifications.html", items=items)
+
+
 @profile_bp.route("/settings", methods=["GET", "POST"])
 @login_required
 def settings():

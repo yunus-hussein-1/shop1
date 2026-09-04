@@ -40,6 +40,17 @@
   <div class="flash flash-danger" style="margin:20px 0">هاد الطلب ملغي.</div>
   {% endif %}
 
+  {% if current_user.is_admin and order.status in ['confirmed','shipped','delivered'] %}
+  <form method="post" action="{{ url_for('admin.advance_order_status', order_id=order.id) }}" style="margin-bottom:16px">
+    <button class="btn btn-gold">
+      {% if order.status == 'confirmed' %}🚚 تحديث الحالة إلى: تم الشحن
+      {% elif order.status == 'shipped' %}📦 تحديث الحالة إلى: تم التوصيل
+      {% elif order.status == 'delivered' %}✅ تحديث الحالة إلى: مكتمل
+      {% endif %}
+    </button>
+  </form>
+  {% endif %}
+
   <table class="simple-table" style="margin-top:16px">
     <thead><tr><th>المنتج</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th><th></th></tr></thead>
     <tbody>

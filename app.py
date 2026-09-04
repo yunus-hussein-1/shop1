@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from flask import Flask, session, request
 
 from config import Config
@@ -55,10 +56,28 @@ def create_app(config_class=Config):
     def inject_globals():
         lang = session.get("lang", "ar")
         from flask_login import current_user
-        from models import Favorite
+        from models import Favorite, Notification, OrderItem, Order
+        from sqlalchemy import func
+        from datetime import timedelta
+
         fav_ids = set()
+        unread_count = 0
         if current_user.is_authenticated:
             fav_ids = {f.product_id for f in Favorite.query.filter_by(user_id=current_user.id).all()}
+            unread_count = Notification.query.filter_by(user_id=current_user.id, is_read=False).count()
+
+        week_ago = datetime.utcnow() - timedelta(days=7)
+        weekly_rows = (
+            db.session.query(OrderItem.product_id)
+            .join(Order, Order.id == OrderItem.order_id)
+            .filter(Order.created_at >= week_ago)
+            .group_by(OrderItem.product_id)
+            .order_by(func.sum(OrderItem.quantity).desc())
+            .limit(5)
+            .all()
+        )
+        weekly_best_ids = {r[0] for r in weekly_rows}
+
         return {
             "t": lambda key: t(key, lang),
             "current_lang": lang,
@@ -66,6 +85,8 @@ def create_app(config_class=Config):
             "price": lambda usd: format_price(usd, lang),
             "dir": "rtl" if lang == "ar" else "ltr",
             "favorite_ids": fav_ids,
+            "unread_notifications_count": unread_count,
+            "weekly_best_ids": weekly_best_ids,
         }
 
     # --- رؤوس أمان أساسية على كل استجابة ---

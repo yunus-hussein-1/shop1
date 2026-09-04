@@ -51,3 +51,12 @@ def format_price(amount_usd, lang):
 
 def current_app_config_symbol(currency):
     return current_app.config["CURRENCY_SYMBOL"].get(currency, "")
+
+
+def notify_user(user_id, message, link=None):
+    """يرسل إشعار داخل الموقع للمستخدم (يظهر بجرس الإشعارات)."""
+    from extensions import db
+    from models import Notification
+    n = Notification(user_id=user_id, message=message, link=link)
+    db.session.add(n)
+    return n

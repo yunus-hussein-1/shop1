@@ -5,6 +5,7 @@ from flask_login import login_required, current_user
 
 from extensions import db
 from models import Store, User, Order, Complaint, Report, ReturnRequest
+from utils import notify_user
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -89,6 +90,7 @@ def confirm_payment(order_id):
     order = Order.query.get_or_404(order_id)
     order.payment_status = "paid"
     order.status = "confirmed"
+    notify_user(order.buyer_id, f"تم تأكيد دفع طلبك رقم {order.order_number} ✅", link=url_for("shop.order_detail", order_id=order.id))
     db.session.commit()
     flash(f"تم تأكيد دفع الطلب {order.order_number}.", "success")
     return redirect(url_for("admin.dashboard"))
@@ -101,9 +103,27 @@ def reject_payment(order_id):
     order = Order.query.get_or_404(order_id)
     order.payment_status = "failed"
     order.status = "cancelled"
+    notify_user(order.buyer_id, f"للأسف تم رفض إثبات دفع طلبك رقم {order.order_number}، تواصل معنا للمساعدة.", link=url_for("shop.order_detail", order_id=order.id))
     db.session.commit()
     flash(f"تم رفض إثبات دفع الطلب {order.order_number}.", "warning")
     return redirect(url_for("admin.dashboard"))
+
+
+@admin_bp.route("/orders/<int:order_id>/advance-status", methods=["POST"])
+@login_required
+@admin_required
+def advance_order_status(order_id):
+    order = Order.query.get_or_404(order_id)
+    flow = ["confirmed", "shipped", "delivered", "completed"]
+    labels = {"shipped": "تم شحن طلبك 🚚", "delivered": "تم توصيل طلبك 📦", "completed": "اكتمل طلبك، بالهنا والشفا 🎉"}
+    if order.status in flow[:-1]:
+        next_status = flow[flow.index(order.status) + 1]
+        order.status = next_status
+        if next_status in labels:
+            notify_user(order.buyer_id, f"{labels[next_status]} — طلب رقم {order.order_number}", link=url_for("shop.order_detail", order_id=order.id))
+        db.session.commit()
+        flash(f"تم تحديث حالة الطلب إلى: {next_status}", "success")
+    return redirect(url_for("shop.order_detail", order_id=order.id))
 
 
 @admin_bp.route("/returns/<int:return_id>/approve", methods=["POST"])

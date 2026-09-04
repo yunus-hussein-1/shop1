@@ -29,6 +29,30 @@
 
       <p class="prose" style="margin:0 0 24px">{{ product.description or "لا يوجد وصف إضافي لهاد المنتج." }}</p>
 
+      {% if product.sizes_list %}
+      <div style="margin-bottom:22px">
+        <p style="font-weight:700; margin-bottom:8px">المقاسات المتوفرة:</p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px">
+          {% for s in product.sizes_list %}
+          <span style="border:1.5px solid var(--line); border-radius:8px; padding:6px 14px; font-weight:700; font-size:.85rem">{{ s }}</span>
+          {% endfor %}
+        </div>
+        <details style="font-size:.82rem; color:var(--ink-500)">
+          <summary style="cursor:pointer; font-weight:700; color:var(--green-700)">📏 جدول المقاسات الإرشادي</summary>
+          <table class="simple-table" style="margin-top:10px">
+            <thead><tr><th>المقاس</th><th>الصدر (سم)</th><th>الطول (سم)</th></tr></thead>
+            <tbody>
+              <tr><td>S</td><td>88-92</td><td>66</td></tr>
+              <tr><td>M</td><td>96-100</td><td>68</td></tr>
+              <tr><td>L</td><td>104-108</td><td>70</td></tr>
+              <tr><td>XL</td><td>112-116</td><td>72</td></tr>
+            </tbody>
+          </table>
+          <p style="margin-top:8px">القياسات تقريبية وقد تختلف بنسبة بسيطة حسب قصّة المنتج.</p>
+        </details>
+      </div>
+      {% endif %}
+
       {% if current_user.is_authenticated %}
       <form method="post" action="{{ url_for('shop.add_to_cart', product_id=product.id) }}" style="display:flex; gap:10px; align-items:center">
         <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" style="width:80px; padding:10px; border:1.5px solid var(--line); border-radius:9px">

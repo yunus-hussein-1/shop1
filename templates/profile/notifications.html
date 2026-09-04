@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h1 class="page-title">🔔 الإشعارات</h1>
+  {% if items %}
+  <div style="max-width:640px; margin-top:20px">
+    {% for n in items %}
+    <a href="{{ n.link or '#' }}" style="display:block; background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:10px; {{ 'border-inline-start:4px solid var(--green-600)' if not n.is_read }}">
+      <p style="margin:0; font-weight:700; color:var(--ink-900)">{{ n.message }}</p>
+      <span style="font-size:.75rem; color:var(--ink-500)">{{ n.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state"><p>ما عندك إشعارات لسا.</p></div>
+  {% endif %}
+</div>
+{% endblock %}
