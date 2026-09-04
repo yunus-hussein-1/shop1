@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import Flask, session, request
 
 from config import Config
-from extensions import db, login_manager, mail
+from extensions import db, login_manager, mail, migrate
 from i18n import t, brand_name
 from utils import format_price
 
@@ -15,14 +15,20 @@ def create_app(config_class=Config):
     db.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
+    migrate.init_app(app, db)
 
     os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
     from models import User
 
-    # ينشئ جداول قاعدة البيانات الناقصة تلقائياً عند بدء التشغيل (آمن: لا يحذف بيانات موجودة)
+    # يطبّق أي هجرة (Migration) ناقصة تلقائياً عند بدء التشغيل — هيك ما في داعي تحذف قاعدة
+    # البيانات يدوياً بعد اليوم كل ما يصير تغيير بالجداول. أول تشغيل بينشئ كل الجداول من الصفر.
     with app.app_context():
-        db.create_all()
+        from flask_migrate import upgrade as _migrate_upgrade
+        try:
+            _migrate_upgrade()
+        except Exception:
+            db.create_all()
 
     @login_manager.user_loader
     def load_user(user_id):

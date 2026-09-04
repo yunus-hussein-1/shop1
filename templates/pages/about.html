@@ -1,9 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container"><div class="prose" style="margin:40px auto">
-  <h1 class="page-title">من نحنو</h1>
-  <p>شايب شوب هو سوق إلكتروني بيجمع بائعين حقيقيين مع زبائن بيدوروا عن منتجات أصلية بجودة عالية، بألبسة رجالية ونسائية وأطفال وإلكترونيات، بتجربة شراء سهلة وآمنة ودفع مريح عبر شام كاش.</p>
-  <h2>رسالتنا</h2>
-  <p>نسهّل على أصحاب المتاجر الصغيرة يوصلوا لأكبر شريحة من الزبائن، وبنفس الوقت نضمن للمشتري تجربة موثوقة من أول خطوة لحد استلام طلبه.</p>
+  <h1 class="page-title" style="text-align:center">🌿 من نحنو</h1>
+  <p style="text-align:center; font-size:1.05rem; color:var(--ink-700); max-width:60ch; margin:0 auto 30px">
+    {{ brand_name }} مش مجرد موقع للبيع والشراء — هو مساحة بنيناها بثقة، لتجمع بائعين حقيقيين بزبائن بيستاهلوا تجربة تسوّق صادقة وسهلة وآمنة.
+  </p>
+
+  <div class="grid-products" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); margin-bottom:30px">
+    <div class="card-product" style="padding:22px; text-align:center">
+      <div class="body" style="align-items:center">
+        <span style="font-size:1.8rem">🤝</span>
+        <strong style="margin-top:8px">الثقة أولاً</strong>
+        <span class="store">كل متجر بيمر بمراجعة قبل ما يفتح، وكل عملية دفع بتتأكد يدوياً من فريقنا.</span>
+      </div>
+    </div>
+    <div class="card-product" style="padding:22px; text-align:center">
+      <div class="body" style="align-items:center">
+        <span style="font-size:1.8rem">🛡️</span>
+        <strong style="margin-top:8px">حماية حقيقية</strong>
+        <span class="store">سياسة إرجاع واضحة، ودعم فوري إذا واجهتك أي مشكلة بطلبك.</span>
+      </div>
+    </div>
+    <div class="card-product" style="padding:22px; text-align:center">
+      <div class="body" style="align-items:center">
+        <span style="font-size:1.8rem">💚</span>
+        <strong style="margin-top:8px">دعم أصحاب المحلات</strong>
+        <span class="store">منساعد أصحاب المتاجر الصغيرة يوصلوا لأكبر شريحة من الزبائن بعمولة عادلة.</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>قصتنا</h2>
+  <p>بلشنا {{ brand_name }} من فكرة بسيطة: التسوّق الإلكتروني بمنطقتنا لازم يكون أسهل وأوثق. جمعنا نخبة من المتاجر الموثوقة بمكان وحد، وبنينا نظام دفع واضح عبر شام كاش، وحطينا فريق حقيقي وراء كل عملية بيع للتأكد إنو كل شي ماشي صح.</p>
+
+  <h2>شو بيميّزنا</h2>
+  <ul>
+    <li>مراجعة يدوية لكل متجر جديد قبل ما يفتح للبيع.</li>
+    <li>تأكيد يدوي لكل عملية دفع، ما في أي معاملة بتمر بدون تدقيق.</li>
+    <li>سياسة إرجاع واستبدال واضحة ومطبّقة فعلياً، مو بس كلام.</li>
+    <li>دعم مباشر عبر بريدنا الرسمي لأي استفسار أو شكوى.</li>
+  </ul>
+
+  <p style="text-align:center; margin-top:30px; font-weight:700; color:var(--green-700)">شكراً إلك إنك اخترت تتسوّق معنا 🌿</p>
 </div></div>
 {% endblock %}

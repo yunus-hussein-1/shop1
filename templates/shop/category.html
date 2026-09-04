@@ -3,7 +3,7 @@
 <div class="container">
   <div class="section-head" style="margin-top:30px">
     <h1 class="page-title" style="margin:0">
-      {% if current_lang=='ar' %}{{ category.name_ar }}{% elif current_lang=='tr' %}{{ category.name_tr }}{% else %}{{ category.name_en }}{% endif %}
+      {{ category.name_ar if current_lang=='ar' else category.name_en }}
     </h1>
     <form method="get" style="display:flex; align-items:center; gap:8px">
       <label style="font-size:.85rem; color:var(--ink-500)">فرز حسب:</label>

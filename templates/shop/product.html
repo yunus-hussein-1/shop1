@@ -71,6 +71,12 @@
         {% if product.stock == 0 %}نفدت الكمية حالياً{% else %}باقي {{ product.stock }} قطع فقط!{% endif %}
       </p>
       {% endif %}
+
+      <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:18px; padding-top:16px; border-top:1px solid var(--line)">
+        <span style="font-size:.78rem; color:var(--ink-500); display:flex; align-items:center; gap:5px">🛡️ دفع موثّق يدوياً</span>
+        <span style="font-size:.78rem; color:var(--ink-500); display:flex; align-items:center; gap:5px">↩️ إرجاع خلال 3 أيام</span>
+        <span style="font-size:.78rem; color:var(--ink-500); display:flex; align-items:center; gap:5px">✅ متجر مراجَع من {{ brand_name }}</span>
+      </div>
     </div>
   </div>
 

@@ -141,7 +141,7 @@ def search_by_image():
 
 @main_bp.route("/set-language/<lang>")
 def set_language(lang):
-    if lang in ("ar", "en", "tr"):
+    if lang in ("ar", "en"):
         session["lang"] = lang
     return redirect(request.referrer or url_for("main.home"))
 

@@ -33,13 +33,13 @@ class Config:
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.environ.get("MAIL_USERNAME", "")  # مثال: care@shayebshop.com
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD", "")  # App Password وليس كلمة السر العادية
-    MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER", "SHAYEB SHOP <no-reply@shayebshop.com>")
+    MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER", "ALSHAYEB SHOP <no-reply@alshayebshop.com>")
 
     # إيميل الأدمن العام المسؤول الكامل عن التطبيق (حظر/قبول/رفض متاجر ومستخدمين)
     ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "yunuselhuseyin82@gmail.com")
 
     # بريد المتجر العام يلي بيوصلو شكاوى/استفسارات الزبائن (بيتحول لصندوق الأدمن)
-    SUPPORT_EMAIL = os.environ.get("SUPPORT_EMAIL", "support@shayebshop.com")
+    SUPPORT_EMAIL = os.environ.get("SUPPORT_EMAIL", "support@alshayebshop.com")
 
     # بيانات شام كاش الرسمية للشركة (تظهر للزبون وقت الدفع)
     # !! استبدل static/shamcash_qr.png بصورة الباركود الحقيقية من تطبيق شام كاش تبعك، وحدّث الرقم هون !!
@@ -64,7 +64,6 @@ class Config:
         # العملة موحّدة ليرة سوري بكل اللغات — كل الدفع الفعلي بيصير عبر شام كاش بالليرة السوري
         "ar": "SYP",
         "en": "SYP",
-        "tr": "SYP",
     }
 
     CURRENCY_SYMBOL = {

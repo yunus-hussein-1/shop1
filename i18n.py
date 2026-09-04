@@ -5,7 +5,6 @@
 BRAND_NAME = {
     "ar": "متجر الشايب",
     "en": "SHAYEB SHOP",
-    "tr": "SHAYEB SHOP",
 }
 
 TRANSLATIONS = {
@@ -34,19 +33,6 @@ TRANSLATIONS = {
         "settings": "Settings", "about": "About us", "terms": "Terms & Conditions",
         "privacy": "Privacy Policy", "returns": "Return Policy",
         "seller_agreement": "Seller Agreement", "track_order": "Track Order",
-    },
-    "tr": {
-        "home": "Ana Sayfa", "new": "Yeni", "men": "Erkek", "women": "Kadın",
-        "kids": "Çocuk", "electronics": "Elektronik", "offers": "Shayeb Fırsatları",
-        "search_placeholder": "İsim veya fotoğrafla ürün ara...",
-        "login": "Giriş yap", "register": "Kayıt ol", "logout": "Çıkış yap",
-        "cart": "Sepet", "my_account": "Hesabım", "sell_on_shayeb": "Shayeb'de Sat",
-        "add_to_cart": "Sepete ekle", "buy_now": "Şimdi al",
-        "price": "Fiyat", "rating": "Puan", "reviews": "Yorumlar",
-        "checkout": "Ödeme", "orders": "Siparişlerim", "addresses": "Adreslerim",
-        "settings": "Ayarlar", "about": "Hakkımızda", "terms": "Şartlar ve Koşullar",
-        "privacy": "Gizlilik Politikası", "returns": "İade Politikası",
-        "seller_agreement": "Satıcı Sözleşmesi", "track_order": "Sipariş Takibi",
     },
 }
 

@@ -1,50 +1,50 @@
 /* ===== SHAYEB SHOP — هوية بصرية خضراء دافئة ===== */
 
 :root{
-  --green-900:#0f3d26;
-  --green-700:#166b41;
-  --green-600:#1e8a52;
-  --green-500:#2ba363;
-  --green-100:#e7f4ec;
-  --green-050:#f3faf5;
-  --sand-050:#fbf9f4;
-  --sand-100:#f2ede1;
-  --gold-500:#c99a3d;
-  --gold-600:#a97e2a;
+  --green-900:#003a75;
+  --green-700:#0066cc;
+  --green-600:#0080ff;
+  --green-500:#3399ff;
+  --green-100:#e3f2ff;
+  --green-050:#f2f9ff;
+  --sand-050:#fbfbfc;
+  --sand-100:#eef1f4;
+  --gold-500:#ffaa03;
+  --gold-600:#e0940a;
   --ink-900:#132019;
   --ink-700:#33473c;
   --ink-500:#6c7d73;
-  --line:#e2ded1;
+  --line:#dfe4ea;
   --danger:#c1443a;
   --card-bg:#ffffff;
   --page-bg:var(--sand-050);
-  --deep-900:#0f3d26; /* أخضر غامق ثابت لا يتغيّر مع الوضع الليلي/النهاري — للخلفيات الداكنة دايماً */
+  --deep-900:#003a75; /* أزرق غامق ثابت لا يتغيّر مع الوضع الليلي/النهاري — للخلفيات الداكنة دايماً */
   --radius-lg:22px;
   --radius-md:14px;
   --radius-sm:9px;
-  --shadow-soft:0 10px 30px -14px rgba(15,61,38,.25);
+  --shadow-soft:0 10px 30px -14px rgba(0,58,117,.25);
   --font-display:'Cairo', 'Poppins', sans-serif;
   --font-body:'Tajawal', 'Poppins', sans-serif;
 }
 
 /* ---------- الوضع الليلي التلقائي (بدون أي زر، يتفعّل حسب توقيت جهاز الزائر) ---------- */
 html[data-theme="dark"]{
-  --green-900:#eaf7ee;
-  --green-700:#5fd394;
-  --green-600:#3fbf7c;
-  --green-500:#2ba363;
-  --green-100:#173626;
-  --green-050:#132019;
-  --sand-050:#0e1512;
-  --sand-100:#182119;
-  --gold-500:#e0b95c;
-  --gold-600:#f0cd7e;
+  --green-900:#eaf4ff;
+  --green-700:#5eb0ff;
+  --green-600:#3399ff;
+  --green-500:#0080ff;
+  --green-100:#123151;
+  --green-050:#0d2438;
+  --sand-050:#0b1622;
+  --sand-100:#15222f;
+  --gold-500:#ffbf47;
+  --gold-600:#ffcf70;
   --ink-900:#eef3ef;
   --ink-700:#c4d0c9;
-  --ink-500:#8fa199;
-  --line:#233029;
-  --card-bg:#141d18;
-  --page-bg:#0e1512;
+  --ink-500:#8fa1b0;
+  --line:#1e2e3e;
+  --card-bg:#101c28;
+  --page-bg:#0b1622;
 }
 html[data-theme="dark"] body{background:var(--page-bg)}
 html[data-theme="dark"] .navbar{background:linear-gradient(180deg,#101a15, var(--page-bg) 120%)}

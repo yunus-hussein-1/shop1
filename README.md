@@ -10,13 +10,21 @@ python -m venv venv
 source venv/bin/activate        # على ويندوز: venv\Scripts\activate
 pip install -r requirements.txt
 
-python -c "from app import create_app; from extensions import db; app=create_app(); app.app_context().push(); db.create_all()"
-python seed.py                  # يجهز التصنيفات + حساب أدمن + متجر تجريبي
-
+python seed.py                  # يجهز قاعدة البيانات + التصنيفات + حساب أدمن + متجر تجريبي
 python app.py
 ```
 
 افتح المتصفح على: http://127.0.0.1:5000
+
+## 🔄 تحديث قاعدة البيانات مستقبلاً (Migrations)
+
+الموقع بيستخدم **Flask-Migrate** لإدارة أي تغيير بجداول قاعدة البيانات — يعني **ما في داعي تحذف `shayeb.db` يدوياً بعد اليوم**. كل ما تسحب تحديث جديد فيه تغيير بقاعدة البيانات، الموقع بيطبّقه تلقائياً أول ما تشغّله (`python app.py` أو `python seed.py`).
+
+إذا حبيت تعمل تغيير بموديلات قاعدة البيانات بنفسك مستقبلاً:
+```bash
+flask db migrate -m "وصف التغيير"
+flask db upgrade
+```
 
 بيانات دخول الأدمن التجريبية (**لازم تغيّرها فوراً من صفحة الإعدادات بعد أول دخول**):
 - الإيميل: القيمة يلي حاطاها بـ `ADMIN_EMAIL` بملف `config.py`
