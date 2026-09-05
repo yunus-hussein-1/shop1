@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container"><div class="prose" style="margin:40px auto">
+{% if current_lang == 'ar' %}
   <h1 class="page-title" style="text-align:center">🔒 سياسة الخصوصية</h1>
   <p style="text-align:center; color:var(--ink-700); max-width:56ch; margin:0 auto 30px">خصوصيتك مو تفصيل هامشي عنا — هي جزء أساسي من التزامنا تجاهك. هاي الصفحة بتشرحلك بالضبط شو منجمع وليش ووين بيروح.</p>
 
@@ -28,5 +29,34 @@
     <li>تحذف حسابك نهائياً وكل بياناته من صفحة الإعدادات — بضغطة وحدة.</li>
     <li>تتواصل معنا لأي استفسار إضافي حول بياناتك.</li>
   </ul>
+{% else %}
+  <h1 class="page-title" style="text-align:center">🔒 Privacy Policy</h1>
+  <p style="text-align:center; color:var(--ink-700); max-width:56ch; margin:0 auto 30px">Your privacy isn't a footnote to us — it's a core part of our commitment to you. This page explains exactly what we collect, why, and where it goes.</p>
+
+  <h2>🗂️ What data we collect</h2>
+  <ul>
+    <li><strong>Account information:</strong> your name, email, phone number, and date of birth (if you choose to add it).</li>
+    <li><strong>Delivery addresses:</strong> so we can get your order to the right place.</li>
+    <li><strong>Payment proof:</strong> Sham Cash transaction number or receipt photo — used only to verify your order, never shared with any third party.</li>
+  </ul>
+
+  <h2>🎯 How we use your data</h2>
+  <p>We use it exclusively to: fulfil your orders accurately, improve your experience on the site, and contact you about your account or orders only. <strong>We never sell your data or share it for marketing purposes with any external party.</strong></p>
+
+  <h2>🛡️ How we protect your data</h2>
+  <ul>
+    <li>Your password is fully encrypted — not even our team can see it as readable text.</li>
+    <li>Access to your data is restricted to authorized members of the {{ brand_name }} team only.</li>
+    <li>We continuously review our security measures to keep them at their best.</li>
+  </ul>
+
+  <h2>✋ Your full rights</h2>
+  <p>Your account is 100% yours. You can, at any time:</p>
+  <ul>
+    <li>Edit your personal information from the "My Account" page.</li>
+    <li>Permanently delete your account and all its data from the Settings page — in one click.</li>
+    <li>Contact us for any further questions about your data.</li>
+  </ul>
+{% endif %}
 </div></div>
 {% endblock %}

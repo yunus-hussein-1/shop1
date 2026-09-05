@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container"><div class="prose" style="margin:40px auto">
+{% if current_lang == 'ar' %}
   <h1 class="page-title" style="text-align:center">🏪 اتفاقية البائع</h1>
   <p style="text-align:center; color:var(--ink-700); max-width:56ch; margin:0 auto 30px">هاي الاتفاقية بتوضح علاقتك كبائع مع {{ brand_name }} بشفافية كاملة — بدون مفاجآت وبدون شروط مخفية.</p>
 
@@ -25,5 +26,31 @@
 
   <h2>⚖️ الإشراف والموافقة</h2>
   <p>كل طلب فتح متجر بيمر بمراجعة يدوية من إدارة {{ brand_name }}. نحتفظ بحق رفض أو تعليق أو حظر أي متجر يخالف هاي الاتفاقية أو شروط الاستخدام العامة، حفاظاً على جودة التجربة لكل الأطراف.</p>
+{% else %}
+  <h1 class="page-title" style="text-align:center">🏪 Seller Agreement</h1>
+  <p style="text-align:center; color:var(--ink-700); max-width:56ch; margin:0 auto 30px">This agreement explains your relationship as a seller with {{ brand_name }} with full transparency — no surprises, no hidden terms.</p>
+
+  <h2>💰 Commission</h2>
+  <p>We take a <strong>10%</strong> commission only on the value of each confirmed sale — in exchange for hosting your store, payment processing, technical support, and access to a ready customer base. This is the only commission — no additional hidden fees.</p>
+
+  <h2>🪪 Your store's real identity</h2>
+  <ul>
+    <li>A valid tax number and real photos of your shop or merchandise are required upon application.</li>
+    <li>Any false or misleading information will result in immediate rejection or cancellation of your store.</li>
+    <li>Your product photos must be real, taken by you (your own studio), not sourced from the internet.</li>
+  </ul>
+
+  <h2>🤝 Your commitment to the customer</h2>
+  <p>We take any customer complaint seriously against a store that misrepresents a product, delays delivery without reason, or manipulates prices after order confirmation. The platform reserves the right to suspend or ban any store proven to engage in such behavior — protecting the trust of all customers.</p>
+
+  <h2>💳 Receiving your earnings</h2>
+  <p>Your net earnings (after commission deduction) are transferred to your Sham Cash number within <strong>7 days</strong> of the sale confirmation date. You are responsible for providing us with a valid, active Sham Cash number.</p>
+
+  <h2>📊 Your dashboard</h2>
+  <p>As soon as your store is approved, you get a dashboard with your sales statistics, net earnings, and pending payouts — everything clear to you at any time.</p>
+
+  <h2>⚖️ Oversight and approval</h2>
+  <p>Every store application goes through manual review by {{ brand_name }}'s administration. We reserve the right to reject, suspend, or ban any store that violates this agreement or the general terms of use, to maintain a quality experience for everyone.</p>
+{% endif %}
 </div></div>
 {% endblock %}

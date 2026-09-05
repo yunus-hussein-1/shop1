@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container"><div class="prose" style="margin:40px auto">
+{% if current_lang == 'ar' %}
   <h1 class="page-title" style="text-align:center">🌿 من نحنو</h1>
   <p style="text-align:center; font-size:1.05rem; color:var(--ink-700); max-width:60ch; margin:0 auto 30px">
     {{ brand_name }} مش مجرد موقع للبيع والشراء — هو مساحة بنيناها بثقة، لتجمع بائعين حقيقيين بزبائن بيستاهلوا تجربة تسوّق صادقة وسهلة وآمنة.
@@ -42,5 +43,48 @@
   </ul>
 
   <p style="text-align:center; margin-top:30px; font-weight:700; color:var(--green-700)">شكراً إلك إنك اخترت تتسوّق معنا 🌿</p>
+{% else %}
+  <h1 class="page-title" style="text-align:center">🌿 About Us</h1>
+  <p style="text-align:center; font-size:1.05rem; color:var(--ink-700); max-width:60ch; margin:0 auto 30px">
+    {{ brand_name }} is not just a marketplace — it's a space built on trust, bringing together real sellers and customers who deserve an honest, easy, and secure shopping experience.
+  </p>
+
+  <div class="grid-products" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); margin-bottom:30px">
+    <div class="card-product" style="padding:22px; text-align:center">
+      <div class="body" style="align-items:center">
+        <span style="font-size:1.8rem">🤝</span>
+        <strong style="margin-top:8px">Trust first</strong>
+        <span class="store">Every store goes through review before it opens, and every payment is manually verified by our team.</span>
+      </div>
+    </div>
+    <div class="card-product" style="padding:22px; text-align:center">
+      <div class="body" style="align-items:center">
+        <span style="font-size:1.8rem">🛡️</span>
+        <strong style="margin-top:8px">Real protection</strong>
+        <span class="store">A clear return policy and immediate support if anything goes wrong with your order.</span>
+      </div>
+    </div>
+    <div class="card-product" style="padding:22px; text-align:center">
+      <div class="body" style="align-items:center">
+        <span style="font-size:1.8rem">💚</span>
+        <strong style="margin-top:8px">Supporting local shops</strong>
+        <span class="store">We help small store owners reach the widest possible customer base with a fair commission.</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>Our story</h2>
+  <p>{{ brand_name }} started from a simple idea: online shopping in our region should be easier and more trustworthy. We brought together a select group of trusted stores in one place, built a clear payment system via Sham Cash, and put a real team behind every sale to make sure everything runs smoothly.</p>
+
+  <h2>What makes us different</h2>
+  <ul>
+    <li>Manual review of every new store before it can sell.</li>
+    <li>Manual verification of every payment — no transaction goes through without a check.</li>
+    <li>A clear, actually-enforced return and exchange policy, not just words.</li>
+    <li>Direct support via our official email for any question or complaint.</li>
+  </ul>
+
+  <p style="text-align:center; margin-top:30px; font-weight:700; color:var(--green-700)">Thank you for choosing to shop with us 🌿</p>
+{% endif %}
 </div></div>
 {% endblock %}

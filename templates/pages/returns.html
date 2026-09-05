@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container"><div class="prose" style="margin:40px auto">
+{% if current_lang == 'ar' %}
   <h1 class="page-title" style="text-align:center">↩️ سياسة الإرجاع والاستبدال</h1>
   <p style="text-align:center; color:var(--ink-700); max-width:56ch; margin:0 auto 30px">منفهم إنو الشراء أونلاين بده ثقة. عشان هيك حطينا سياسة إرجاع واضحة ومطبّقة فعلياً من داخل حسابك — مو بس كلام بصفحة.</p>
 
@@ -24,5 +25,30 @@
 
   <h2>🤝 مسؤولية مشتركة</h2>
   <p>البائع مسؤول عن جودة ودقة وصف منتجاته، ونحن مسؤولون عن متابعة أي طلب إرجاع بجدية حتى يوصل لحل عادل للطرفين.</p>
+{% else %}
+  <h1 class="page-title" style="text-align:center">↩️ Return & Exchange Policy</h1>
+  <p style="text-align:center; color:var(--ink-700); max-width:56ch; margin:0 auto 30px">We understand that shopping online requires trust. That's why we have a clear return policy that's actually implemented from within your account — not just words on a page.</p>
+
+  <h2>✅ When can you return or exchange a product?</h2>
+  <ul>
+    <li>Within 3 days of receiving the order.</li>
+    <li>If the product arrives damaged or doesn't match the description shown.</li>
+    <li>The product must be in its original condition and unused.</li>
+  </ul>
+
+  <h2>📝 How to request a return or exchange?</h2>
+  <ol>
+    <li>Go to the "My Orders" page and select the completed order.</li>
+    <li>Tap the "↩️ Return/Exchange" button next to the relevant product.</li>
+    <li>Choose the request type (return or exchange) and write your reason.</li>
+    <li>Our team will review your request and contact you as soon as possible.</li>
+  </ol>
+
+  <h2>💳 Refunds</h2>
+  <p>After a return request is approved, we'll coordinate with you directly to refund the amount via Sham Cash within a reasonable timeframe. We commit to full transparency with you at every step.</p>
+
+  <h2>🤝 Shared responsibility</h2>
+  <p>The seller is responsible for the quality and accurate description of their products, and we are responsible for following up on any return request seriously until it reaches a fair resolution for both parties.</p>
+{% endif %}
 </div></div>
 {% endblock %}

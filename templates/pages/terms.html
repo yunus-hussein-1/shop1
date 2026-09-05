@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container"><div class="prose" style="margin:40px auto">
+{% if current_lang == 'ar' %}
   <h1 class="page-title" style="text-align:center">📋 الشروط والأحكام</h1>
-  <p style="text-align:center; color:var(--ink-500); font-size:.9rem; margin-bottom:30px">آخر تحديث: هاي الشروط بتنطبق على كل استخدام لموقع {{ brand_name }}</p>
+  <p style="text-align:center; color:var(--ink-500); font-size:.9rem; margin-bottom:30px">هاي الشروط بتنطبق على كل استخدام لموقع {{ brand_name }}</p>
 
   <h2>1️⃣ حسابك على {{ brand_name }}</h2>
   <ul>
@@ -29,5 +30,35 @@
 
   <h2>6️⃣ تواصل معنا</h2>
   <p>عندك سؤال عن هاي الشروط؟ راسلنا على <strong style="direction:ltr; display:inline-block">support@alshayebshop.com</strong> ورح نرد عليك بأقرب وقت.</p>
+{% else %}
+  <h1 class="page-title" style="text-align:center">📋 Terms & Conditions</h1>
+  <p style="text-align:center; color:var(--ink-500); font-size:.9rem; margin-bottom:30px">These terms apply to any use of the {{ brand_name }} website</p>
+
+  <h2>1️⃣ Your {{ brand_name }} account</h2>
+  <ul>
+    <li>You must register with accurate, real information — your name, email, and phone number.</li>
+    <li>You are solely responsible for keeping your password confidential, and for any activity on your account.</li>
+    <li>Creating multiple accounts to manipulate offers or reviews is not allowed.</li>
+  </ul>
+
+  <h2>2️⃣ Orders and payment</h2>
+  <ul>
+    <li>Payment is exclusively via Sham Cash, and every transaction is manually confirmed by our team before the order is processed.</li>
+    <li>Displayed prices are final and include all listed fees, unless stated otherwise.</li>
+    <li>You may cancel your order freely as long as it is still "processing" and not yet confirmed.</li>
+  </ul>
+
+  <h2>3️⃣ Your conduct on the platform</h2>
+  <p>We rely on you to use {{ brand_name }} honestly. Any attempt at fraud, fake reviews, or impersonation will result in immediate account suspension.</p>
+
+  <h2>4️⃣ Content responsibility</h2>
+  <p>Sellers are fully responsible for the accuracy of their product descriptions and photos. We review every store application, and we follow up on any report we receive with full seriousness.</p>
+
+  <h2>5️⃣ Changes to these terms</h2>
+  <p>We may update these terms from time to time to improve your experience or comply with new requirements. We will clearly notify you of any material change.</p>
+
+  <h2>6️⃣ Contact us</h2>
+  <p>Have a question about these terms? Email us at <strong style="direction:ltr; display:inline-block">support@alshayebshop.com</strong> and we'll get back to you as soon as possible.</p>
+{% endif %}
 </div></div>
 {% endblock %}
