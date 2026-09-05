@@ -259,6 +259,8 @@ def reorder(order_id):
 @shop_bp.route("/addresses/add", methods=["POST"])
 @login_required
 def add_address():
+    lat = request.form.get("latitude", "").strip()
+    lng = request.form.get("longitude", "").strip()
     addr = Address(
         user_id=current_user.id,
         label=request.form.get("label", "المنزل"),
@@ -267,6 +269,8 @@ def add_address():
         street_details=request.form.get("street_details", "").strip(),
         phone=request.form.get("phone", "").strip(),
         is_default=bool(request.form.get("is_default")),
+        latitude=float(lat) if lat else None,
+        longitude=float(lng) if lng else None,
     )
     if not addr.city:
         flash("المدينة مطلوبة.", "danger")

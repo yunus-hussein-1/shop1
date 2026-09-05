@@ -3,33 +3,49 @@
 <div class="container">
 
   <div class="form-card wide" style="padding:0; overflow:hidden; margin-top:30px">
-    <div style="height:120px; background:var(--green-600); {% if current_user.cover_path %}background-image:url('{{ url_for('static', filename=current_user.cover_path) }}'); background-size:cover; background-position:center;{% endif %}"></div>
-    <div style="display:flex; align-items:center; gap:22px; padding:0 22px 22px; margin-top:-38px">
-      <div class="avatar-preview" style="width:78px; height:78px; flex:none">
+    <div style="height:130px; background:var(--green-600); {% if current_user.cover_path %}background-image:url('{{ url_for('static', filename=current_user.cover_path) }}'); background-size:cover; background-position:center;{% endif %}"></div>
+    <div style="display:flex; align-items:center; gap:22px; padding:0 22px 22px; margin-top:-42px; flex-wrap:wrap">
+      <div class="avatar-preview" style="width:84px; height:84px; flex:none; box-shadow:0 6px 18px -6px rgba(0,0,0,.3)">
         {% if current_user.avatar_path %}
           <img src="{{ url_for('static', filename=current_user.avatar_path) }}" alt="{{ current_user.name }}">
         {% else %}
           <span class="placeholder">{{ current_user.name[0] }}</span>
         {% endif %}
       </div>
-      <div style="flex:1; padding-top:38px">
+      <div style="flex:1; padding-top:42px; min-width:180px">
         <h1 style="margin:0 0 4px">{{ ('أهلاً، ' + current_user.name) if current_lang=='ar' else ('Hi, ' + current_user.name) }} 👋</h1>
         <p style="margin:0; color:var(--ink-500); font-size:.86rem">{{ current_user.email }} · {{ 'عضو منذ' if current_lang=='ar' else 'Member since' }} {{ current_user.created_at.strftime('%Y-%m-%d') }}</p>
       </div>
-      <div style="display:flex; gap:22px; text-align:center; padding-top:38px">
-        <div><div style="font-weight:900; font-size:1.3rem; color:var(--green-700)">{{ stats.orders_count }}</div><div style="font-size:.75rem; color:var(--ink-500)">{{ t('orders') }}</div></div>
-        <div><div style="font-weight:900; font-size:1.3rem; color:var(--green-700)">{{ stats.favorites_count }}</div><div style="font-size:.75rem; color:var(--ink-500)">{{ t('favorites') }}</div></div>
-        <div><div style="font-weight:900; font-size:1.3rem; color:var(--green-700)">{{ stats.addresses_count }}</div><div style="font-size:.75rem; color:var(--ink-500)">{{ t('addresses') }}</div></div>
+      <div style="display:flex; gap:22px; text-align:center; padding-top:42px">
+        <div><div style="font-weight:900; font-size:1.3rem; color:var(--green-700)">📦 {{ stats.orders_count }}</div><div style="font-size:.75rem; color:var(--ink-500)">{{ t('orders') }}</div></div>
+        <div><div style="font-weight:900; font-size:1.3rem; color:var(--green-700)">❤️ {{ stats.favorites_count }}</div><div style="font-size:.75rem; color:var(--ink-500)">{{ t('favorites') }}</div></div>
+        <div><div style="font-weight:900; font-size:1.3rem; color:var(--green-700)">📍 {{ stats.addresses_count }}</div><div style="font-size:.75rem; color:var(--ink-500)">{{ t('addresses') }}</div></div>
       </div>
     </div>
+
+    {% if completion_percent < 100 %}
+    <div style="padding:0 22px 20px">
+      <div style="display:flex; justify-content:space-between; font-size:.78rem; color:var(--ink-500); margin-bottom:6px">
+        <span>{{ 'اكتمال ملفك الشخصي' if current_lang=='ar' else 'Profile completeness' }}</span>
+        <span style="font-weight:800; color:var(--green-700)">{{ completion_percent }}%</span>
+      </div>
+      <div style="background:var(--line); border-radius:999px; height:8px; overflow:hidden">
+        <div style="width:{{ completion_percent }}%; height:100%; background:var(--gold-500); border-radius:999px"></div>
+      </div>
+      <p style="font-size:.76rem; color:var(--ink-500); margin:6px 0 0">
+        {{ 'كمّل صورتك، هاتفك، تاريخ ميلادك، وعنوانك عشان تجربة أسرع بالطلبات الجاية 🌿' if current_lang=='ar' else 'Complete your photo, phone, birth date, and address for a faster experience on future orders 🌿' }}
+      </p>
+    </div>
+    {% endif %}
   </div>
 
-  <div class="grid-products" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); margin-top:24px">
-    <a href="{{ url_for('profile.edit_info') }}" class="card-product" style="padding:20px"><div class="body"><span class="title">{{ t('edit_profile') }}</span></div></a>
-    <a href="{{ url_for('profile.addresses') }}" class="card-product" style="padding:20px"><div class="body"><span class="title">{{ t('addresses') }}</span></div></a>
-    <a href="{{ url_for('shop.my_orders') }}" class="card-product" style="padding:20px"><div class="body"><span class="title">{{ t('orders') }}</span></div></a>
-    <a href="{{ url_for('shop.favorites') }}" class="card-product" style="padding:20px"><div class="body"><span class="title">❤️ {{ t('favorites') }}</span></div></a>
-    <a href="{{ url_for('profile.settings') }}" class="card-product" style="padding:20px"><div class="body"><span class="title">{{ t('settings') }}</span></div></a>
+  <div class="grid-products" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); margin-top:24px">
+    <a href="{{ url_for('profile.edit_info') }}" class="card-product" style="padding:22px; text-align:center"><div class="body" style="align-items:center"><span style="font-size:1.5rem">🧑</span><span class="title" style="margin-top:6px">{{ t('edit_profile') }}</span></div></a>
+    <a href="{{ url_for('profile.addresses') }}" class="card-product" style="padding:22px; text-align:center"><div class="body" style="align-items:center"><span style="font-size:1.5rem">📍</span><span class="title" style="margin-top:6px">{{ t('addresses') }}</span></div></a>
+    <a href="{{ url_for('shop.my_orders') }}" class="card-product" style="padding:22px; text-align:center"><div class="body" style="align-items:center"><span style="font-size:1.5rem">📦</span><span class="title" style="margin-top:6px">{{ t('orders') }}</span></div></a>
+    <a href="{{ url_for('shop.favorites') }}" class="card-product" style="padding:22px; text-align:center"><div class="body" style="align-items:center"><span style="font-size:1.5rem">❤️</span><span class="title" style="margin-top:6px">{{ t('favorites') }}</span></div></a>
+    <a href="{{ url_for('profile.notifications') }}" class="card-product" style="padding:22px; text-align:center"><div class="body" style="align-items:center"><span style="font-size:1.5rem">🔔</span><span class="title" style="margin-top:6px">{{ t('notifications') }}</span></div></a>
+    <a href="{{ url_for('profile.settings') }}" class="card-product" style="padding:22px; text-align:center"><div class="body" style="align-items:center"><span style="font-size:1.5rem">⚙️</span><span class="title" style="margin-top:6px">{{ t('settings') }}</span></div></a>
   </div>
 
   <section class="section">

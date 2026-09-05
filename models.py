@@ -84,6 +84,14 @@ class Address(db.Model):
         parts = [self.city, self.area, self.street_details]
         return ", ".join([p for p in parts if p])
 
+    @property
+    def maps_url(self):
+        """رابط خريطة دقيق بالإحداثيات إذا موجودة، وإلا بحث نصي عادي."""
+        if self.latitude is not None and self.longitude is not None:
+            return f"https://www.google.com/maps?q={self.latitude},{self.longitude}"
+        from urllib.parse import quote
+        return f"https://www.google.com/maps/search/?api=1&query={quote(self.maps_query)}"
+
 
 class Store(db.Model):
     id = db.Column(db.Integer, primary_key=True)

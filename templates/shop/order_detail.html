@@ -11,7 +11,7 @@
   <div style="background:var(--green-050); border:1px solid var(--green-100); border-radius:14px; padding:14px 18px; margin-bottom:16px">
     <strong>{{ t('delivery_address') }}:</strong> {{ order.address.city }} — {{ order.address.area }} — {{ order.address.street_details }} (📞 {{ order.address.phone }})
     <br>
-    <a class="map-pin" href="https://www.google.com/maps/search/?api=1&query={{ order.address.maps_query | urlencode }}" target="_blank" rel="noopener">📍 {{ 'شوف عنوان الزبون على الخريطة' if current_lang=='ar' else 'View customer address on map' }}</a>
+    <a class="map-pin" href="{{ order.address.maps_url }}" target="_blank" rel="noopener">📍 {{ 'شوف عنوان الزبون على الخريطة' if current_lang=='ar' else 'View customer address on map' }}</a>
   </div>
   {% endif %}
 

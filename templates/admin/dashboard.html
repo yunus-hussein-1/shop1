@@ -37,7 +37,7 @@
           <td>{{ o.order_number }}</td><td>{{ o.buyer.name }}</td><td>{{ price(o.total_usd) }}</td>
           <td>{{ o.payment_reference or '—' }}</td>
           <td>{% if o.payment_proof_path %}<a href="{{ url_for('static', filename=o.payment_proof_path) }}" target="_blank">{{ 'عرض' if current_lang=='ar' else 'View' }}</a>{% else %}—{% endif %}</td>
-          <td>{% if o.address %}<a class="map-pin" href="https://www.google.com/maps/search/?api=1&query={{ o.address.maps_query | urlencode }}" target="_blank" rel="noopener">📍 {{ 'خريطة' if current_lang=='ar' else 'Map' }}</a>{% endif %}</td>
+          <td>{% if o.address %}<a class="map-pin" href="{{ o.address.maps_url }}" target="_blank" rel="noopener">📍 {{ 'خريطة' if current_lang=='ar' else 'Map' }}</a>{% endif %}</td>
           <td style="display:flex; gap:6px">
             <form method="post" action="{{ url_for('admin.confirm_payment', order_id=o.id) }}"><button class="btn btn-primary btn-sm">{{ 'تأكيد الدفع' if current_lang=='ar' else 'Confirm payment' }}</button></form>
             <form method="post" action="{{ url_for('admin.reject_payment', order_id=o.id) }}"><button class="btn btn-ghost btn-sm">{{ 'رفض' if current_lang=='ar' else 'Reject' }}</button></form>

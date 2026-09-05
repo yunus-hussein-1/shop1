@@ -348,6 +348,20 @@ footer a:hover{opacity:1; text-decoration:underline}
 .cart-drawer-body{flex:1; overflow-y:auto; padding:6px 18px}
 .cart-drawer-foot{padding:16px 18px; border-top:1px solid var(--line)}
 
+/* ---------- قائمة حسابي المنسدلة ---------- */
+.account-dropdown{position:relative}
+.account-dropdown-panel{
+  display:none; position:absolute; top:calc(100% + 8px); inset-inline-end:0; z-index:60;
+  background:var(--card-bg); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow-soft);
+  min-width:200px; padding:8px; flex-direction:column; gap:2px;
+}
+.account-dropdown-panel.open{display:flex}
+.account-dropdown-panel a{
+  padding:9px 12px; border-radius:9px; font-size:.86rem; font-weight:600; color:var(--ink-900); display:block;
+}
+.account-dropdown-panel a:hover{background:var(--green-050)}
+.account-dropdown-panel hr{border:none; border-top:1px solid var(--line); margin:6px 0}
+
 /* ---------- misc ---------- */
 .empty-state{text-align:center; padding:60px 20px; color:var(--ink-500)}
 .empty-state .leaf{width:70px; height:70px; margin:0 auto 14px; opacity:.5}

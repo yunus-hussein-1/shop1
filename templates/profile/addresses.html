@@ -12,7 +12,7 @@
         <span class="store">{{ a.city }} — {{ a.area }}</span>
         <span class="store">{{ a.street_details }}</span>
         <span class="store">📞 {{ a.phone }}</span>
-        <a class="map-pin" href="https://www.google.com/maps/search/?api=1&query={{ a.maps_query | urlencode }}" target="_blank" rel="noopener">📍 {{ 'شوف على الخريطة' if current_lang=='ar' else 'View on map' }}</a>
+        <a class="map-pin" href="{{ a.maps_url }}" target="_blank" rel="noopener">📍 {{ 'شوف على الخريطة' if current_lang=='ar' else 'View on map' }}</a>
         <form method="post" action="{{ url_for('shop.delete_address', address_id=a.id) }}" style="margin-top:10px">
           <button class="btn btn-ghost btn-sm">{{ t('delete') }}</button>
         </form>
@@ -24,19 +24,61 @@
 
   <div class="form-card wide" style="margin:0">
     <h1 style="font-size:1.2rem">{{ t('add_address') }}</h1>
-    <form method="post" action="{{ url_for('shop.add_address') }}">
+
+    <button type="button" id="useLocationBtn" class="btn btn-gold" style="margin-bottom:18px" onclick="useMyLocation()">
+      📍 {{ 'استخدم موقعي الحالي (بدون كتابة)' if current_lang=='ar' else 'Use my current location (no typing)' }}
+    </button>
+    <p id="locationStatus" class="hint" style="display:none; margin-bottom:14px"></p>
+
+    <form method="post" action="{{ url_for('shop.add_address') }}" id="addressForm">
+      <input type="hidden" name="latitude" id="latInput">
+      <input type="hidden" name="longitude" id="lngInput">
       <div class="two-col">
         <div class="field"><label>{{ 'اسم العنوان' if current_lang=='ar' else 'Address label' }}</label><input type="text" name="label" placeholder="{{ 'المنزل / العمل' if current_lang=='ar' else 'Home / Work' }}" required></div>
-        <div class="field"><label>{{ t('city') }}</label><input type="text" name="city" required></div>
+        <div class="field"><label>{{ t('city') }}</label><input type="text" name="city" id="cityInput" required></div>
       </div>
       <div class="two-col">
-        <div class="field"><label>{{ t('area') }}</label><input type="text" name="area"></div>
+        <div class="field"><label>{{ t('area') }}</label><input type="text" name="area" id="areaInput"></div>
         <div class="field"><label>{{ t('phone') }}</label><input type="tel" name="phone" required></div>
       </div>
-      <div class="field"><label>{{ t('street_details') }}</label><textarea name="street_details" rows="2"></textarea></div>
+      <div class="field"><label>{{ t('street_details') }}</label><textarea name="street_details" id="streetInput" rows="2"></textarea></div>
       <div class="checkbox-row" style="margin-bottom:16px"><input type="checkbox" name="is_default" id="def"><label for="def">{{ 'اجعله العنوان الافتراضي' if current_lang=='ar' else 'Make this my default address' }}</label></div>
       <button type="submit" class="btn btn-primary">{{ t('add_address') }}</button>
     </form>
   </div>
 </div>
+
+<script>
+function useMyLocation() {
+  const statusEl = document.getElementById('locationStatus');
+  statusEl.style.display = 'block';
+  statusEl.textContent = "{{ 'جاري تحديد موقعك...' if current_lang=='ar' else 'Detecting your location...' }}";
+
+  if (!navigator.geolocation) {
+    statusEl.textContent = "{{ 'جهازك ما بيدعم تحديد الموقع.' if current_lang=='ar' else 'Your device does not support geolocation.' }}";
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(async function (pos) {
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+    document.getElementById('latInput').value = lat;
+    document.getElementById('lngInput').value = lng;
+
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language={{ current_lang }}`);
+      const data = await res.json();
+      const addr = data.address || {};
+      document.getElementById('cityInput').value = addr.city || addr.town || addr.village || addr.state || '';
+      document.getElementById('areaInput').value = addr.suburb || addr.neighbourhood || addr.county || '';
+      document.getElementById('streetInput').value = data.display_name || '';
+      statusEl.textContent = "{{ '✅ تم تحديد موقعك وتعبئة العنوان تلقائياً — راجعه وعدّل إذا حبيت.' if current_lang=='ar' else '✅ Location detected and address auto-filled — review and adjust if needed.' }}";
+    } catch (e) {
+      statusEl.textContent = "{{ '✅ تم تحديد إحداثيات موقعك. عبّي المدينة والتفاصيل يدوياً من فضلك.' if current_lang=='ar' else '✅ Coordinates detected. Please fill in city and details manually.' }}";
+    }
+  }, function () {
+    statusEl.textContent = "{{ 'ما قدرنا نوصل لموقعك — تأكد إنك سمحت بصلاحية الموقع للمتصفح.' if current_lang=='ar' else 'Could not access your location — make sure you granted location permission.' }}";
+  });
+}
+</script>
 {% endblock %}

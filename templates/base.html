@@ -125,11 +125,25 @@ setTimeout(function () {
           🔔{% if unread_notifications_count %}<span class="cart-count">{{ unread_notifications_count }}</span>{% endif %}
         </a>
         {% endif %}
-        <a href="{{ url_for('profile.dashboard') }}" class="btn btn-ghost btn-sm">👤 {{ t('my_account') }}</a>
+        <div class="account-dropdown" id="accountDropdown">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="toggleAccountMenu(event)">👤 {{ t('my_account') }} ▾</button>
+          <div class="account-dropdown-panel" id="accountDropdownPanel">
+            <a href="{{ url_for('profile.dashboard') }}">🏠 {{ 'لوحة حسابي' if current_lang=='ar' else 'Account overview' }}</a>
+            <a href="{{ url_for('shop.my_orders') }}">📦 {{ t('orders') }}</a>
+            <a href="{{ url_for('shop.favorites') }}">❤️ {{ t('favorites') }}</a>
+            <a href="{{ url_for('profile.addresses') }}">📍 {{ t('addresses') }}</a>
+            <a href="{{ url_for('profile.notifications') }}">🔔 {{ t('notifications') }}</a>
+            <a href="{{ url_for('profile.settings') }}">⚙️ {{ t('settings') }}</a>
+            {% if current_user.store %}
+            <a href="{{ url_for('seller.dashboard') }}">🏪 {{ 'متجري' if current_lang=='ar' else 'My Store' }}</a>
+            {% endif %}
+            <hr>
+            <a href="{{ url_for('auth.logout') }}" style="color:var(--danger)">🚪 {{ t('logout') }}</a>
+          </div>
+        </div>
         {% if current_user.is_admin %}
           <a href="{{ url_for('admin.dashboard') }}" class="btn btn-ghost btn-sm">🛠️ {{ 'لوحة الإدارة' if current_lang=='ar' else 'Admin Panel' }}</a>
         {% endif %}
-        <a href="{{ url_for('auth.logout') }}" class="btn btn-ghost btn-sm">{{ t('logout') }}</a>
       {% else %}
         <a href="{{ url_for('auth.login') }}" class="btn btn-ghost btn-sm">{{ t('login') }}</a>
         <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm">{{ t('register') }}</a>
@@ -310,6 +324,20 @@ function toggleTheme() {
   document.documentElement.setAttribute('data-theme', next);
   localStorage.setItem('shayeb_theme', next);
 }
+
+// قائمة حسابي المنسدلة
+function toggleAccountMenu(e) {
+  e.stopPropagation();
+  const panel = document.getElementById('accountDropdownPanel');
+  if (panel) panel.classList.toggle('open');
+}
+document.addEventListener('click', function (e) {
+  const dropdown = document.getElementById('accountDropdown');
+  const panel = document.getElementById('accountDropdownPanel');
+  if (dropdown && panel && !dropdown.contains(e.target)) {
+    panel.classList.remove('open');
+  }
+});
 </script>
 </body>
 </html>

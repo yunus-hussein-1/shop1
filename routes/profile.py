@@ -24,7 +24,21 @@ def dashboard():
         "favorites_count": Favorite.query.filter_by(user_id=current_user.id).count(),
         "addresses_count": Address.query.filter_by(user_id=current_user.id).count(),
     }
-    return render_template("profile/dashboard.html", recent_orders=recent_orders, stats=stats)
+
+    # نسبة اكتمال الملف الشخصي — ميزة بسيطة تشجّع المستخدم يكمل بياناته
+    checklist = [
+        bool(current_user.avatar_path),
+        bool(current_user.phone),
+        bool(current_user.birth_date),
+        stats["addresses_count"] > 0,
+        bool(current_user.saved_shamcash_number),
+    ]
+    completion_percent = round(sum(checklist) / len(checklist) * 100)
+
+    return render_template(
+        "profile/dashboard.html", recent_orders=recent_orders, stats=stats,
+        completion_percent=completion_percent,
+    )
 
 
 @profile_bp.route("/edit", methods=["GET", "POST"])
