@@ -1,57 +1,62 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-  <h1 class="page-title">متجر {{ store.name }}</h1>
-  <p>حالة المتجر: <span class="status-pill status-{{ store.status }}">{{ store.status }}</span></p>
+  <h1 class="page-title">{{ ('متجر ' + store.name) if current_lang=='ar' else (store.name + ' store') }}</h1>
+  <p>{{ 'حالة المتجر:' if current_lang=='ar' else 'Store status:' }} <span class="status-pill status-{{ store.status }}">{{ store.status }}</span></p>
 
   {% if store.status == 'pending' %}
-  <div class="empty-state"><p>طلبك قيد المراجعة من فريق شايب، رح تنعلم فور الموافقة عليه 🌿</p></div>
+  <div class="empty-state"><p>{{ 'طلبك قيد المراجعة من فريق شايب، رح تنعلم فور الموافقة عليه 🌿' if current_lang=='ar' else 'Your application is under review by our team, you’ll be notified as soon as it’s approved 🌿' }}</p></div>
   {% elif store.status == 'rejected' %}
-  <div class="empty-state"><p>للأسف تم رفض طلب متجرك. تواصل معنا لمزيد من التفاصيل.</p></div>
+  <div class="empty-state"><p>{{ 'للأسف تم رفض طلب متجرك. تواصل معنا لمزيد من التفاصيل.' if current_lang=='ar' else 'Unfortunately your store application was rejected. Contact us for more details.' }}</p></div>
   {% elif store.status == 'banned' %}
-  <div class="empty-state"><p>هاد المتجر موقوف حالياً من قبل الإدارة.</p></div>
+  <div class="empty-state"><p>{{ 'هاد المتجر موقوف حالياً من قبل الإدارة.' if current_lang=='ar' else 'This store is currently suspended by the administration.' }}</p></div>
   {% else %}
-  <a href="{{ url_for('seller.add_product') }}" class="btn btn-primary" style="margin-bottom:24px; display:inline-flex">+ أضف منتج جديد</a>
-  <a href="{{ url_for('seller.report') }}" class="btn btn-ghost" style="margin-bottom:24px; margin-inline-start:10px; display:inline-flex">🧾 تقرير المبيعات</a>
+  <a href="{{ url_for('seller.add_product') }}" class="btn btn-primary" style="margin-bottom:24px; display:inline-flex">+ {{ 'أضف منتج جديد' if current_lang=='ar' else 'Add new product' }}</a>
+  <a href="{{ url_for('seller.report') }}" class="btn btn-ghost" style="margin-bottom:24px; margin-inline-start:10px; display:inline-flex">🧾 {{ 'تقرير المبيعات' if current_lang=='ar' else 'Sales report' }}</a>
 
   <div class="grid-products" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); margin-bottom:28px">
     <div class="card-product" style="padding:20px; text-align:center">
       <div class="body" style="align-items:center">
         <span style="font-size:1.6rem; font-weight:900; color:var(--green-700)">{{ stats.orders_count }}</span>
-        <span class="store">عدد الطلبات</span>
+        <span class="store">{{ 'عدد الطلبات' if current_lang=='ar' else 'Orders' }}</span>
       </div>
     </div>
     <div class="card-product" style="padding:20px; text-align:center">
       <div class="body" style="align-items:center">
         <span style="font-size:1.6rem; font-weight:900; color:var(--green-700)">{{ price(stats.total_sold_usd) }}</span>
-        <span class="store">إجمالي المبيعات</span>
+        <span class="store">{{ 'إجمالي المبيعات' if current_lang=='ar' else 'Total sales' }}</span>
       </div>
     </div>
     <div class="card-product" style="padding:20px; text-align:center">
       <div class="body" style="align-items:center">
         <span style="font-size:1.6rem; font-weight:900; color:var(--gold-600)">{{ price(stats.net_earnings_usd) }}</span>
-        <span class="store">صافي أرباحك (بعد عمولة 10%)</span>
+        <span class="store">{{ 'صافي أرباحك (بعد عمولة 10%)' if current_lang=='ar' else 'Your net earnings (after 10% commission)' }}</span>
       </div>
     </div>
     <div class="card-product" style="padding:20px; text-align:center">
       <div class="body" style="align-items:center">
         <span style="font-size:1.6rem; font-weight:900; color:var(--danger)">{{ price(stats.pending_payout_usd) }}</span>
-        <span class="store">قيد التحويل (خلال 7 أيام)</span>
+        <span class="store">{{ 'قيد التحويل (خلال 7 أيام)' if current_lang=='ar' else 'Pending payout (within 7 days)' }}</span>
       </div>
     </div>
   </div>
 
   <div class="simple-table-scroll"><table class="simple-table">
-    <thead><tr><th>المنتج</th><th>الكمية المباعة</th><th>سعر الوحدة</th><th>حالة الطلب</th></tr></thead>
+    <thead><tr>
+      <th>{{ 'المنتج' if current_lang=='ar' else 'Product' }}</th>
+      <th>{{ 'الكمية المباعة' if current_lang=='ar' else 'Quantity sold' }}</th>
+      <th>{{ 'سعر الوحدة' if current_lang=='ar' else 'Unit price' }}</th>
+      <th>{{ 'حالة الطلب' if current_lang=='ar' else 'Order status' }}</th>
+    </tr></thead>
     <tbody>
     {% for item in sold_items %}
       <tr><td>{{ item.title_snapshot }}</td><td>{{ item.quantity }}</td><td>{{ price(item.unit_price_usd) }}</td><td><span class="status-pill status-{{ item.order.status }}">{{ item.order.status }}</span></td></tr>
     {% else %}
-      <tr><td colspan="4">ما في مبيعات لسا.</td></tr>
+      <tr><td colspan="4">{{ 'ما في مبيعات لسا.' if current_lang=='ar' else 'No sales yet.' }}</td></tr>
     {% endfor %}
     </tbody>
   </table></div>
-  <p class="hint" style="margin-top:16px">يتم تحويل مستحقاتك لرقم شام كاش تبعك خلال 7 أيام من كل عملية بيع مؤكدة، بعد خصم عمولة شايب (10%).</p>
+  <p class="hint" style="margin-top:16px">{{ 'يتم تحويل مستحقاتك لرقم شام كاش تبعك خلال 7 أيام من كل عملية بيع مؤكدة، بعد خصم عمولة شايب (10%).' if current_lang=='ar' else 'Your earnings are transferred to your Sham Cash number within 7 days of each confirmed sale, after the Shayeb commission (10%) is deducted.' }}</p>
   {% endif %}
 </div>
 {% endblock %}

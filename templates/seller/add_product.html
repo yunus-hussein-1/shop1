@@ -2,32 +2,32 @@
 {% block content %}
 <div class="container">
   <div class="form-card wide">
-    <h1>إضافة منتج جديد</h1>
+    <h1>{{ 'إضافة منتج جديد' if current_lang=='ar' else 'Add new product' }}</h1>
     <form method="post" enctype="multipart/form-data">
-      <div class="field"><label>اسم المنتج</label><input type="text" name="title" required></div>
-      <div class="field"><label>الوصف</label><textarea name="description" rows="3"></textarea></div>
+      <div class="field"><label>{{ 'اسم المنتج' if current_lang=='ar' else 'Product name' }}</label><input type="text" name="title" required></div>
+      <div class="field"><label>{{ 'الوصف' if current_lang=='ar' else 'Description' }}</label><textarea name="description" rows="3"></textarea></div>
       <div class="two-col">
-        <div class="field"><label>السعر (بالدولار)</label><input type="number" step="0.01" name="price_usd" required></div>
-        <div class="field"><label>نسبة الخصم % (اختياري)</label><input type="number" name="discount_percent" value="0"></div>
+        <div class="field"><label>{{ 'السعر (بالدولار)' if current_lang=='ar' else 'Price (USD)' }}</label><input type="number" step="0.01" name="price_usd" required></div>
+        <div class="field"><label>{{ 'نسبة الخصم % (اختياري)' if current_lang=='ar' else 'Discount % (optional)' }}</label><input type="number" name="discount_percent" value="0"></div>
       </div>
       <div class="two-col">
-        <div class="field"><label>الكمية المتوفرة</label><input type="number" name="stock" value="1" required></div>
+        <div class="field"><label>{{ 'الكمية المتوفرة' if current_lang=='ar' else 'Available quantity' }}</label><input type="number" name="stock" value="1" required></div>
         <div class="field">
-          <label>القسم</label>
+          <label>{{ 'القسم' if current_lang=='ar' else 'Category' }}</label>
           <select name="category_id" required>
-            {% for c in categories %}<option value="{{ c.id }}">{{ c.name_ar }}</option>{% endfor %}
+            {% for c in categories %}<option value="{{ c.id }}">{{ c.name_ar if current_lang=='ar' else c.name_en }}</option>{% endfor %}
           </select>
         </div>
       </div>
-      <div class="field"><label>صورة المنتج الرئيسية</label><input type="file" name="image" accept="image/*" required></div>
-      <div class="field"><label>صور إضافية (اختياري، حتى 6 صور)</label><input type="file" name="extra_images" accept="image/*" multiple></div>
-      <div class="checkbox-row" style="margin-bottom:18px"><input type="checkbox" name="is_shayeb_offer" id="offer"><label for="offer">أضفه لقسم عروض شايب</label></div>
+      <div class="field"><label>{{ 'صورة المنتج الرئيسية' if current_lang=='ar' else 'Main product photo' }}</label><input type="file" name="image" accept="image/*" required></div>
+      <div class="field"><label>{{ 'صور إضافية (اختياري، حتى 6 صور)' if current_lang=='ar' else 'Extra photos (optional, up to 6)' }}</label><input type="file" name="extra_images" accept="image/*" multiple></div>
+      <div class="checkbox-row" style="margin-bottom:18px"><input type="checkbox" name="is_shayeb_offer" id="offer"><label for="offer">{{ 'أضفه لقسم عروض شايب' if current_lang=='ar' else 'Add to the Shayeb Offers section' }}</label></div>
       <div class="field">
-        <label>المقاسات المتوفرة (للألبسة فقط، اختياري)</label>
-        <input type="text" name="available_sizes" placeholder="مثال: S,M,L,XL">
-        <p class="hint">افصل بين المقاسات بفاصلة.</p>
+        <label>{{ 'المقاسات المتوفرة (للألبسة فقط، اختياري)' if current_lang=='ar' else 'Available sizes (clothing only, optional)' }}</label>
+        <input type="text" name="available_sizes" placeholder="{{ 'مثال: S,M,L,XL' if current_lang=='ar' else 'e.g. S,M,L,XL' }}">
+        <p class="hint">{{ 'افصل بين المقاسات بفاصلة.' if current_lang=='ar' else 'Separate sizes with a comma.' }}</p>
       </div>
-      <button type="submit" class="btn btn-primary btn-block">إضافة المنتج</button>
+      <button type="submit" class="btn btn-primary btn-block">{{ 'إضافة المنتج' if current_lang=='ar' else 'Add product' }}</button>
     </form>
   </div>
 </div>

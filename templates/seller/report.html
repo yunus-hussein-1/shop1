@@ -8,46 +8,52 @@
 </style>
 <div class="container">
   <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin:26px 0">
-    <h1 class="page-title" style="margin:0">🧾 تقرير مبيعات {{ store.name }}</h1>
-    <button onclick="window.print()" class="btn btn-primary">🖨️ طباعة / حفظ PDF</button>
+    <h1 class="page-title" style="margin:0">🧾 {{ ('تقرير مبيعات ' + store.name) if current_lang=='ar' else (store.name + ' Sales Report') }}</h1>
+    <button onclick="window.print()" class="btn btn-primary">🖨️ {{ 'طباعة / حفظ PDF' if current_lang=='ar' else 'Print / Save PDF' }}</button>
   </div>
 
-  <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:26px">
+  <div style="background:var(--card-bg); border:1px solid var(--line); border-radius:16px; padding:26px">
     <div style="display:flex; justify-content:space-between; border-bottom:2px solid var(--green-600); padding-bottom:16px; margin-bottom:20px">
       <div>
         <strong style="font-size:1.2rem">{{ store.name }}</strong><br>
-        <span style="font-size:.82rem; color:var(--ink-500)">تقرير صادر عن {{ brand_name }}</span>
+        <span style="font-size:.82rem; color:var(--ink-500)">{{ ('تقرير صادر عن ' + brand_name) if current_lang=='ar' else ('Report issued by ' + brand_name) }}</span>
       </div>
       <div style="text-align:end; font-size:.82rem; color:var(--ink-500)">
-        تاريخ الإصدار: {{ report.generated_at.strftime('%Y-%m-%d %H:%M') }}
+        {{ 'تاريخ الإصدار:' if current_lang=='ar' else 'Issued on:' }} {{ report.generated_at.strftime('%Y-%m-%d %H:%M') }}
       </div>
     </div>
 
     <div class="grid-products" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); margin-bottom:24px">
       <div class="card-product" style="padding:16px; text-align:center"><div class="body" style="align-items:center">
         <span style="font-size:1.4rem; font-weight:900; color:var(--green-700)">{{ report.orders_count }}</span>
-        <span class="store">عدد الطلبات</span>
+        <span class="store">{{ 'عدد الطلبات' if current_lang=='ar' else 'Orders' }}</span>
       </div></div>
       <div class="card-product" style="padding:16px; text-align:center"><div class="body" style="align-items:center">
         <span style="font-size:1.4rem; font-weight:900; color:var(--green-700)">{{ report.items_count }}</span>
-        <span class="store">القطع المباعة</span>
+        <span class="store">{{ 'القطع المباعة' if current_lang=='ar' else 'Items sold' }}</span>
       </div></div>
       <div class="card-product" style="padding:16px; text-align:center"><div class="body" style="align-items:center">
         <span style="font-size:1.4rem; font-weight:900; color:var(--green-700)">{{ price(report.gross_usd) }}</span>
-        <span class="store">إجمالي المبيعات</span>
+        <span class="store">{{ 'إجمالي المبيعات' if current_lang=='ar' else 'Total sales' }}</span>
       </div></div>
       <div class="card-product" style="padding:16px; text-align:center"><div class="body" style="align-items:center">
         <span style="font-size:1.4rem; font-weight:900; color:var(--gold-600)">{{ price(report.net_usd) }}</span>
-        <span class="store">صافي أرباحك</span>
+        <span class="store">{{ 'صافي أرباحك' if current_lang=='ar' else 'Your net earnings' }}</span>
       </div></div>
     </div>
 
     {% if report.best_product %}
-    <p style="margin-bottom:20px">🏆 <strong>أفضل منتج مبيعاً:</strong> {{ report.best_product.title }} ({{ report.best_qty }} قطعة)</p>
+    <p style="margin-bottom:20px">🏆 <strong>{{ 'أفضل منتج مبيعاً:' if current_lang=='ar' else 'Best-selling product:' }}</strong> {{ report.best_product.title }} ({{ report.best_qty }} {{ 'قطعة' if current_lang=='ar' else 'units' }})</p>
     {% endif %}
 
     <div class="simple-table-scroll"><table class="simple-table">
-      <thead><tr><th>المنتج</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th><th>حالة الطلب</th></tr></thead>
+      <thead><tr>
+        <th>{{ 'المنتج' if current_lang=='ar' else 'Product' }}</th>
+        <th>{{ 'الكمية' if current_lang=='ar' else 'Quantity' }}</th>
+        <th>{{ 'سعر الوحدة' if current_lang=='ar' else 'Unit price' }}</th>
+        <th>{{ t('total') }}</th>
+        <th>{{ 'حالة الطلب' if current_lang=='ar' else 'Order status' }}</th>
+      </tr></thead>
       <tbody>
       {% for item in sold_items %}
         <tr>
@@ -58,7 +64,7 @@
           <td><span class="status-pill status-{{ item.order.status }}">{{ item.order.status }}</span></td>
         </tr>
       {% else %}
-        <tr><td colspan="5">ما في مبيعات لسا.</td></tr>
+        <tr><td colspan="5">{{ 'ما في مبيعات لسا.' if current_lang=='ar' else 'No sales yet.' }}</td></tr>
       {% endfor %}
       </tbody>
     </table></div>

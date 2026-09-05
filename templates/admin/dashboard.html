@@ -1,83 +1,87 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-  <h1 class="page-title">لوحة إدارة شايب</h1>
+  <h1 class="page-title">{{ (brand_name + ' Admin Panel') if current_lang!='ar' else 'لوحة إدارة شايب' }}</h1>
 
   <section class="section">
-    <div class="section-head"><h2><span class="dot"></span> طلبات فتح متاجر بانتظار الموافقة</h2></div>
+    <div class="section-head"><h2><span class="dot"></span> {{ 'طلبات فتح متاجر بانتظار الموافقة' if current_lang=='ar' else 'Store applications pending approval' }}</h2></div>
     <div class="simple-table-scroll"><table class="simple-table">
-      <thead><tr><th>المتجر</th><th>المالك</th><th>القسم</th><th></th></tr></thead>
+      <thead><tr><th>{{ 'المتجر' if current_lang=='ar' else 'Store' }}</th><th>{{ 'المالك' if current_lang=='ar' else 'Owner' }}</th><th>{{ 'القسم' if current_lang=='ar' else 'Category' }}</th><th></th></tr></thead>
       <tbody>
       {% for s in pending_stores %}
         <tr>
           <td>{{ s.name }}</td><td>{{ s.owner.name }} ({{ s.owner.email }})</td><td>{{ s.category }}</td>
           <td style="display:flex; gap:6px">
-            <form method="post" action="{{ url_for('admin.approve_store', store_id=s.id) }}"><button class="btn btn-primary btn-sm">قبول</button></form>
-            <form method="post" action="{{ url_for('admin.reject_store', store_id=s.id) }}"><button class="btn btn-ghost btn-sm">رفض</button></form>
+            <form method="post" action="{{ url_for('admin.approve_store', store_id=s.id) }}"><button class="btn btn-primary btn-sm">{{ 'قبول' if current_lang=='ar' else 'Approve' }}</button></form>
+            <form method="post" action="{{ url_for('admin.reject_store', store_id=s.id) }}"><button class="btn btn-ghost btn-sm">{{ 'رفض' if current_lang=='ar' else 'Reject' }}</button></form>
           </td>
         </tr>
       {% else %}
-        <tr><td colspan="4">لا يوجد طلبات حالياً.</td></tr>
+        <tr><td colspan="4">{{ 'لا يوجد طلبات حالياً.' if current_lang=='ar' else 'No applications currently.' }}</td></tr>
       {% endfor %}
       </tbody>
     </table></div>
   </section>
 
   <section class="section">
-    <div class="section-head"><h2><span class="dot"></span> طلبات بانتظار تأكيد دفع شام كاش</h2></div>
+    <div class="section-head"><h2><span class="dot"></span> {{ 'طلبات بانتظار تأكيد دفع شام كاش' if current_lang=='ar' else 'Orders pending Sham Cash payment confirmation' }}</h2></div>
     <div class="simple-table-scroll"><table class="simple-table">
-      <thead><tr><th>رقم الطلب</th><th>الزبون</th><th>الإجمالي</th><th>رقم العملية</th><th>الإيصال</th><th>العنوان</th><th></th></tr></thead>
+      <thead><tr>
+        <th>{{ t('order_number') }}</th><th>{{ 'الزبون' if current_lang=='ar' else 'Customer' }}</th><th>{{ t('total') }}</th>
+        <th>{{ 'رقم العملية' if current_lang=='ar' else 'Transaction #' }}</th><th>{{ 'الإيصال' if current_lang=='ar' else 'Receipt' }}</th>
+        <th>{{ 'العنوان' if current_lang=='ar' else 'Address' }}</th><th></th>
+      </tr></thead>
       <tbody>
       {% for o in pending_payments %}
         <tr>
           <td>{{ o.order_number }}</td><td>{{ o.buyer.name }}</td><td>{{ price(o.total_usd) }}</td>
           <td>{{ o.payment_reference or '—' }}</td>
-          <td>{% if o.payment_proof_path %}<a href="{{ url_for('static', filename=o.payment_proof_path) }}" target="_blank">عرض</a>{% else %}—{% endif %}</td>
-          <td>{% if o.address %}<a class="map-pin" href="https://www.google.com/maps/search/?api=1&query={{ o.address.maps_query | urlencode }}" target="_blank" rel="noopener">📍 خريطة</a>{% endif %}</td>
+          <td>{% if o.payment_proof_path %}<a href="{{ url_for('static', filename=o.payment_proof_path) }}" target="_blank">{{ 'عرض' if current_lang=='ar' else 'View' }}</a>{% else %}—{% endif %}</td>
+          <td>{% if o.address %}<a class="map-pin" href="https://www.google.com/maps/search/?api=1&query={{ o.address.maps_query | urlencode }}" target="_blank" rel="noopener">📍 {{ 'خريطة' if current_lang=='ar' else 'Map' }}</a>{% endif %}</td>
           <td style="display:flex; gap:6px">
-            <form method="post" action="{{ url_for('admin.confirm_payment', order_id=o.id) }}"><button class="btn btn-primary btn-sm">تأكيد الدفع</button></form>
-            <form method="post" action="{{ url_for('admin.reject_payment', order_id=o.id) }}"><button class="btn btn-ghost btn-sm">رفض</button></form>
+            <form method="post" action="{{ url_for('admin.confirm_payment', order_id=o.id) }}"><button class="btn btn-primary btn-sm">{{ 'تأكيد الدفع' if current_lang=='ar' else 'Confirm payment' }}</button></form>
+            <form method="post" action="{{ url_for('admin.reject_payment', order_id=o.id) }}"><button class="btn btn-ghost btn-sm">{{ 'رفض' if current_lang=='ar' else 'Reject' }}</button></form>
           </td>
         </tr>
       {% else %}
-        <tr><td colspan="7">لا يوجد طلبات بانتظار التأكيد.</td></tr>
+        <tr><td colspan="7">{{ 'لا يوجد طلبات بانتظار التأكيد.' if current_lang=='ar' else 'No orders pending confirmation.' }}</td></tr>
       {% endfor %}
       </tbody>
     </table></div>
   </section>
 
   <section class="section">
-    <div class="section-head"><h2><span class="dot"></span> شكاوى واستفسارات مفتوحة</h2></div>
+    <div class="section-head"><h2><span class="dot"></span> {{ 'شكاوى واستفسارات مفتوحة' if current_lang=='ar' else 'Open complaints and inquiries' }}</h2></div>
     <div class="simple-table-scroll"><table class="simple-table">
-      <thead><tr><th>الموضوع</th><th>المتجر</th><th>التاريخ</th></tr></thead>
+      <thead><tr><th>{{ 'الموضوع' if current_lang=='ar' else 'Subject' }}</th><th>{{ 'المتجر' if current_lang=='ar' else 'Store' }}</th><th>{{ t('date') }}</th></tr></thead>
       <tbody>
       {% for c in open_complaints %}
         <tr><td>{{ c.subject }}</td><td>{{ c.store.name if c.store else '—' }}</td><td>{{ c.created_at.strftime('%Y-%m-%d') }}</td></tr>
       {% else %}
-        <tr><td colspan="3">لا يوجد شكاوى مفتوحة.</td></tr>
+        <tr><td colspan="3">{{ 'لا يوجد شكاوى مفتوحة.' if current_lang=='ar' else 'No open complaints.' }}</td></tr>
       {% endfor %}
       </tbody>
     </table></div>
   </section>
 
   <section class="section">
-    <div class="section-head"><h2><span class="dot"></span> طلبات إرجاع/استبدال بانتظار المراجعة</h2></div>
+    <div class="section-head"><h2><span class="dot"></span> {{ 'طلبات إرجاع/استبدال بانتظار المراجعة' if current_lang=='ar' else 'Return/exchange requests pending review' }}</h2></div>
     <div class="simple-table-scroll"><table class="simple-table">
-      <thead><tr><th>المنتج</th><th>الزبون</th><th>النوع</th><th>السبب</th><th></th></tr></thead>
+      <thead><tr><th>{{ 'المنتج' if current_lang=='ar' else 'Product' }}</th><th>{{ 'الزبون' if current_lang=='ar' else 'Customer' }}</th><th>{{ 'النوع' if current_lang=='ar' else 'Type' }}</th><th>{{ 'السبب' if current_lang=='ar' else 'Reason' }}</th><th></th></tr></thead>
       <tbody>
       {% for r in pending_returns %}
         <tr>
           <td>{{ r.order_item.title_snapshot }}</td>
           <td>{{ r.user.name }}</td>
-          <td>{{ 'إرجاع' if r.request_type == 'return' else 'استبدال' }}</td>
+          <td>{{ ('إرجاع' if r.request_type == 'return' else 'استبدال') if current_lang=='ar' else ('Return' if r.request_type == 'return' else 'Exchange') }}</td>
           <td>{{ r.reason or '—' }}</td>
           <td style="display:flex; gap:6px">
-            <form method="post" action="{{ url_for('admin.approve_return', return_id=r.id) }}"><button class="btn btn-primary btn-sm">قبول</button></form>
-            <form method="post" action="{{ url_for('admin.reject_return', return_id=r.id) }}"><button class="btn btn-ghost btn-sm">رفض</button></form>
+            <form method="post" action="{{ url_for('admin.approve_return', return_id=r.id) }}"><button class="btn btn-primary btn-sm">{{ 'قبول' if current_lang=='ar' else 'Approve' }}</button></form>
+            <form method="post" action="{{ url_for('admin.reject_return', return_id=r.id) }}"><button class="btn btn-ghost btn-sm">{{ 'رفض' if current_lang=='ar' else 'Reject' }}</button></form>
           </td>
         </tr>
       {% else %}
-        <tr><td colspan="5">لا يوجد طلبات إرجاع حالياً.</td></tr>
+        <tr><td colspan="5">{{ 'لا يوجد طلبات إرجاع حالياً.' if current_lang=='ar' else 'No return requests currently.' }}</td></tr>
       {% endfor %}
       </tbody>
     </table></div>
