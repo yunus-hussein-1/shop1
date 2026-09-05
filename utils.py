@@ -79,3 +79,18 @@ def send_order_email(user_email, subject, body):
         return False
     finally:
         socket.setdefaulttimeout(old_timeout)
+
+
+def send_sms(phone, message):
+    """
+    يبعت رسالة SMS. حالياً ما في خدمة إرسال حقيقية مربوطة (بتحتاج اشتراك بخدمة
+    متل Twilio أو مزوّد محلي). لين ما تربط خدمة حقيقية، هاي الدالة برجع False
+    والكود المطلوب بيظهر مباشرة بالواجهة (وضع تطوير) بدل ما يوصل SMS فعلي.
+
+    لربط خدمة حقيقية لاحقاً: عبّي المنطق هون (مثال Twilio):
+        from twilio.rest import Client
+        client = Client(ACCOUNT_SID, AUTH_TOKEN)
+        client.messages.create(body=message, from_=YOUR_TWILIO_NUMBER, to=phone)
+        return True
+    """
+    return False

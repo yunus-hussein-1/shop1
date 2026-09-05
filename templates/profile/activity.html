@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h1 class="page-title">🕓 {{ 'سجل نشاط الحساب' if current_lang=='ar' else 'Account activity log' }}</h1>
+  <p style="color:var(--ink-500); font-size:.88rem; margin-bottom:20px">
+    {% if current_lang == 'ar' %}
+    {% if current_user.last_login_at %}آخر تسجيل دخول: {{ current_user.last_login_at.strftime('%Y-%m-%d %H:%M') }}{% endif %}
+    {% if current_user.password_changed_at %} · آخر تغيير لكلمة السر: {{ current_user.password_changed_at.strftime('%Y-%m-%d %H:%M') }}{% endif %}
+    {% else %}
+    {% if current_user.last_login_at %}Last login: {{ current_user.last_login_at.strftime('%Y-%m-%d %H:%M') }}{% endif %}
+    {% if current_user.password_changed_at %} · Password last changed: {{ current_user.password_changed_at.strftime('%Y-%m-%d %H:%M') }}{% endif %}
+    {% endif %}
+  </p>
+
+  {% if logs %}
+  <div class="simple-table-scroll"><table class="simple-table">
+    <thead><tr><th>{{ 'الحدث' if current_lang=='ar' else 'Event' }}</th><th>{{ 'تفاصيل' if current_lang=='ar' else 'Detail' }}</th><th>{{ t('date') }}</th></tr></thead>
+    <tbody>
+    {% for l in logs %}
+      {% set action_labels_ar = {'login':'تسجيل دخول','password_change':'تغيير كلمة السر','email_change':'تغيير الإيميل'} %}
+      {% set action_labels_en = {'login':'Login','password_change':'Password changed','email_change':'Email changed'} %}
+      <tr>
+        <td>{{ (action_labels_ar if current_lang=='ar' else action_labels_en).get(l.action, l.action) }}</td>
+        <td>{{ l.detail or '—' }}</td>
+        <td>{{ l.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}
+  <div class="empty-state"><p>{{ 'ما في نشاط مسجّل لسا.' if current_lang=='ar' else 'No activity recorded yet.' }}</p></div>
+  {% endif %}
+</div>
+{% endblock %}

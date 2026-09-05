@@ -133,6 +133,7 @@ setTimeout(function () {
             <a href="{{ url_for('shop.favorites') }}">❤️ {{ t('favorites') }}</a>
             <a href="{{ url_for('profile.addresses') }}">📍 {{ t('addresses') }}</a>
             <a href="{{ url_for('profile.notifications') }}">🔔 {{ t('notifications') }}</a>
+            <a href="{{ url_for('profile.activity') }}">🕓 {{ 'سجل النشاط' if current_lang=='ar' else 'Activity log' }}</a>
             <a href="{{ url_for('profile.settings') }}">⚙️ {{ t('settings') }}</a>
             {% if current_user.store %}
             <a href="{{ url_for('seller.dashboard') }}">🏪 {{ 'متجري' if current_lang=='ar' else 'My Store' }}</a>

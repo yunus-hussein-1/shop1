@@ -100,6 +100,14 @@ def notifications():
     return render_template("profile/notifications.html", items=items)
 
 
+@profile_bp.route("/activity")
+@login_required
+def activity():
+    from models import ActivityLog
+    logs = ActivityLog.query.filter_by(user_id=current_user.id).order_by(ActivityLog.created_at.desc()).limit(30).all()
+    return render_template("profile/activity.html", logs=logs)
+
+
 @profile_bp.route("/settings", methods=["GET", "POST"])
 @login_required
 def settings():
@@ -117,6 +125,8 @@ def settings():
                 flash("في حساب تاني مستخدم هاد الإيميل.", "danger")
             else:
                 current_user.email = new_email
+                from models import ActivityLog
+                db.session.add(ActivityLog(user_id=current_user.id, action="email_change", detail=new_email))
                 db.session.commit()
                 flash("تم تحديث الإيميل بنجاح.", "success")
 
@@ -144,6 +154,9 @@ def settings():
                 flash("كلمة السر الجديدة لازم تكون 8 محارف عالأقل ومتطابقة.", "danger")
             else:
                 current_user.set_password(new_pw)
+                current_user.password_changed_at = datetime.utcnow()
+                from models import ActivityLog
+                db.session.add(ActivityLog(user_id=current_user.id, action="password_change"))
                 db.session.commit()
                 flash("تم تغيير كلمة السر بنجاح.", "success")
 

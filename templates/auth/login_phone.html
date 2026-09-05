@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="form-card">
+    <h1>📱 {{ 'تسجيل الدخول برقم الهاتف' if current_lang=='ar' else 'Log in with phone number' }}</h1>
+    <p class="sub">{{ 'دخّل رقم هاتفك المسجّل، وبنبعتلك كود دخول عبر رسالة نصية.' if current_lang=='ar' else 'Enter your registered phone number, and we\'ll send you a login code via text message.' }}</p>
+    <form method="post">
+      <div class="field">
+        <label>{{ t('phone') }}</label>
+        <input type="tel" name="phone" required autofocus placeholder="09xxxxxxxx">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">{{ 'إرسال الكود' if current_lang=='ar' else 'Send code' }}</button>
+    </form>
+    <p class="form-foot"><a href="{{ url_for('auth.login') }}" style="color:var(--green-700); font-weight:700">{{ 'رجوع لتسجيل الدخول بالإيميل' if current_lang=='ar' else 'Back to email login' }}</a></p>
+  </div>
+</div>
+{% endblock %}

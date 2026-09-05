@@ -23,6 +23,7 @@
       <hr style="flex:1; border:none; border-top:1px solid var(--line)"> {{ t('or') }} <hr style="flex:1; border:none; border-top:1px solid var(--line)">
     </div>
     <a href="{{ url_for('auth.login_google') }}" class="btn btn-ghost btn-block">{{ t('login_with_google') }}</a>
+    <a href="{{ url_for('auth.login_phone') }}" class="btn btn-ghost btn-block" style="margin-top:8px">📱 {{ 'تسجيل الدخول برقم الهاتف' if current_lang=='ar' else 'Log in with phone number' }}</a>
     <p class="form-foot">{{ t('no_account') }} <a href="{{ url_for('auth.register') }}" style="color:var(--green-700); font-weight:700">{{ t('sign_up_now') }}</a></p>
   </div>
 </div>

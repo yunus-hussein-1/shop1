@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="form-card">
+    <h1>🔐 {{ 'أدخل كود الدخول' if current_lang=='ar' else 'Enter login code' }}</h1>
+    <p class="sub">{{ 'دخّل الكود يلي وصلك برسالة نصية (صالح لمدة 10 دقائق).' if current_lang=='ar' else 'Enter the code sent to your phone (valid for 10 minutes).' }}</p>
+    <form method="post">
+      <div class="field">
+        <label>{{ 'الكود (6 أرقام)' if current_lang=='ar' else 'Code (6 digits)' }}</label>
+        <input type="text" name="code" maxlength="6" required autofocus>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">{{ t('login') }}</button>
+    </form>
+    <p class="form-foot"><a href="{{ url_for('auth.login_phone') }}" style="color:var(--green-700); font-weight:700">{{ 'ما وصلني كود، أعد الإرسال' if current_lang=='ar' else 'Didn\'t get a code, resend' }}</a></p>
+  </div>
+</div>
+{% endblock %}

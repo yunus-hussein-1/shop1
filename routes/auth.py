@@ -5,7 +5,8 @@ from flask_login import login_user, logout_user, login_required, current_user
 from flask_mail import Message
 
 from extensions import db, mail
-from models import User, PasswordResetCode
+from models import User, PasswordResetCode, ActivityLog, PhoneLoginCode
+from utils import send_sms
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -75,6 +76,9 @@ def login():
         login_user(user, remember=remember)
         if user.preferred_lang:
             session["lang"] = user.preferred_lang
+        user.last_login_at = datetime.utcnow()
+        db.session.add(ActivityLog(user_id=user.id, action="login", detail="بالإيميل وكلمة السر"))
+        db.session.commit()
         flash(f"أهلاً فيك من جديد يا {user.name} 👋", "success")
         next_page = request.args.get("next")
         return redirect(next_page or url_for("main.home"))
@@ -88,6 +92,74 @@ def login_google():
     # يحتاج بيانات اعتماد حقيقية (Client ID/Secret) من Google Cloud Console قبل التفعيل.
     flash("تسجيل الدخول عبر جوجل قيد الإعداد حالياً.", "info")
     return redirect(url_for("auth.login"))
+
+
+@auth_bp.route("/login/phone", methods=["GET", "POST"])
+def login_phone():
+    if current_user.is_authenticated:
+        return redirect(url_for("main.home"))
+
+    if request.method == "POST":
+        phone = request.form.get("phone", "").strip()
+        user = User.query.filter_by(phone=phone).first() if phone else None
+
+        if not user:
+            flash("ما لقينا حساب مسجّل بهاد رقم الهاتف.", "danger")
+            return render_template("auth/login_phone.html")
+
+        if user.is_banned:
+            flash("هاد الحساب موقوف. تواصل معنا للاستفسار.", "danger")
+            return render_template("auth/login_phone.html")
+
+        code_obj = PhoneLoginCode.new_for(user)
+        db.session.commit()
+
+        sent = send_sms(user.phone, f"كود دخولك لـ SHAYEB SHOP: {code_obj.code}")
+        session["otp_phone"] = user.phone
+        if not sent:
+            # وضع تطوير: ما في خدمة SMS حقيقية مربوطة بعد، فمنعرض الكود مباشرة
+            flash(f"[وضع تجريبي - بدون SMS حقيقي بعد] الكود: {code_obj.code}", "info")
+        else:
+            flash("تم إرسال كود الدخول لرقم هاتفك عبر رسالة نصية.", "success")
+
+        return redirect(url_for("auth.verify_phone_code"))
+
+    return render_template("auth/login_phone.html")
+
+
+@auth_bp.route("/login/phone/verify", methods=["GET", "POST"])
+def verify_phone_code():
+    phone = session.get("otp_phone")
+    if not phone:
+        return redirect(url_for("auth.login_phone"))
+
+    if request.method == "POST":
+        code = request.form.get("code", "").strip()
+        user = User.query.filter_by(phone=phone).first()
+        code_obj = (
+            PhoneLoginCode.query.filter_by(user_id=user.id, code=code, used=False)
+            .order_by(PhoneLoginCode.id.desc())
+            .first()
+            if user else None
+        )
+
+        if not code_obj or code_obj.expires_at < datetime.utcnow():
+            flash("الكود غير صحيح أو منتهي الصلاحية.", "danger")
+            return render_template("auth/verify_phone_code.html")
+
+        code_obj.used = True
+        user.last_login_at = datetime.utcnow()
+        db.session.add(ActivityLog(user_id=user.id, action="login", detail="برقم الهاتف (OTP)"))
+        db.session.commit()
+
+        login_user(user)
+        if user.preferred_lang:
+            session["lang"] = user.preferred_lang
+        session.pop("otp_phone", None)
+        flash(f"أهلاً فيك يا {user.name} 👋", "success")
+        return redirect(url_for("main.home"))
+
+    return render_template("auth/verify_phone_code.html")
 
 
 @auth_bp.route("/logout")

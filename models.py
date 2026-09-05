@@ -23,6 +23,8 @@ class User(UserMixin, db.Model):
     cover_path = db.Column(db.String(255))
     saved_shamcash_number = db.Column(db.String(40))
     measurement_unit = db.Column(db.String(10), default="cm")  # cm / inch
+    last_login_at = db.Column(db.DateTime)
+    password_changed_at = db.Column(db.DateTime)
 
     is_admin = db.Column(db.Boolean, default=False)
     is_banned = db.Column(db.Boolean, default=False)
@@ -227,6 +229,33 @@ class Notification(db.Model):
     link = db.Column(db.String(255))
     is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class ActivityLog(db.Model):
+    """سجل نشاط أمني للحساب: تسجيل دخول، تغيير كلمة سر، تغيير إيميل..."""
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    action = db.Column(db.String(50), nullable=False)  # login / password_change / email_change / phone_login
+    detail = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class PhoneLoginCode(db.Model):
+    """كود تسجيل دخول عبر رقم الهاتف (OTP)."""
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    code = db.Column(db.String(6), nullable=False)
+    expires_at = db.Column(db.DateTime, nullable=False)
+    used = db.Column(db.Boolean, default=False)
+
+    user = db.relationship("User")
+
+    @staticmethod
+    def new_for(user, minutes_valid=10):
+        code = f"{secrets.randbelow(1000000):06d}"
+        c = PhoneLoginCode(user_id=user.id, code=code, expires_at=datetime.utcnow() + timedelta(minutes=minutes_valid))
+        db.session.add(c)
+        return c
 
 
 class Order(db.Model):
