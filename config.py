@@ -13,6 +13,10 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL", f"sqlite:///{os.path.join(BASE_DIR, 'shayeb.db')}"
     )
+    # Render (وبعض الاستضافات التانية) بتعطي رابط قاعدة بيانات يبلش بـ "postgres://"
+    # بينما SQLAlchemy الحديث بده "postgresql://" — هاد السطر بيصلحها تلقائياً
+    if SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
+        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # جلسات الدخول
