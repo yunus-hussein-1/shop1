@@ -3,18 +3,18 @@
   <form method="post" action="{{ url_for('shop.toggle_favorite', product_id=p.id) }}"
         style="position:absolute; top:10px; inset-inline-end:10px; z-index:2">
     <button type="submit" class="icon-btn" style="background:rgba(255,255,255,.9); width:32px; height:32px; font-size:.95rem"
-            title="{{ 'إزالة من المفضلة' if p.id in favorite_ids else 'أضف للمفضلة' }}">
+            title="{{ ('إزالة من المفضلة' if p.id in favorite_ids else 'أضف للمفضلة') if current_lang=='ar' else ('Remove from favorites' if p.id in favorite_ids else 'Add to favorites') }}">
       {{ '❤️' if p.id in favorite_ids else '🤍' }}
     </button>
   </form>
   {% endif %}
   <a href="{{ url_for('main.compare_add', product_id=p.id) }}"
      style="position:absolute; top:50px; inset-inline-end:10px; z-index:2; background:rgba(255,255,255,.9); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.85rem; box-shadow:var(--shadow-soft)"
-     title="أضف للمقارنة">⚖️</a>
+     title="{{ 'أضف للمقارنة' if current_lang=='ar' else 'Add to compare' }}">⚖️</a>
   <a href="{{ url_for('main.product_detail', product_id=p.id) }}" style="display:contents">
     <div class="thumb">
-      {% if p.discount_percent %}<span class="tag">خصم {{ p.discount_percent }}%</span>{% endif %}
-      {% if p.id in weekly_best_ids %}<span class="tag-trend">🔥 الأكثر طلباً</span>{% endif %}
+      {% if p.discount_percent %}<span class="tag">{{ ('خصم ' + p.discount_percent|string + '%') if current_lang=='ar' else (p.discount_percent|string + '% off') }}</span>{% endif %}
+      {% if p.id in weekly_best_ids %}<span class="tag-trend">🔥 {{ 'الأكثر طلباً' if current_lang=='ar' else 'Trending' }}</span>{% endif %}
       {% if p.image_path %}
         <img src="{{ url_for('static', filename=p.image_path) }}" alt="{{ p.title }}">
       {% endif %}

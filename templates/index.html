@@ -5,12 +5,12 @@
   <div class="container">
     <div>
       <div class="hero-badges">
-        <span class="badge">🌿 توصيل لكل المناطق</span>
-        <span class="badge">💳 دفع آمن عبر شام كاش</span>
+        <span class="badge">🌿 {{ 'توصيل لكل المناطق' if current_lang=='ar' else 'Delivery to all areas' }}</span>
+        <span class="badge">💳 {{ 'دفع آمن عبر شام كاش' if current_lang=='ar' else 'Secure payment via Sham Cash' }}</span>
       </div>
-      <h1>سوق شايب... كل شي بلمسة وحدة.</h1>
-      <p>تسوّق أحدث الملابس الرجالية والنسائية وأغراض الأطفال والإلكترونيات من متاجر موثوقة، بأسعار وعروض حصرية.</p>
-      <a href="#new" class="btn btn-primary">شوف الجديد</a>
+      <h1>{{ 'سوق شايب... كل شي بلمسة وحدة.' if current_lang=='ar' else 'Shayeb Market... everything in one touch.' }}</h1>
+      <p>{{ 'تسوّق أحدث الملابس الرجالية والنسائية وأغراض الأطفال والإلكترونيات من متاجر موثوقة، بأسعار وعروض حصرية.' if current_lang=='ar' else 'Shop the latest men’s and women’s clothing, kids’ items, and electronics from trusted stores, with exclusive prices and offers.' }}</p>
+      <a href="#new" class="btn btn-primary">{{ 'شوف الجديد' if current_lang=='ar' else 'See what’s new' }}</a>
       <a href="{{ url_for('seller.apply') }}" class="btn btn-ghost">{{ t('sell_on_shayeb') }}</a>
     </div>
     <div class="hero-art">
@@ -56,7 +56,7 @@
   <section class="section" id="new">
     <div class="section-head">
       <h2><span class="dot"></span> {{ t('new') }}</h2>
-      <a href="{{ url_for('main.search') }}">شوف الكل ←</a>
+      <a href="{{ url_for('main.search') }}">{{ 'شوف الكل ←' if current_lang=='ar' else 'See all →' }}</a>
     </div>
     {% if new_products %}
     <div class="grid-products">
@@ -67,13 +67,13 @@
     {% else %}
     <div class="empty-state">
       <svg class="leaf" viewBox="0 0 40 40" fill="none"><path d="M20 4C11 8 6 16 8 26c1.5 7 8 10 14 8-4-2-7-6-7-11 0-8 6-14 13-16-2-2-5-3-8-3Z" fill="#c9d9cf"/></svg>
-      <p>لسا ما في منتجات مضافة. أول بائع يوافَق عليه رح تظهر منتجاته هون.</p>
+      <p>{{ 'لسا ما في منتجات مضافة. أول بائع يوافَق عليه رح تظهر منتجاته هون.' if current_lang=='ar' else 'No products added yet. The first approved seller’s products will appear here.' }}</p>
     </div>
     {% endif %}
   </section>
 
   <section class="section" style="padding-top:0">
-    <div class="section-head"><h2><span class="dot"></span> تسوّق حسب الفئة</h2></div>
+    <div class="section-head"><h2><span class="dot"></span> {{ 'تسوّق حسب الفئة' if current_lang=='ar' else 'Shop by category' }}</h2></div>
     <div class="grid-products" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
       {% for c in categories %}
       <a href="{{ url_for('main.category', slug=c.slug) }}" class="card-product" style="align-items:center; justify-content:center; text-align:center; padding:26px 10px">
@@ -101,13 +101,13 @@
       {% endfor %}
     </div>
     {% else %}
-    <p style="opacity:.8">لسا ما في عروض فعّالة، ترقّب قريباً 🌿</p>
+    <p style="opacity:.8">{{ 'لسا ما في عروض فعّالة، ترقّب قريباً 🌿' if current_lang=='ar' else 'No active offers yet, stay tuned 🌿' }}</p>
     {% endif %}
   </section>
 
   {% if best_sellers %}
   <section class="section">
-    <div class="section-head"><h2><span class="dot"></span> 🔥 الأكثر مبيعاً</h2></div>
+    <div class="section-head"><h2><span class="dot"></span> 🔥 {{ t('best_sellers') }}</h2></div>
     <div class="grid-products">
       {% for p in best_sellers %}
         {% include "partials/product_card.html" %}
@@ -118,7 +118,7 @@
 
   {% if recently_viewed %}
   <section class="section">
-    <div class="section-head"><h2><span class="dot"></span> 👁️ شوهد مؤخراً</h2></div>
+    <div class="section-head"><h2><span class="dot"></span> 👁️ {{ t('recently_viewed') }}</h2></div>
     <div class="grid-products">
       {% for p in recently_viewed %}
         {% include "partials/product_card.html" %}

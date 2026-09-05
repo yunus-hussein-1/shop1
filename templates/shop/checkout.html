@@ -3,18 +3,22 @@
 <div class="container">
   <div class="form-card wide">
     <h1>{{ t('checkout') }}</h1>
-    <p class="sub">الإجمالي المطلوب دفعه: <strong>{{ price(total) }}</strong></p>
+    <p class="sub">{{ 'الإجمالي المطلوب دفعه' if current_lang=='ar' else 'Total amount due' }}: <strong>{{ price(total) }}</strong></p>
 
     {% set stores_count = items|map(attribute='product.store_id')|unique|list|length %}
     {% if stores_count > 1 %}
     <div style="background:var(--green-050); border:1px solid var(--green-100); border-radius:10px; padding:10px 14px; margin-bottom:16px; font-size:.85rem; color:var(--ink-700)">
+      {% if current_lang == 'ar' %}
       🧾 طلبك يشمل منتجات من {{ stores_count }} متاجر مختلفة، وبتوصلك كلها بطلب واحد موحّد.
+      {% else %}
+      🧾 Your order includes products from {{ stores_count }} different stores, delivered together as one order.
+      {% endif %}
     </div>
     {% endif %}
 
     <form method="post" enctype="multipart/form-data">
       <div class="field">
-        <label>عنوان التوصيل</label>
+        <label>{{ t('delivery_address') }}</label>
         {% if addresses %}
         <select name="address_id" required>
           {% for a in addresses %}
@@ -22,39 +26,46 @@
           {% endfor %}
         </select>
         {% else %}
-        <p class="hint" style="color:var(--danger)">ما عندك عنوان محفوظ. <a href="{{ url_for('profile.addresses') }}">أضف عنوان أول من هون</a>.</p>
+        <p class="hint" style="color:var(--danger)">
+          {% if current_lang == 'ar' %}ما عندك عنوان محفوظ. <a href="{{ url_for('profile.addresses') }}">أضف عنوان أول من هون</a>.
+          {% else %}You have no saved address. <a href="{{ url_for('profile.addresses') }}">Add one here first</a>.{% endif %}
+        </p>
         {% endif %}
       </div>
 
       <div style="background:var(--green-050); border:1px solid var(--green-100); border-radius:14px; padding:18px; margin:20px 0">
-        <h3 style="margin:0 0 8px; color:var(--green-800,var(--green-700))">💳 الدفع عبر شام كاش</h3>
+        <h3 style="margin:0 0 8px; color:var(--green-800,var(--green-700))">💳 {{ 'الدفع عبر شام كاش' if current_lang=='ar' else 'Pay via Sham Cash' }}</h3>
         <p style="font-size:.88rem; color:var(--ink-700); margin:0 0 14px">
+          {% if current_lang == 'ar' %}
           امسح الباركود التالي من تطبيق شام كاش عندك، أو حوّل يدوياً لرقم شام كاش الرسمي بالأسفل. بعدها ارفق رقم العملية أو صورة الإيصال.
+          {% else %}
+          Scan the barcode below from your Sham Cash app, or transfer manually to the official number below. Then attach the transaction number or a receipt photo.
+          {% endif %}
         </p>
 
         <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap; margin-bottom:16px">
-          <img src="{{ url_for('static', filename=config.SHAMCASH_QR_PATH) }}" alt="باركود شام كاش" style="width:150px; height:auto; border-radius:12px; border:1px solid var(--line); background:#fff; padding:6px">
+          <img src="{{ url_for('static', filename=config.SHAMCASH_QR_PATH) }}" alt="Sham Cash barcode" style="width:150px; height:auto; border-radius:12px; border:1px solid var(--line); background:#fff; padding:6px">
           <div>
-            <p style="margin:0 0 6px; font-weight:700">رقم شام كاش الرسمي:</p>
+            <p style="margin:0 0 6px; font-weight:700">{{ 'رقم شام كاش الرسمي:' if current_lang=='ar' else 'Official Sham Cash number:' }}</p>
             <p style="margin:0; font-size:1.2rem; font-weight:900; color:var(--green-700); direction:ltr; text-align:right">{{ config.SHAMCASH_NUMBER }}</p>
-            <a href="{{ url_for('static', filename=config.SHAMCASH_QR_PATH) }}" download class="btn btn-ghost btn-sm" style="margin-top:10px; display:inline-flex">⬇️ تحميل صورة الباركود</a>
+            <a href="{{ url_for('static', filename=config.SHAMCASH_QR_PATH) }}" download class="btn btn-ghost btn-sm" style="margin-top:10px; display:inline-flex">⬇️ {{ 'تحميل صورة الباركود' if current_lang=='ar' else 'Download barcode image' }}</a>
           </div>
         </div>
 
         <div class="field">
-          <label>رقم عملية شام كاش (اختياري إذا رفعت الإيصال)</label>
-          <input type="text" name="payment_reference" placeholder="مثال: 45789632">
+          <label>{{ 'رقم عملية شام كاش (اختياري إذا رفعت الإيصال)' if current_lang=='ar' else 'Sham Cash transaction number (optional if you upload a receipt)' }}</label>
+          <input type="text" name="payment_reference" placeholder="{{ 'مثال: 45789632' if current_lang=='ar' else 'e.g. 45789632' }}">
         </div>
         {% if current_user.saved_shamcash_number %}
-        <p class="hint">💳 رقمك المحفوظ للدفع السريع: <strong style="direction:ltr; display:inline-block">{{ current_user.saved_shamcash_number }}</strong></p>
+        <p class="hint">💳 {{ 'رقمك المحفوظ للدفع السريع' if current_lang=='ar' else 'Your saved number for quick payment' }}: <strong style="direction:ltr; display:inline-block">{{ current_user.saved_shamcash_number }}</strong></p>
         {% endif %}
         <div class="field" style="margin-bottom:0">
-          <label>صورة إيصال الدفع (من تطبيق شام كاش بعد إتمام التحويل)</label>
+          <label>{{ 'صورة إيصال الدفع (من تطبيق شام كاش بعد إتمام التحويل)' if current_lang=='ar' else 'Payment receipt photo (from the Sham Cash app after transfer)' }}</label>
           <input type="file" name="payment_proof" accept="image/*" capture="environment">
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary btn-block">تأكيد الطلب</button>
+      <button type="submit" class="btn btn-primary btn-block">{{ t('confirm_order') }}</button>
     </form>
   </div>
 </div>

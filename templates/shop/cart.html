@@ -4,7 +4,7 @@
   <h1 class="page-title">{{ t('cart') }}</h1>
   {% if items %}
   <div class="simple-table-scroll"><table class="simple-table" style="margin-top:20px">
-    <thead><tr><th>المنتج</th><th>السعر</th><th>الكمية</th><th>الإجمالي</th><th></th></tr></thead>
+    <thead><tr><th>{{ 'المنتج' if current_lang=='ar' else 'Product' }}</th><th>{{ t('price') }}</th><th>{{ t('quantity') }}</th><th>{{ t('total') }}</th><th></th></tr></thead>
     <tbody>
     {% for i in items %}
       <tr>
@@ -17,7 +17,7 @@
         <td>{{ price(i.product.final_price_usd * i.quantity) }}</td>
         <td>
           <form method="post" action="{{ url_for('shop.remove_from_cart', item_id=i.id) }}">
-            <button class="btn btn-ghost btn-sm">إلغاء</button>
+            <button class="btn btn-ghost btn-sm">{{ t('remove') }}</button>
           </form>
         </td>
       </tr>
@@ -25,11 +25,11 @@
     </tbody>
   </table></div>
   <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px">
-    <h2 style="margin:0">الإجمالي: {{ price(total) }}</h2>
+    <h2 style="margin:0">{{ t('total') }}: {{ price(total) }}</h2>
     <a href="{{ url_for('shop.checkout') }}" class="btn btn-primary">{{ t('checkout') }}</a>
   </div>
   {% else %}
-  <div class="empty-state"><p>سلتك فاضية حالياً.</p><a href="{{ url_for('main.home') }}" class="btn btn-primary" style="margin-top:14px">تسوّق هلق</a></div>
+  <div class="empty-state"><p>{{ t('empty_cart') }}</p><a href="{{ url_for('main.home') }}" class="btn btn-primary" style="margin-top:14px">{{ t('shop_now') }}</a></div>
   {% endif %}
 </div>
 {% endblock %}

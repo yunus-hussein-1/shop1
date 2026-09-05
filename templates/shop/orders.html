@@ -4,7 +4,7 @@
   <h1 class="page-title">{{ t('orders') }}</h1>
   {% if orders %}
   <div class="simple-table-scroll"><table class="simple-table" style="margin-top:20px">
-    <thead><tr><th>رقم الطلب</th><th>التاريخ</th><th>الإجمالي</th><th>الحالة</th><th>الدفع</th><th></th></tr></thead>
+    <thead><tr><th>{{ t('order_number') }}</th><th>{{ t('date') }}</th><th>{{ t('total') }}</th><th>{{ t('status') }}</th><th>{{ t('payment_status') }}</th><th></th></tr></thead>
     <tbody>
     {% for o in orders %}
       <tr>
@@ -13,13 +13,13 @@
         <td>{{ price(o.total_usd) }}</td>
         <td><span class="status-pill status-{{ o.status }}">{{ o.status }}</span></td>
         <td><span class="status-pill status-{{ o.payment_status }}">{{ o.payment_status }}</span></td>
-        <td><a href="{{ url_for('shop.order_detail', order_id=o.id) }}" class="btn btn-ghost btn-sm">التفاصيل</a></td>
+        <td><a href="{{ url_for('shop.order_detail', order_id=o.id) }}" class="btn btn-ghost btn-sm">{{ t('details') }}</a></td>
       </tr>
     {% endfor %}
     </tbody>
   </table></div>
   {% else %}
-  <div class="empty-state"><p>ما عندك طلبات لسا.</p></div>
+  <div class="empty-state"><p>{{ t('no_orders') }}</p></div>
   {% endif %}
 </div>
 {% endblock %}

@@ -4,7 +4,7 @@
   <div class="two-col" style="margin-top:34px; align-items:start">
     <div class="card-product" style="border-radius:22px">
       <div class="thumb" style="aspect-ratio:1/1" id="mainImageWrap">
-        {% if product.discount_percent %}<span class="tag">خصم {{ product.discount_percent }}%</span>{% endif %}
+        {% if product.discount_percent %}<span class="tag">{{ ('خصم ' + product.discount_percent|string + '%') if current_lang=='ar' else (product.discount_percent|string + '% off') }}</span>{% endif %}
         {% if product.gallery %}<img id="mainImage" src="{{ url_for('static', filename=product.gallery[0]) }}" alt="{{ product.title }}">{% endif %}
       </div>
       {% if product.gallery|length > 1 %}
@@ -19,9 +19,9 @@
 
     <div>
       <h1 class="page-title" style="margin-top:0">{{ product.title }}</h1>
-      <p style="color:var(--ink-500)">من متجر
+      <p style="color:var(--ink-500)">{{ 'من متجر' if current_lang=='ar' else 'From store' }}
         <a href="{{ url_for('main.store_page', store_id=product.store.id) }}" style="color:var(--green-700); font-weight:700">{{ product.store.name }}</a>
-        {% if product.store.is_verified %}<span class="status-pill status-approved" title="متجر موثوق بعد مبيعات ناجحة">✅ موثوق</span>{% endif %}
+        {% if product.store.is_verified %}<span class="status-pill status-approved" title="{{ 'متجر موثوق بعد مبيعات ناجحة' if current_lang=='ar' else 'Verified after successful sales' }}">✅ {{ t('trusted_store') }}</span>{% endif %}
       </p>
       {% if product.avg_rating %}<p class="rating" style="font-size:1rem">★ {{ product.avg_rating }} ({{ reviews|length }} {{ t('reviews') }})</p>{% endif %}
 
@@ -30,28 +30,28 @@
         {% if product.discount_percent %}<span class="price-old" style="font-size:1rem">{{ price(product.price_usd) }}</span>{% endif %}
       </div>
 
-      <p class="prose" style="margin:0 0 24px">{{ product.description or "لا يوجد وصف إضافي لهاد المنتج." }}</p>
+      <p class="prose" style="margin:0 0 24px">{{ product.description or ('No additional description for this product.' if current_lang!='ar' else 'لا يوجد وصف إضافي لهاد المنتج.') }}</p>
 
       {% if product.sizes_list %}
       <div style="margin-bottom:22px">
-        <p style="font-weight:700; margin-bottom:8px">المقاسات المتوفرة:</p>
+        <p style="font-weight:700; margin-bottom:8px">{{ 'المقاسات المتوفرة:' if current_lang=='ar' else 'Available sizes:' }}</p>
         <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px">
           {% for s in product.sizes_list %}
           <span style="border:1.5px solid var(--line); border-radius:8px; padding:6px 14px; font-weight:700; font-size:.85rem">{{ s }}</span>
           {% endfor %}
         </div>
         <details style="font-size:.82rem; color:var(--ink-500)">
-          <summary style="cursor:pointer; font-weight:700; color:var(--green-700)">📏 جدول المقاسات الإرشادي</summary>
-          <table class="simple-table" style="margin-top:10px">
-            <thead><tr><th>المقاس</th><th>الصدر</th><th>الطول</th></tr></thead>
+          <summary style="cursor:pointer; font-weight:700; color:var(--green-700)">📏 {{ t('size_chart') }}</summary>
+          <div class="simple-table-scroll"><table class="simple-table" style="margin-top:10px">
+            <thead><tr><th>{{ 'المقاس' if current_lang=='ar' else 'Size' }}</th><th>{{ 'الصدر' if current_lang=='ar' else 'Chest' }}</th><th>{{ 'الطول' if current_lang=='ar' else 'Length' }}</th></tr></thead>
             <tbody>
               <tr><td>S</td><td>{{ cm_display(88) }}-{{ cm_display(92) }}</td><td>{{ cm_display(66) }}</td></tr>
               <tr><td>M</td><td>{{ cm_display(96) }}-{{ cm_display(100) }}</td><td>{{ cm_display(68) }}</td></tr>
               <tr><td>L</td><td>{{ cm_display(104) }}-{{ cm_display(108) }}</td><td>{{ cm_display(70) }}</td></tr>
               <tr><td>XL</td><td>{{ cm_display(112) }}-{{ cm_display(116) }}</td><td>{{ cm_display(72) }}</td></tr>
             </tbody>
-          </table>
-          <p style="margin-top:8px">القياسات تقريبية وقد تختلف بنسبة بسيطة حسب قصّة المنتج.</p>
+          </table></div>
+          <p style="margin-top:8px">{{ 'القياسات تقريبية وقد تختلف بنسبة بسيطة حسب قصّة المنتج.' if current_lang=='ar' else 'Measurements are approximate and may vary slightly by cut.' }}</p>
         </details>
       </div>
       {% endif %}
@@ -60,25 +60,25 @@
       <form method="post" action="{{ url_for('shop.add_to_cart', product_id=product.id) }}" style="display:flex; gap:10px; align-items:center">
         <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" style="width:80px; padding:10px; border:1.5px solid var(--line); border-radius:9px">
         <button type="submit" class="btn btn-primary">{{ t('add_to_cart') }}</button>
-        <button type="button" class="btn btn-ghost" onclick="shareProduct()">🔗 مشاركة</button>
+        <button type="button" class="btn btn-ghost" onclick="shareProduct()">🔗 {{ t('share_product') }}</button>
       </form>
       {% else %}
       <div style="display:flex; gap:10px">
-        <a href="{{ url_for('auth.login') }}" class="btn btn-primary">سجّل دخول للشراء</a>
-        <button type="button" class="btn btn-ghost" onclick="shareProduct()">🔗 مشاركة</button>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-primary">{{ 'سجّل دخول للشراء' if current_lang=='ar' else 'Log in to purchase' }}</a>
+        <button type="button" class="btn btn-ghost" onclick="shareProduct()">🔗 {{ t('share_product') }}</button>
       </div>
       {% endif %}
 
       {% if product.stock is not none and product.stock <= 3 %}
       <p style="color:var(--danger); font-weight:700; margin-top:10px; font-size:.85rem">
-        {% if product.stock == 0 %}نفدت الكمية حالياً{% else %}باقي {{ product.stock }} قطع فقط!{% endif %}
+        {% if product.stock == 0 %}{{ t('out_of_stock') }}{% else %}{{ 'باقي ' + product.stock|string + ' قطع فقط!' if current_lang=='ar' else 'Only ' + product.stock|string + ' left!' }}{% endif %}
       </p>
       {% endif %}
 
       <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:18px; padding-top:16px; border-top:1px solid var(--line)">
-        <span style="font-size:.78rem; color:var(--ink-500); display:flex; align-items:center; gap:5px">🛡️ دفع موثّق يدوياً</span>
-        <span style="font-size:.78rem; color:var(--ink-500); display:flex; align-items:center; gap:5px">↩️ إرجاع خلال 3 أيام</span>
-        <span style="font-size:.78rem; color:var(--ink-500); display:flex; align-items:center; gap:5px">✅ متجر مراجَع من {{ brand_name }}</span>
+        <span style="font-size:.78rem; color:var(--ink-500); display:flex; align-items:center; gap:5px">🛡️ {{ 'دفع موثّق يدوياً' if current_lang=='ar' else 'Manually verified payment' }}</span>
+        <span style="font-size:.78rem; color:var(--ink-500); display:flex; align-items:center; gap:5px">↩️ {{ 'إرجاع خلال 3 أيام' if current_lang=='ar' else '3-day return window' }}</span>
+        <span style="font-size:.78rem; color:var(--ink-500); display:flex; align-items:center; gap:5px">✅ {{ 'متجر مراجَع من ' + brand_name if current_lang=='ar' else 'Store reviewed by ' + brand_name }}</span>
       </div>
     </div>
   </div>
@@ -87,7 +87,7 @@
     <div class="section-head"><h2><span class="dot"></span> {{ t('reviews') }}</h2></div>
     {% if reviews %}
       {% for r in reviews %}
-      <div style="background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:12px">
+      <div style="background:var(--card-bg); border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:12px">
         <div style="display:flex; justify-content:space-between">
           <strong>{{ r.author.name }}</strong>
           <span class="stars">{{ '★'*r.rating }}{{ '☆'*(5-r.rating) }}</span>
@@ -97,13 +97,13 @@
       </div>
       {% endfor %}
     {% else %}
-      <p style="color:var(--ink-500)">لسا ما في تقييمات على هاد المنتج.</p>
+      <p style="color:var(--ink-500)">{{ 'لسا ما في تقييمات على هاد المنتج.' if current_lang=='ar' else 'No reviews yet for this product.' }}</p>
     {% endif %}
   </section>
 
   {% if related_products %}
   <section class="section">
-    <div class="section-head"><h2><span class="dot"></span> منتجات مشابهة</h2></div>
+    <div class="section-head"><h2><span class="dot"></span> {{ t('related_products') }}</h2></div>
     <div class="grid-products">
       {% for p in related_products %}{% include "partials/product_card.html" %}{% endfor %}
     </div>
@@ -114,10 +114,12 @@
 <script>
 function shareProduct() {
   const url = window.location.href;
+  const msg = "{{ 'تم نسخ رابط المنتج! 🔗' if current_lang=='ar' else 'Product link copied! 🔗' }}";
+  const promptMsg = "{{ 'انسخ الرابط:' if current_lang=='ar' else 'Copy this link:' }}";
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(url).then(() => alert('تم نسخ رابط المنتج! 🔗'));
+    navigator.clipboard.writeText(url).then(() => alert(msg));
   } else {
-    prompt('انسخ الرابط:', url);
+    prompt(promptMsg, url);
   }
 }
 </script>
