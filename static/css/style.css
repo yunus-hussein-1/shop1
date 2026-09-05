@@ -1,50 +1,57 @@
 /* ===== SHAYEB SHOP — هوية بصرية خضراء دافئة ===== */
 
 :root{
-  --green-900:#003a75;
-  --green-700:#0066cc;
-  --green-600:#0080ff;
-  --green-500:#3399ff;
-  --green-100:#e3f2ff;
-  --green-050:#f2f9ff;
-  --sand-050:#fbfbfc;
-  --sand-100:#eef1f4;
-  --gold-500:#ffaa03;
-  --gold-600:#e0940a;
+  --green-900:#0f3d26;
+  --green-700:#166b41;
+  --green-600:#1e8a52;
+  --green-500:#2ba363;
+  --green-100:#e7f4ec;
+  --green-050:#f3faf5;
+  --sand-050:#fbf9f4;
+  --sand-100:#f2ede1;
+  --gold-500:#c99a3d;
+  --gold-600:#a97e2a;
   --ink-900:#132019;
   --ink-700:#33473c;
   --ink-500:#6c7d73;
-  --line:#dfe4ea;
+  --line:#e2ded1;
   --danger:#c1443a;
   --card-bg:#ffffff;
   --page-bg:var(--sand-050);
-  --deep-900:#003a75; /* أزرق غامق ثابت لا يتغيّر مع الوضع الليلي/النهاري — للخلفيات الداكنة دايماً */
+  --deep-900:#0f3d26; /* أخضر غامق ثابت لا يتغيّر مع الوضع الليلي/النهاري — للخلفيات الداكنة دايماً */
   --radius-lg:22px;
   --radius-md:14px;
   --radius-sm:9px;
-  --shadow-soft:0 10px 30px -14px rgba(0,58,117,.25);
+  --shadow-soft:0 10px 30px -14px rgba(15,61,38,.25);
   --font-display:'Cairo', 'Poppins', sans-serif;
   --font-body:'Tajawal', 'Poppins', sans-serif;
 }
 
+/* ---------- تدرّجات متحركة (أخضر + ذهبي دايماً بحركة، مو لون ثابت) ---------- */
+@keyframes shayebGradientShift{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
 /* ---------- الوضع الليلي التلقائي (بدون أي زر، يتفعّل حسب توقيت جهاز الزائر) ---------- */
 html[data-theme="dark"]{
-  --green-900:#eaf4ff;
-  --green-700:#5eb0ff;
-  --green-600:#3399ff;
-  --green-500:#0080ff;
-  --green-100:#123151;
-  --green-050:#0d2438;
-  --sand-050:#0b1622;
-  --sand-100:#15222f;
-  --gold-500:#ffbf47;
-  --gold-600:#ffcf70;
+  --green-900:#eaf7ee;
+  --green-700:#5fd394;
+  --green-600:#3fbf7c;
+  --green-500:#2ba363;
+  --green-100:#173626;
+  --green-050:#132019;
+  --sand-050:#0e1512;
+  --sand-100:#182119;
+  --gold-500:#e0b95c;
+  --gold-600:#f0cd7e;
   --ink-900:#eef3ef;
   --ink-700:#c4d0c9;
-  --ink-500:#8fa1b0;
-  --line:#1e2e3e;
-  --card-bg:#101c28;
-  --page-bg:#0b1622;
+  --ink-500:#8fa199;
+  --line:#233029;
+  --card-bg:#141d18;
+  --page-bg:#0e1512;
 }
 html[data-theme="dark"] body{background:var(--page-bg)}
 html[data-theme="dark"] .navbar{background:linear-gradient(180deg,#101a15, var(--page-bg) 120%)}
@@ -134,12 +141,21 @@ button{font-family:inherit; cursor:pointer}
   transition:.18s cubic-bezier(.2,.8,.2,1); cursor:pointer;
 }
 .btn:hover{transform:translateY(-2px)}
-.btn-primary{background:linear-gradient(135deg,var(--green-600),var(--green-800,var(--green-700))); color:#fff; box-shadow:0 8px 18px -8px rgba(30,138,82,.55)}
+.btn-primary{
+  background:linear-gradient(120deg,var(--green-600),var(--gold-500),var(--green-700),var(--green-600));
+  background-size:300% 300%;
+  animation:shayebGradientShift 5s ease infinite;
+  color:#fff; box-shadow:0 8px 18px -8px rgba(30,138,82,.55);
+}
 .btn-primary:hover{background:var(--deep-900)}
 .btn-ghost{background:transparent; color:var(--green-800,var(--green-700)); border:1.5px solid var(--line)}
 .btn-ghost:hover{border-color:var(--green-600); color:var(--green-700)}
-.btn-gold{background:var(--gold-500); color:#fff}
-.btn-gold:hover{background:var(--gold-600)}
+.btn-gold{
+  background:linear-gradient(120deg,var(--gold-500),var(--green-600),var(--gold-600));
+  background-size:300% 300%;
+  animation:shayebGradientShift 5s ease infinite;
+  color:#fff;
+}
 .btn-danger{background:var(--danger); color:#fff}
 .btn-sm{padding:7px 14px; font-size:.82rem; border-radius:999px}
 .btn-block{width:100%}
@@ -175,7 +191,10 @@ button{font-family:inherit; cursor:pointer}
   font-size:.8rem; font-weight:700; color:var(--green-800,var(--green-700)); display:inline-flex; gap:6px; align-items:center;
 }
 .hero-art{
-  aspect-ratio:1/1; border-radius:32px; background:linear-gradient(150deg,var(--green-600),var(--deep-900));
+  aspect-ratio:1/1; border-radius:32px;
+  background:linear-gradient(120deg,var(--green-500),var(--gold-500),var(--deep-900),var(--green-600));
+  background-size:300% 300%;
+  animation:shayebGradientShift 8s ease infinite;
   display:flex; align-items:center; justify-content:center; position:relative; box-shadow:var(--shadow-soft);
 }
 .hero-art .leaf{width:44%; height:44%; opacity:.9}
@@ -214,7 +233,12 @@ button{font-family:inherit; cursor:pointer}
 .card-product .rating{font-size:.78rem; color:var(--gold-600); font-weight:700; background:var(--sand-100); padding:2px 8px; border-radius:999px}
 
 /* ---------- offers block ---------- */
-.offers-section{background:var(--deep-900); color:#fff; border-radius:32px; margin:30px 0; padding:44px 26px}
+.offers-section{
+  background:linear-gradient(120deg,var(--deep-900),var(--green-700),var(--gold-600),var(--deep-900));
+  background-size:300% 300%;
+  animation:shayebGradientShift 10s ease infinite;
+  color:#fff; border-radius:32px; margin:30px 0; padding:44px 26px;
+}
 .offers-section .section-head h2{color:#fff}
 .offers-section .section-head a{color:var(--gold-500)}
 .offers-section .card-product{background:var(--green-800,#154a2c); border-color:rgba(255,255,255,.12)}
@@ -297,7 +321,12 @@ footer a:hover{opacity:1; text-decoration:underline}
 .map-pin:hover{background:var(--green-100)}
 
 /* ---------- شريط العروض المتحرك ---------- */
-.promo-marquee{background:linear-gradient(90deg,#c99a3d,#a97e2a); color:#fff; text-align:center; font-weight:800; font-size:.82rem; padding:7px 0}
+.promo-marquee{
+  background:linear-gradient(120deg,var(--gold-500),var(--green-600),var(--gold-600),var(--green-700));
+  background-size:300% 300%;
+  animation:shayebGradientShift 6s ease infinite;
+  color:#fff; text-align:center; font-weight:800; font-size:.82rem; padding:7px 0;
+}
 #promoText{transition:opacity .3s ease; display:inline-block}
 
 /* ---------- سلة التسوق المنزلقة ---------- */
