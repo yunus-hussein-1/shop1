@@ -73,6 +73,8 @@ def login():
             return render_template("auth/login.html")
 
         login_user(user, remember=remember)
+        if user.preferred_lang:
+            session["lang"] = user.preferred_lang
         flash(f"أهلاً فيك من جديد يا {user.name} 👋", "success")
         next_page = request.args.get("next")
         return redirect(next_page or url_for("main.home"))

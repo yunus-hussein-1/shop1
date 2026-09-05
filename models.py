@@ -20,6 +20,9 @@ class User(UserMixin, db.Model):
     birth_date = db.Column(db.Date)
     preferred_lang = db.Column(db.String(5), default="ar")
     avatar_path = db.Column(db.String(255))
+    cover_path = db.Column(db.String(255))
+    saved_shamcash_number = db.Column(db.String(40))
+    measurement_unit = db.Column(db.String(10), default="cm")  # cm / inch
 
     is_admin = db.Column(db.Boolean, default=False)
     is_banned = db.Column(db.Boolean, default=False)
@@ -191,6 +194,7 @@ class CartItem(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)
     quantity = db.Column(db.Integer, default=1)
+    added_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     product = db.relationship("Product")
 

@@ -2,22 +2,25 @@
 {% block content %}
 <div class="container">
 
-  <div class="form-card wide" style="display:flex; align-items:center; gap:22px; margin-top:30px">
-    <div class="avatar-preview" style="width:78px; height:78px; flex:none">
-      {% if current_user.avatar_path %}
-        <img src="{{ url_for('static', filename=current_user.avatar_path) }}" alt="{{ current_user.name }}">
-      {% else %}
-        <span class="placeholder">{{ current_user.name[0] }}</span>
-      {% endif %}
-    </div>
-    <div style="flex:1">
-      <h1 style="margin:0 0 4px">أهلاً، {{ current_user.name }} 👋</h1>
-      <p style="margin:0; color:var(--ink-500); font-size:.86rem">{{ current_user.email }} · عضو منذ {{ current_user.created_at.strftime('%Y-%m-%d') }}</p>
-    </div>
-    <div style="display:flex; gap:22px; text-align:center">
-      <div><div style="font-weight:900; font-size:1.3rem; color:var(--green-700)">{{ stats.orders_count }}</div><div style="font-size:.75rem; color:var(--ink-500)">{{ t('orders') }}</div></div>
-      <div><div style="font-weight:900; font-size:1.3rem; color:var(--green-700)">{{ stats.favorites_count }}</div><div style="font-size:.75rem; color:var(--ink-500)">المفضلة</div></div>
-      <div><div style="font-weight:900; font-size:1.3rem; color:var(--green-700)">{{ stats.addresses_count }}</div><div style="font-size:.75rem; color:var(--ink-500)">{{ t('addresses') }}</div></div>
+  <div class="form-card wide" style="padding:0; overflow:hidden; margin-top:30px">
+    <div style="height:120px; background:linear-gradient(120deg,var(--green-600),var(--gold-500),var(--green-700)); background-size:300% 300%; animation:shayebGradientShift 8s ease infinite; {% if current_user.cover_path %}background-image:url('{{ url_for('static', filename=current_user.cover_path) }}'); background-size:cover; background-position:center; animation:none;{% endif %}"></div>
+    <div style="display:flex; align-items:center; gap:22px; padding:0 22px 22px; margin-top:-38px">
+      <div class="avatar-preview" style="width:78px; height:78px; flex:none">
+        {% if current_user.avatar_path %}
+          <img src="{{ url_for('static', filename=current_user.avatar_path) }}" alt="{{ current_user.name }}">
+        {% else %}
+          <span class="placeholder">{{ current_user.name[0] }}</span>
+        {% endif %}
+      </div>
+      <div style="flex:1; padding-top:38px">
+        <h1 style="margin:0 0 4px">أهلاً، {{ current_user.name }} 👋</h1>
+        <p style="margin:0; color:var(--ink-500); font-size:.86rem">{{ current_user.email }} · عضو منذ {{ current_user.created_at.strftime('%Y-%m-%d') }}</p>
+      </div>
+      <div style="display:flex; gap:22px; text-align:center; padding-top:38px">
+        <div><div style="font-weight:900; font-size:1.3rem; color:var(--green-700)">{{ stats.orders_count }}</div><div style="font-size:.75rem; color:var(--ink-500)">{{ t('orders') }}</div></div>
+        <div><div style="font-weight:900; font-size:1.3rem; color:var(--green-700)">{{ stats.favorites_count }}</div><div style="font-size:.75rem; color:var(--ink-500)">المفضلة</div></div>
+        <div><div style="font-weight:900; font-size:1.3rem; color:var(--green-700)">{{ stats.addresses_count }}</div><div style="font-size:.75rem; color:var(--ink-500)">{{ t('addresses') }}</div></div>
+      </div>
     </div>
   </div>
 

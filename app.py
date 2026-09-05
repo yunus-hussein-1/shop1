@@ -68,9 +68,15 @@ def create_app(config_class=Config):
 
         fav_ids = set()
         unread_count = 0
+        cart_reminder_count = 0
         if current_user.is_authenticated:
             fav_ids = {f.product_id for f in Favorite.query.filter_by(user_id=current_user.id).all()}
             unread_count = Notification.query.filter_by(user_id=current_user.id, is_read=False).count()
+            from models import CartItem
+            threshold = datetime.utcnow() - timedelta(hours=1)
+            cart_reminder_count = CartItem.query.filter(
+                CartItem.user_id == current_user.id, CartItem.added_at <= threshold
+            ).count()
 
         week_ago = datetime.utcnow() - timedelta(days=7)
         weekly_rows = (
@@ -93,6 +99,11 @@ def create_app(config_class=Config):
             "favorite_ids": fav_ids,
             "unread_notifications_count": unread_count,
             "weekly_best_ids": weekly_best_ids,
+            "cart_reminder_count": cart_reminder_count,
+            "measurement_unit": (current_user.measurement_unit if current_user.is_authenticated else "cm"),
+            "cm_display": lambda cm: (
+                f"{round(cm/2.54,1)} inch" if current_user.is_authenticated and current_user.measurement_unit == "inch" else f"{cm} cm"
+            ),
         }
 
     # --- رؤوس أمان أساسية على كل استجابة ---

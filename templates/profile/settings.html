@@ -38,6 +38,34 @@
     {% endif %}
   </div>
 
+  <div class="form-card wide" style="margin:26px auto">
+    <h1 style="font-size:1.15rem">💳 طرق الدفع المحفوظة</h1>
+    <p class="sub">احفظ رقم شام كاش تبعك هون عشان يظهرلك جاهز بأي عملية شراء جاية (للتأكيد فقط، الدفع دايماً يدوي وآمن).</p>
+    <form method="post" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end">
+      <input type="hidden" name="action" value="save_payment_method">
+      <div class="field" style="flex:1; min-width:200px; margin-bottom:0">
+        <label>رقم شام كاش تبعك</label>
+        <input type="tel" name="saved_shamcash_number" value="{{ current_user.saved_shamcash_number or '' }}" placeholder="0999xxxxxx">
+      </div>
+      <button type="submit" class="btn btn-primary">حفظ</button>
+    </form>
+  </div>
+
+  <div class="form-card wide" style="margin:0 auto 26px">
+    <h1 style="font-size:1.15rem">📏 تفضيلاتك</h1>
+    <form method="post" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end">
+      <input type="hidden" name="action" value="save_preferences">
+      <div class="field" style="margin-bottom:0">
+        <label>وحدة قياس المقاسات</label>
+        <select name="measurement_unit">
+          <option value="cm" {{ 'selected' if current_user.measurement_unit=='cm' }}>سنتيمتر (cm)</option>
+          <option value="inch" {{ 'selected' if current_user.measurement_unit=='inch' }}>إنش (inch)</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">حفظ</button>
+    </form>
+  </div>
+
   <div class="form-card" style="margin:0 auto; border-color:#f2c6c1">
     <h1 style="font-size:1.15rem; color:var(--danger)">🗑️ حذف الحساب نهائياً</h1>
     <p class="sub">هاد الإجراء لا يمكن التراجع عنه. رح يتم حذف كل بياناتك.</p>

@@ -45,6 +45,9 @@
           <label>رقم عملية شام كاش (اختياري إذا رفعت الإيصال)</label>
           <input type="text" name="payment_reference" placeholder="مثال: 45789632">
         </div>
+        {% if current_user.saved_shamcash_number %}
+        <p class="hint">💳 رقمك المحفوظ للدفع السريع: <strong style="direction:ltr; display:inline-block">{{ current_user.saved_shamcash_number }}</strong></p>
+        {% endif %}
         <div class="field" style="margin-bottom:0">
           <label>صورة إيصال الدفع (من تطبيق شام كاش بعد إتمام التحويل)</label>
           <input type="file" name="payment_proof" accept="image/*" capture="environment">

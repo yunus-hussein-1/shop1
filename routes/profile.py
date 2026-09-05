@@ -35,6 +35,7 @@ def edit_info():
         phone = request.form.get("phone", "").strip()
         birth_date = request.form.get("birth_date", "")
         avatar = request.files.get("avatar")
+        cover = request.files.get("cover")
 
         current_user.name = name or current_user.name
         current_user.phone = phone
@@ -47,6 +48,13 @@ def edit_info():
         if avatar and avatar.filename:
             try:
                 current_user.avatar_path = save_image(avatar, subfolder="avatars")
+            except ValueError as e:
+                flash(str(e), "danger")
+                return render_template("profile/edit.html")
+
+        if cover and cover.filename:
+            try:
+                current_user.cover_path = save_image(cover, subfolder="covers")
             except ValueError as e:
                 flash(str(e), "danger")
                 return render_template("profile/edit.html")
@@ -97,6 +105,19 @@ def settings():
                 current_user.email = new_email
                 db.session.commit()
                 flash("تم تحديث الإيميل بنجاح.", "success")
+
+        elif action == "save_payment_method":
+            saved_number = request.form.get("saved_shamcash_number", "").strip()
+            current_user.saved_shamcash_number = saved_number
+            db.session.commit()
+            flash("تم حفظ رقم شام كاش تبعك للدفع السريع.", "success")
+
+        elif action == "save_preferences":
+            unit = request.form.get("measurement_unit", "cm")
+            if unit in ("cm", "inch"):
+                current_user.measurement_unit = unit
+            db.session.commit()
+            flash("تم حفظ تفضيلاتك.", "success")
 
         elif action == "change_password":
             old_pw = request.form.get("old_password", "")

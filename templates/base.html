@@ -159,6 +159,15 @@ setTimeout(function () {
   {% endif %}
 {% endwith %}
 
+{% if cart_reminder_count and request.endpoint not in ['shop.cart', 'shop.checkout'] %}
+<div class="flashes">
+  <div class="flash flash-info" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px">
+    <span>🛒 نسيت {{ cart_reminder_count }} منتج بسلتك من زمان — أكمل طلبك قبل ما تنفد الكمية!</span>
+    <a href="{{ url_for('shop.cart') }}" class="btn btn-primary btn-sm">أكمل الطلب</a>
+  </div>
+</div>
+{% endif %}
+
 <main>
   {% block content %}{% endblock %}
 </main>

@@ -143,6 +143,10 @@ def search_by_image():
 def set_language(lang):
     if lang in ("ar", "en"):
         session["lang"] = lang
+        if current_user.is_authenticated:
+            from extensions import db
+            current_user.preferred_lang = lang
+            db.session.commit()
     return redirect(request.referrer or url_for("main.home"))
 
 

@@ -43,12 +43,12 @@
         <details style="font-size:.82rem; color:var(--ink-500)">
           <summary style="cursor:pointer; font-weight:700; color:var(--green-700)">📏 جدول المقاسات الإرشادي</summary>
           <table class="simple-table" style="margin-top:10px">
-            <thead><tr><th>المقاس</th><th>الصدر (سم)</th><th>الطول (سم)</th></tr></thead>
+            <thead><tr><th>المقاس</th><th>الصدر</th><th>الطول</th></tr></thead>
             <tbody>
-              <tr><td>S</td><td>88-92</td><td>66</td></tr>
-              <tr><td>M</td><td>96-100</td><td>68</td></tr>
-              <tr><td>L</td><td>104-108</td><td>70</td></tr>
-              <tr><td>XL</td><td>112-116</td><td>72</td></tr>
+              <tr><td>S</td><td>{{ cm_display(88) }}-{{ cm_display(92) }}</td><td>{{ cm_display(66) }}</td></tr>
+              <tr><td>M</td><td>{{ cm_display(96) }}-{{ cm_display(100) }}</td><td>{{ cm_display(68) }}</td></tr>
+              <tr><td>L</td><td>{{ cm_display(104) }}-{{ cm_display(108) }}</td><td>{{ cm_display(70) }}</td></tr>
+              <tr><td>XL</td><td>{{ cm_display(112) }}-{{ cm_display(116) }}</td><td>{{ cm_display(72) }}</td></tr>
             </tbody>
           </table>
           <p style="margin-top:8px">القياسات تقريبية وقد تختلف بنسبة بسيطة حسب قصّة المنتج.</p>
