@@ -51,7 +51,7 @@
   </form>
   {% endif %}
 
-  <table class="simple-table" style="margin-top:16px">
+  <div class="simple-table-scroll"><table class="simple-table" style="margin-top:16px">
     <thead><tr><th>المنتج</th><th>المتجر</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th><th></th></tr></thead>
     <tbody>
     {% for item in order.items %}
@@ -95,7 +95,7 @@
       {% endif %}
     {% endfor %}
     </tbody>
-  </table>
+  </table></div>
 
   <p style="margin-top:16px; font-weight:800; font-size:1.1rem">الإجمالي: {{ price(order.total_usd) }}</p>
 

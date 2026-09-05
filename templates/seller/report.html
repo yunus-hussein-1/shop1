@@ -46,7 +46,7 @@
     <p style="margin-bottom:20px">🏆 <strong>أفضل منتج مبيعاً:</strong> {{ report.best_product.title }} ({{ report.best_qty }} قطعة)</p>
     {% endif %}
 
-    <table class="simple-table">
+    <div class="simple-table-scroll"><table class="simple-table">
       <thead><tr><th>المنتج</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th><th>حالة الطلب</th></tr></thead>
       <tbody>
       {% for item in sold_items %}
@@ -61,7 +61,7 @@
         <tr><td colspan="5">ما في مبيعات لسا.</td></tr>
       {% endfor %}
       </tbody>
-    </table>
+    </table></div>
   </div>
 </div>
 {% endblock %}

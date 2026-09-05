@@ -3,7 +3,7 @@
 <div class="container">
   <h1 class="page-title">{{ t('cart') }}</h1>
   {% if items %}
-  <table class="simple-table" style="margin-top:20px">
+  <div class="simple-table-scroll"><table class="simple-table" style="margin-top:20px">
     <thead><tr><th>المنتج</th><th>السعر</th><th>الكمية</th><th>الإجمالي</th><th></th></tr></thead>
     <tbody>
     {% for i in items %}
@@ -23,7 +23,7 @@
       </tr>
     {% endfor %}
     </tbody>
-  </table>
+  </table></div>
   <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px">
     <h2 style="margin:0">الإجمالي: {{ price(total) }}</h2>
     <a href="{{ url_for('shop.checkout') }}" class="btn btn-primary">{{ t('checkout') }}</a>

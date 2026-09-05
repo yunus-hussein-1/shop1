@@ -5,7 +5,7 @@
 
   <section class="section">
     <div class="section-head"><h2><span class="dot"></span> طلبات فتح متاجر بانتظار الموافقة</h2></div>
-    <table class="simple-table">
+    <div class="simple-table-scroll"><table class="simple-table">
       <thead><tr><th>المتجر</th><th>المالك</th><th>القسم</th><th></th></tr></thead>
       <tbody>
       {% for s in pending_stores %}
@@ -20,12 +20,12 @@
         <tr><td colspan="4">لا يوجد طلبات حالياً.</td></tr>
       {% endfor %}
       </tbody>
-    </table>
+    </table></div>
   </section>
 
   <section class="section">
     <div class="section-head"><h2><span class="dot"></span> طلبات بانتظار تأكيد دفع شام كاش</h2></div>
-    <table class="simple-table">
+    <div class="simple-table-scroll"><table class="simple-table">
       <thead><tr><th>رقم الطلب</th><th>الزبون</th><th>الإجمالي</th><th>رقم العملية</th><th>الإيصال</th><th>العنوان</th><th></th></tr></thead>
       <tbody>
       {% for o in pending_payments %}
@@ -43,12 +43,12 @@
         <tr><td colspan="7">لا يوجد طلبات بانتظار التأكيد.</td></tr>
       {% endfor %}
       </tbody>
-    </table>
+    </table></div>
   </section>
 
   <section class="section">
     <div class="section-head"><h2><span class="dot"></span> شكاوى واستفسارات مفتوحة</h2></div>
-    <table class="simple-table">
+    <div class="simple-table-scroll"><table class="simple-table">
       <thead><tr><th>الموضوع</th><th>المتجر</th><th>التاريخ</th></tr></thead>
       <tbody>
       {% for c in open_complaints %}
@@ -57,12 +57,12 @@
         <tr><td colspan="3">لا يوجد شكاوى مفتوحة.</td></tr>
       {% endfor %}
       </tbody>
-    </table>
+    </table></div>
   </section>
 
   <section class="section">
     <div class="section-head"><h2><span class="dot"></span> طلبات إرجاع/استبدال بانتظار المراجعة</h2></div>
-    <table class="simple-table">
+    <div class="simple-table-scroll"><table class="simple-table">
       <thead><tr><th>المنتج</th><th>الزبون</th><th>النوع</th><th>السبب</th><th></th></tr></thead>
       <tbody>
       {% for r in pending_returns %}
@@ -80,7 +80,7 @@
         <tr><td colspan="5">لا يوجد طلبات إرجاع حالياً.</td></tr>
       {% endfor %}
       </tbody>
-    </table>
+    </table></div>
   </section>
 </div>
 {% endblock %}

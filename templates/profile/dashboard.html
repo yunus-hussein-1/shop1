@@ -32,14 +32,14 @@
   <section class="section">
     <div class="section-head"><h2><span class="dot"></span> آخر الطلبات</h2><a href="{{ url_for('shop.my_orders') }}">شوف الكل ←</a></div>
     {% if recent_orders %}
-    <table class="simple-table">
+    <div class="simple-table-scroll"><table class="simple-table">
       <thead><tr><th>رقم الطلب</th><th>التاريخ</th><th>الإجمالي</th><th>الحالة</th></tr></thead>
       <tbody>
       {% for o in recent_orders %}
         <tr><td><a href="{{ url_for('shop.order_detail', order_id=o.id) }}">{{ o.order_number }}</a></td><td>{{ o.created_at.strftime('%Y-%m-%d') }}</td><td>{{ price(o.total_usd) }}</td><td><span class="status-pill status-{{ o.status }}">{{ o.status }}</span></td></tr>
       {% endfor %}
       </tbody>
-    </table>
+    </table></div>
     {% else %}
     <p style="color:var(--ink-500)">ما عندك طلبات لسا.</p>
     {% endif %}
