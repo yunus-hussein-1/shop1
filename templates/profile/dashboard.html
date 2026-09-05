@@ -3,7 +3,7 @@
 <div class="container">
 
   <div class="form-card wide" style="padding:0; overflow:hidden; margin-top:30px">
-    <div style="height:120px; background:linear-gradient(120deg,var(--green-600),var(--gold-500),var(--green-700)); background-size:300% 300%; animation:shayebGradientShift 8s ease infinite; {% if current_user.cover_path %}background-image:url('{{ url_for('static', filename=current_user.cover_path) }}'); background-size:cover; background-position:center; animation:none;{% endif %}"></div>
+    <div style="height:120px; background:var(--green-600); {% if current_user.cover_path %}background-image:url('{{ url_for('static', filename=current_user.cover_path) }}'); background-size:cover; background-position:center;{% endif %}"></div>
     <div style="display:flex; align-items:center; gap:22px; padding:0 22px 22px; margin-top:-38px">
       <div class="avatar-preview" style="width:78px; height:78px; flex:none">
         {% if current_user.avatar_path %}

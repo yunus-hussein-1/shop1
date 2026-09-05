@@ -32,12 +32,7 @@
   *{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important}
 }
 
-/* ---------- تدرّجات متحركة (أخضر + ذهبي دايماً بحركة، مو لون ثابت) ---------- */
-@keyframes shayebGradientShift{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
+/* ---------- (تم إيقاف تحريك التدرجات بناءً على طلبك — الألوان هلق ثابتة بالكامل) ---------- */
 
 /* ---------- الوضع الليلي التلقائي (بدون أي زر، يتفعّل حسب توقيت جهاز الزائر) ---------- */
 html[data-theme="dark"]{
@@ -51,9 +46,9 @@ html[data-theme="dark"]{
   --sand-100:#182119;
   --gold-500:#e0b95c;
   --gold-600:#f0cd7e;
-  --ink-900:#dfe8e2;
-  --ink-700:#b6c4bc;
-  --ink-500:#8497a0;
+  --ink-900:#ffffff;
+  --ink-700:#e4e4e4;
+  --ink-500:#a9b3ae;
   --line:#26332c;
   --card-bg:#16211c;
   --page-bg:#101915;
@@ -90,9 +85,7 @@ button{font-family:inherit; cursor:pointer}
 
 /* ---------- Utility top bar ---------- */
 .topbar{
-  background:linear-gradient(120deg,var(--deep-900),var(--green-700),var(--gold-600),var(--deep-900));
-  background-size:300% 300%;
-  animation:shayebGradientShift 12s ease infinite;
+  background:#12100c;
   color:#eaf5ee;
   font-size:.82rem;
 }
@@ -149,30 +142,23 @@ button{font-family:inherit; cursor:pointer}
 }
 .btn:hover{transform:translateY(-2px)}
 .btn-primary{
-  background:linear-gradient(120deg,var(--green-600),var(--gold-500),var(--green-700),var(--green-600));
-  background-size:300% 300%;
-  animation:shayebGradientShift 5s ease infinite;
+  background:var(--green-700);
   color:#fff; box-shadow:0 8px 18px -8px rgba(30,138,82,.55);
 }
 .btn-primary:hover{background:var(--deep-900)}
 .btn-ghost{background:transparent; color:var(--green-800,var(--green-700)); border:1.5px solid var(--line)}
 .btn-ghost:hover{border-color:var(--green-600); color:var(--green-700)}
 .btn-gold{
-  background:linear-gradient(120deg,var(--gold-500),var(--green-600),var(--gold-600));
-  background-size:300% 300%;
-  animation:shayebGradientShift 5s ease infinite;
+  background:var(--gold-500);
   color:#fff;
 }
+.btn-gold:hover{background:var(--gold-600)}
 .btn-danger{background:var(--danger); color:#fff}
 .btn-sm{padding:7px 14px; font-size:.82rem; border-radius:999px}
 .btn-block{width:100%}
 
 /* ---------- categories strip ---------- */
-.cat-strip{
-  background:linear-gradient(120deg,var(--deep-900),var(--green-600),var(--deep-900));
-  background-size:300% 300%;
-  animation:shayebGradientShift 9s ease infinite;
-}
+.cat-strip{background:#12100c}
 .cat-strip .container{display:flex; gap:26px; overflow-x:auto; padding-top:10px; padding-bottom:10px}
 .cat-strip a{color:#dcf0e3; font-weight:700; font-size:.9rem; white-space:nowrap; opacity:.85}
 .cat-strip a:hover, .cat-strip a.active{opacity:1; color:#fff; text-decoration:underline; text-underline-offset:6px; text-decoration-color:var(--gold-500)}
@@ -203,9 +189,7 @@ button{font-family:inherit; cursor:pointer}
 }
 .hero-art{
   aspect-ratio:1/1; border-radius:32px;
-  background:linear-gradient(120deg,var(--green-500),var(--gold-500),var(--deep-900),var(--green-600));
-  background-size:300% 300%;
-  animation:shayebGradientShift 8s ease infinite;
+  background:linear-gradient(150deg,var(--green-600),#12100c);
   display:flex; align-items:center; justify-content:center; position:relative; box-shadow:var(--shadow-soft);
 }
 .hero-art .leaf{width:44%; height:44%; opacity:.9}
@@ -216,8 +200,7 @@ button{font-family:inherit; cursor:pointer}
 .section-head h2{font-size:1.55rem; color:var(--green-900); margin:0; display:flex; align-items:center; gap:10px}
 .section-head h2 .dot{
   width:9px; height:9px; border-radius:50%; display:inline-block;
-  background:linear-gradient(120deg,var(--gold-500),var(--green-600));
-  background-size:300% 300%; animation:shayebGradientShift 6s ease infinite;
+  background:var(--gold-500);
 }
 .section-head a{color:var(--green-700); font-weight:700; font-size:.88rem}
 
@@ -233,14 +216,12 @@ button{font-family:inherit; cursor:pointer}
 .card-product:hover .thumb img{transform:scale(1.07)}
 .card-product .thumb .tag{
   position:absolute; top:10px; inset-inline-start:10px; color:#fff;
-  background:linear-gradient(120deg,var(--gold-500),var(--green-700),var(--gold-600));
-  background-size:300% 300%; animation:shayebGradientShift 7s ease infinite;
+  background:var(--gold-500);
   font-size:.7rem; font-weight:800; padding:4px 10px; border-radius:999px; box-shadow:0 4px 10px -3px rgba(201,148,10,.5);
 }
 .card-product .thumb .tag-trend{
   position:absolute; top:48px; inset-inline-start:10px; color:#fff;
-  background:linear-gradient(120deg,var(--green-600),var(--deep-900),var(--green-700));
-  background-size:300% 300%; animation:shayebGradientShift 7s ease infinite;
+  background:#12100c;
   font-size:.65rem; font-weight:800; padding:4px 9px; border-radius:999px; box-shadow:0 4px 10px -3px rgba(15,61,38,.6);
 }
 .card-product .body{padding:14px; display:flex; flex-direction:column; gap:6px; flex:1}
@@ -253,9 +234,7 @@ button{font-family:inherit; cursor:pointer}
 
 /* ---------- offers block ---------- */
 .offers-section{
-  background:linear-gradient(120deg,var(--deep-900),var(--green-700),var(--gold-600),var(--deep-900));
-  background-size:300% 300%;
-  animation:shayebGradientShift 10s ease infinite;
+  background:#12100c;
   color:#fff; border-radius:32px; margin:30px 0; padding:44px 26px;
 }
 .offers-section .section-head h2{color:#fff}
@@ -271,8 +250,7 @@ button{font-family:inherit; cursor:pointer}
 }
 .form-card::before{
   content:""; position:absolute; top:0; inset-inline-start:0; width:100%; height:5px;
-  background:linear-gradient(120deg,var(--green-600),var(--gold-500),var(--green-700),var(--gold-500));
-  background-size:300% 300%; animation:shayebGradientShift 6s ease infinite;
+  background:var(--gold-500);
 }
 .form-card.wide{max-width:720px}
 .form-card h1{font-size:1.5rem; color:var(--green-900); margin-top:0}
@@ -301,9 +279,7 @@ button{font-family:inherit; cursor:pointer}
 
 /* ---------- footer ---------- */
 footer{
-  background:linear-gradient(120deg,var(--deep-900),var(--green-700),var(--gold-600),var(--deep-900));
-  background-size:300% 300%;
-  animation:shayebGradientShift 14s ease infinite;
+  background:#12100c;
   color:#cfe7d7; margin-top:60px; padding:46px 0 22px;
 }
 footer .container{display:grid; grid-template-columns:1.3fr repeat(3,1fr); gap:30px}
@@ -351,9 +327,7 @@ footer a:hover{opacity:1; text-decoration:underline}
 
 /* ---------- شريط العروض المتحرك ---------- */
 .promo-marquee{
-  background:linear-gradient(120deg,var(--gold-500),var(--green-600),var(--gold-600),var(--green-700));
-  background-size:300% 300%;
-  animation:shayebGradientShift 6s ease infinite;
+  background:#12100c;
   color:#fff; text-align:center; font-weight:800; font-size:.82rem; padding:7px 0;
 }
 #promoText{transition:opacity .3s ease; display:inline-block}
@@ -382,8 +356,7 @@ footer a:hover{opacity:1; text-decoration:underline}
 }
 .page-title::after{
   content:""; position:absolute; bottom:0; inset-inline-start:0; width:64px; height:4px; border-radius:4px;
-  background:linear-gradient(120deg,var(--green-600),var(--gold-500),var(--green-700));
-  background-size:300% 300%; animation:shayebGradientShift 5s ease infinite;
+  background:var(--gold-500);
 }
 .prose{max-width:760px; margin:0 auto; color:var(--ink-700); font-size:.98rem}
 .prose h2{color:var(--green-900); margin-top:30px}
