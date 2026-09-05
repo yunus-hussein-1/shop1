@@ -7,8 +7,8 @@
       {% else %}<span class="placeholder">{{ store.name[0] }}</span>{% endif %}
     </div>
     <div>
-      <h1 style="margin:0 0 4px">{{ store.name }} {% if store.is_verified %}<span class="status-pill status-approved">✅ موثوق</span>{% endif %}</h1>
-      <p style="margin:0; color:var(--ink-500); font-size:.88rem">{{ store.description or "متجر على " + brand_name }}</p>
+      <h1 style="margin:0 0 4px">{{ store.name }} {% if store.is_verified %}<span class="status-pill status-approved">✅ {{ t('trusted_store') }}</span>{% endif %}</h1>
+      <p style="margin:0; color:var(--ink-500); font-size:.88rem">{{ store.description or (('متجر على ' + brand_name) if current_lang=='ar' else ('A store on ' + brand_name)) }}</p>
     </div>
   </div>
 
@@ -17,7 +17,7 @@
     {% for p in products %}{% include "partials/product_card.html" %}{% endfor %}
   </div>
   {% else %}
-  <div class="empty-state"><p>ما في منتجات بهاد المتجر لسا.</p></div>
+  <div class="empty-state"><p>{{ 'ما في منتجات بهاد المتجر لسا.' if current_lang=='ar' else 'No products in this store yet.' }}</p></div>
   {% endif %}
 </div>
 {% endblock %}

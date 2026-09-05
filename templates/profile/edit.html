@@ -2,11 +2,11 @@
 {% block content %}
 <div class="container">
   <div class="form-card">
-    <h1>معلوماتي الشخصية</h1>
+    <h1>{{ t('edit_profile') }}</h1>
     <form method="post" enctype="multipart/form-data">
 
       <div class="field">
-        <label>صورة الغلاف</label>
+        <label>{{ 'صورة الغلاف' if current_lang=='ar' else 'Cover photo' }}</label>
         <div style="height:110px; border-radius:14px; background:var(--green-100) center/cover no-repeat {% if current_user.cover_path %}url('{{ url_for('static', filename=current_user.cover_path) }}'){% endif %}; margin-bottom:8px"></div>
         <input type="file" name="cover" accept="image/*">
       </div>
@@ -14,20 +14,20 @@
       <div class="avatar-upload">
         <div class="avatar-preview" id="avatarPreview">
           {% if current_user.avatar_path %}
-            <img src="{{ url_for('static', filename=current_user.avatar_path) }}" alt="صورتي">
+            <img src="{{ url_for('static', filename=current_user.avatar_path) }}" alt="{{ current_user.name }}">
           {% else %}
             <span class="placeholder">{{ current_user.name[0] }}</span>
           {% endif %}
         </div>
-        <label for="avatarInput" class="avatar-btn">📷 تغيير صورة البروفايل</label>
+        <label for="avatarInput" class="avatar-btn">📷 {{ 'تغيير صورة البروفايل' if current_lang=='ar' else 'Change profile photo' }}</label>
         <input type="file" id="avatarInput" name="avatar" accept="image/*" capture="user">
       </div>
 
-      <div class="field"><label>الاسم</label><input type="text" name="name" value="{{ current_user.name }}"></div>
-      <div class="field"><label>رقم الهاتف</label><input type="tel" name="phone" value="{{ current_user.phone or '' }}"></div>
-      <div class="field"><label>تاريخ الميلاد</label><input type="date" name="birth_date" value="{{ current_user.birth_date or '' }}"></div>
-      <p class="hint">لتغيير الإيميل أو كلمة السر أو طرق الدفع، فوت على <a href="{{ url_for('profile.settings') }}">{{ t('settings') }}</a>.</p>
-      <button type="submit" class="btn btn-primary btn-block">حفظ التعديلات</button>
+      <div class="field"><label>{{ t('name') }}</label><input type="text" name="name" value="{{ current_user.name }}"></div>
+      <div class="field"><label>{{ t('phone') }}</label><input type="tel" name="phone" value="{{ current_user.phone or '' }}"></div>
+      <div class="field"><label>{{ 'تاريخ الميلاد' if current_lang=='ar' else 'Date of birth' }}</label><input type="date" name="birth_date" value="{{ current_user.birth_date or '' }}"></div>
+      <p class="hint">{{ 'لتغيير الإيميل أو كلمة السر أو طرق الدفع، فوت على' if current_lang=='ar' else 'To change your email, password, or payment methods, go to' }} <a href="{{ url_for('profile.settings') }}">{{ t('settings') }}</a>.</p>
+      <button type="submit" class="btn btn-primary btn-block">{{ t('save') }}</button>
     </form>
   </div>
 </div>

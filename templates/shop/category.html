@@ -6,12 +6,12 @@
       {{ category.name_ar if current_lang=='ar' else category.name_en }}
     </h1>
     <form method="get" style="display:flex; align-items:center; gap:8px">
-      <label style="font-size:.85rem; color:var(--ink-500)">فرز حسب:</label>
+      <label style="font-size:.85rem; color:var(--ink-500)">{{ 'فرز حسب:' if current_lang=='ar' else 'Sort by:' }}</label>
       <select name="sort" onchange="this.form.submit()" style="padding:8px 12px; border:1.5px solid var(--line); border-radius:9px">
-        <option value="newest" {{ 'selected' if sort=='newest' }}>الأحدث</option>
-        <option value="price_asc" {{ 'selected' if sort=='price_asc' }}>السعر: من الأقل للأعلى</option>
-        <option value="price_desc" {{ 'selected' if sort=='price_desc' }}>السعر: من الأعلى للأقل</option>
-        <option value="rating" {{ 'selected' if sort=='rating' }}>الأعلى تقييماً</option>
+        <option value="newest" {{ 'selected' if sort=='newest' }}>{{ 'الأحدث' if current_lang=='ar' else 'Newest' }}</option>
+        <option value="price_asc" {{ 'selected' if sort=='price_asc' }}>{{ 'السعر: من الأقل للأعلى' if current_lang=='ar' else 'Price: low to high' }}</option>
+        <option value="price_desc" {{ 'selected' if sort=='price_desc' }}>{{ 'السعر: من الأعلى للأقل' if current_lang=='ar' else 'Price: high to low' }}</option>
+        <option value="rating" {{ 'selected' if sort=='rating' }}>{{ 'الأعلى تقييماً' if current_lang=='ar' else 'Top rated' }}</option>
       </select>
     </form>
   </div>
@@ -20,7 +20,7 @@
     {% for p in products %}{% include "partials/product_card.html" %}{% endfor %}
   </div>
   {% else %}
-  <div class="empty-state"><p>ما في منتجات بهاد القسم لسا.</p></div>
+  <div class="empty-state"><p>{{ 'ما في منتجات بهاد القسم لسا.' if current_lang=='ar' else 'No products in this category yet.' }}</p></div>
   {% endif %}
 </div>
 {% endblock %}

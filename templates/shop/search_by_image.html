@@ -2,32 +2,32 @@
 {% block content %}
 <div class="container">
   <div class="form-card wide" style="text-align:center">
-    <h1>📷 دور بالصورة</h1>
-    <p class="sub">افتح كاميرا جوالك مباشرة وصوّر المنتج، أو ارفع صورة جاهزة من معرض الصور — ورح نلاقيلك أشبه المنتجات عندنا.</p>
+    <h1>📷 {{ 'دور بالصورة' if current_lang=='ar' else 'Search by photo' }}</h1>
+    <p class="sub">{{ 'افتح كاميرا جوالك مباشرة وصوّر المنتج، أو ارفع صورة جاهزة من معرض الصور — ورح نلاقيلك أشبه المنتجات عندنا.' if current_lang=='ar' else 'Open your phone camera and take a photo of the product, or upload an existing photo from your gallery — we’ll find similar products for you.' }}</p>
 
     <form method="post" enctype="multipart/form-data" id="imgSearchForm">
       <div style="display:flex; gap:14px; flex-wrap:wrap; justify-content:center; margin:26px 0">
 
         <label for="cameraInput" class="btn btn-primary" style="padding:16px 26px; font-size:1rem; cursor:pointer">
-          📸 افتح الكاميرا
+          📸 {{ 'افتح الكاميرا' if current_lang=='ar' else 'Open camera' }}
         </label>
         <input type="file" id="cameraInput" name="photo" accept="image/*" capture="environment" style="display:none" onchange="document.getElementById('imgSearchForm').submit()">
 
         <label for="galleryInput" class="btn btn-ghost" style="padding:16px 26px; font-size:1rem; cursor:pointer">
-          🖼️ ارفع من المعرض
+          🖼️ {{ 'ارفع من المعرض' if current_lang=='ar' else 'Upload from gallery' }}
         </label>
         <input type="file" id="galleryInput" name="photo" accept="image/*" style="display:none" onchange="document.getElementById('imgSearchForm').submit()">
 
       </div>
     </form>
 
-    <p class="hint">أول ما تدوس "افتح الكاميرا"، الجوال رح يطلب منك صلاحية استخدام الكاميرا (سواء آيفون أو سامسونج) — اسمح فيها عشان الميزة تشتغل.</p>
-    <p class="hint">ملاحظة: هاي أول نسخة من ميزة البحث بالصورة، وبتحسّن أكتر مع الوقت.</p>
+    <p class="hint">{{ 'أول ما تدوس "افتح الكاميرا"، الجوال رح يطلب منك صلاحية استخدام الكاميرا (سواء آيفون أو سامسونج) — اسمح فيها عشان الميزة تشتغل.' if current_lang=='ar' else 'As soon as you tap "Open camera", your phone will ask for camera permission (iPhone or Samsung) — allow it for this feature to work.' }}</p>
+    <p class="hint">{{ 'ملاحظة: هاي أول نسخة من ميزة البحث بالصورة، وبتحسّن أكتر مع الوقت.' if current_lang=='ar' else 'Note: this is an early version of image search, and it will keep improving.' }}</p>
   </div>
 
   {% if uploaded_path %}
   <section class="section">
-    <div class="section-head"><h2><span class="dot"></span> نتائج مقترحة</h2></div>
+    <div class="section-head"><h2><span class="dot"></span> {{ 'نتائج مقترحة' if current_lang=='ar' else 'Suggested results' }}</h2></div>
     <div class="grid-products">
       {% for p in results %}{% include "partials/product_card.html" %}{% endfor %}
     </div>

@@ -1,23 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-  <h1 class="page-title">طلب رقم {{ order.order_number }}</h1>
+  <h1 class="page-title">{{ ('طلب رقم ' + order.order_number) if current_lang=='ar' else ('Order #' + order.order_number) }}</h1>
   <p>
-    الحالة: <span class="status-pill status-{{ order.status }}">{{ order.status }}</span>
-    &nbsp; حالة الدفع: <span class="status-pill status-{{ order.payment_status }}">{{ order.payment_status }}</span>
+    {{ t('status') }}: <span class="status-pill status-{{ order.status }}">{{ order.status }}</span>
+    &nbsp; {{ t('payment_status') }}: <span class="status-pill status-{{ order.payment_status }}">{{ order.payment_status }}</span>
   </p>
 
   {% if order.address %}
   <div style="background:var(--green-050); border:1px solid var(--green-100); border-radius:14px; padding:14px 18px; margin-bottom:16px">
-    <strong>عنوان التوصيل:</strong> {{ order.address.city }} — {{ order.address.area }} — {{ order.address.street_details }} (📞 {{ order.address.phone }})
+    <strong>{{ t('delivery_address') }}:</strong> {{ order.address.city }} — {{ order.address.area }} — {{ order.address.street_details }} (📞 {{ order.address.phone }})
     <br>
-    <a class="map-pin" href="https://www.google.com/maps/search/?api=1&query={{ order.address.maps_query | urlencode }}" target="_blank" rel="noopener">📍 شوف عنوان الزبون على الخريطة</a>
+    <a class="map-pin" href="https://www.google.com/maps/search/?api=1&query={{ order.address.maps_query | urlencode }}" target="_blank" rel="noopener">📍 {{ 'شوف عنوان الزبون على الخريطة' if current_lang=='ar' else 'View customer address on map' }}</a>
   </div>
   {% endif %}
 
   {% if order.status != 'cancelled' %}
   {% set steps = ['processing', 'confirmed', 'shipped', 'delivered', 'completed'] %}
-  {% set step_labels = {'processing':'قيد المعالجة','confirmed':'تم التأكيد','shipped':'تم الشحن','delivered':'تم التوصيل','completed':'مكتمل'} %}
+  {% set step_labels_ar = {'processing':'قيد المعالجة','confirmed':'تم التأكيد','shipped':'تم الشحن','delivered':'تم التوصيل','completed':'مكتمل'} %}
+  {% set step_labels_en = {'processing':'Processing','confirmed':'Confirmed','shipped':'Shipped','delivered':'Delivered','completed':'Completed'} %}
+  {% set step_labels = step_labels_ar if current_lang=='ar' else step_labels_en %}
   {% set current_index = steps.index(order.status) if order.status in steps else 0 %}
   <div style="display:flex; align-items:center; margin:26px 0 30px; overflow-x:auto">
     {% for s in steps %}
@@ -37,22 +39,28 @@
     {% endfor %}
   </div>
   {% else %}
-  <div class="flash flash-danger" style="margin:20px 0">هاد الطلب ملغي.</div>
+  <div class="flash flash-danger" style="margin:20px 0">{{ 'هاد الطلب ملغي.' if current_lang=='ar' else 'This order has been cancelled.' }}</div>
   {% endif %}
 
   {% if current_user.is_admin and order.status in ['confirmed','shipped','delivered'] %}
   <form method="post" action="{{ url_for('admin.advance_order_status', order_id=order.id) }}" style="margin-bottom:16px">
     <button class="btn btn-gold">
-      {% if order.status == 'confirmed' %}🚚 تحديث الحالة إلى: تم الشحن
-      {% elif order.status == 'shipped' %}📦 تحديث الحالة إلى: تم التوصيل
-      {% elif order.status == 'delivered' %}✅ تحديث الحالة إلى: مكتمل
+      {% if order.status == 'confirmed' %}🚚 {{ 'تحديث الحالة إلى: تم الشحن' if current_lang=='ar' else 'Update status to: Shipped' }}
+      {% elif order.status == 'shipped' %}📦 {{ 'تحديث الحالة إلى: تم التوصيل' if current_lang=='ar' else 'Update status to: Delivered' }}
+      {% elif order.status == 'delivered' %}✅ {{ 'تحديث الحالة إلى: مكتمل' if current_lang=='ar' else 'Update status to: Completed' }}
       {% endif %}
     </button>
   </form>
   {% endif %}
 
   <div class="simple-table-scroll"><table class="simple-table" style="margin-top:16px">
-    <thead><tr><th>المنتج</th><th>المتجر</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th><th></th></tr></thead>
+    <thead><tr>
+      <th>{{ 'المنتج' if current_lang=='ar' else 'Product' }}</th>
+      <th>{{ 'المتجر' if current_lang=='ar' else 'Store' }}</th>
+      <th>{{ t('quantity') }}</th>
+      <th>{{ 'سعر الوحدة' if current_lang=='ar' else 'Unit price' }}</th>
+      <th>{{ t('total') }}</th><th></th>
+    </tr></thead>
     <tbody>
     {% for item in order.items %}
       <tr>
@@ -69,12 +77,18 @@
               <option value="3">★★★</option><option value="2">★★</option><option value="1">★</option>
             </select>
             <input type="file" name="photo" accept="image/*" style="max-width:130px; font-size:.72rem">
-            <button class="btn btn-gold btn-sm">قيّم</button>
+            <button class="btn btn-gold btn-sm">{{ t('write_review') }}</button>
           </form>
           {% if not item.return_requests %}
-          <button class="btn btn-ghost btn-sm" onclick="document.getElementById('return-form-{{ item.id }}').style.display='flex'">↩️ إرجاع/استبدال</button>
+          <button class="btn btn-ghost btn-sm" onclick="document.getElementById('return-form-{{ item.id }}').style.display='flex'">↩️ {{ t('return_or_exchange') }}</button>
           {% else %}
-          <span class="status-pill status-{{ item.return_requests[-1].status }}">طلب {{ 'إرجاع' if item.return_requests[-1].request_type=='return' else 'استبدال' }}: {{ item.return_requests[-1].status }}</span>
+          <span class="status-pill status-{{ item.return_requests[-1].status }}">
+            {% if current_lang == 'ar' %}
+            طلب {{ 'إرجاع' if item.return_requests[-1].request_type=='return' else 'استبدال' }}: {{ item.return_requests[-1].status }}
+            {% else %}
+            {{ 'Return' if item.return_requests[-1].request_type=='return' else 'Exchange' }} request: {{ item.return_requests[-1].status }}
+            {% endif %}
+          </span>
           {% endif %}
           {% endif %}
         </td>
@@ -84,11 +98,11 @@
         <td colspan="6">
           <form method="post" action="{{ url_for('shop.request_return', order_item_id=item.id) }}" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:10px; background:var(--sand-100); border-radius:10px">
             <select name="request_type" style="padding:8px; border-radius:8px; border:1.5px solid var(--line)">
-              <option value="return">إرجاع (استرداد المبلغ)</option>
-              <option value="exchange">استبدال</option>
+              <option value="return">{{ 'إرجاع (استرداد المبلغ)' if current_lang=='ar' else 'Return (refund)' }}</option>
+              <option value="exchange">{{ 'استبدال' if current_lang=='ar' else 'Exchange' }}</option>
             </select>
-            <input type="text" name="reason" placeholder="سبب الطلب (اختياري)" style="flex:1; min-width:180px; padding:8px; border-radius:8px; border:1.5px solid var(--line)">
-            <button class="btn btn-primary btn-sm">إرسال الطلب</button>
+            <input type="text" name="reason" placeholder="{{ 'سبب الطلب (اختياري)' if current_lang=='ar' else 'Reason (optional)' }}" style="flex:1; min-width:180px; padding:8px; border-radius:8px; border:1.5px solid var(--line)">
+            <button class="btn btn-primary btn-sm">{{ 'إرسال الطلب' if current_lang=='ar' else 'Submit request' }}</button>
           </form>
         </td>
       </tr>
@@ -97,17 +111,17 @@
     </tbody>
   </table></div>
 
-  <p style="margin-top:16px; font-weight:800; font-size:1.1rem">الإجمالي: {{ price(order.total_usd) }}</p>
+  <p style="margin-top:16px; font-weight:800; font-size:1.1rem">{{ t('total') }}: {{ price(order.total_usd) }}</p>
 
   <div style="display:flex; gap:10px; flex-wrap:wrap">
     {% if order.status in ['processing','confirmed'] %}
     <form method="post" action="{{ url_for('shop.cancel_order', order_id=order.id) }}">
-      <button class="btn btn-danger">إلغاء الطلب</button>
+      <button class="btn btn-danger">{{ t('cancel_order') }}</button>
     </form>
     {% endif %}
     {% if order.status == 'completed' %}
     <form method="post" action="{{ url_for('shop.reorder', order_id=order.id) }}">
-      <button class="btn btn-primary">🔁 اطلب نفس الطلبية مرة تانية</button>
+      <button class="btn btn-primary">🔁 {{ t('reorder') }}</button>
     </form>
     {% endif %}
   </div>
